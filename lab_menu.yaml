@@ -1,0 +1,153 @@
+# This file contains the complete list of options in the main script.
+# It must contain at least a root menu with several options, and a description
+# of each option in the root menu.
+# Each option in any menu should have a description
+
+# ROOT MENU
+root:
+  type: branch
+  options: 
+    # - create   <I simply remove these two options because the appropriate one
+    # - load      has been selected by the starting command> 
+    - setup
+    - showSDBdata
+    - show_SuperGraph
+    - reset_snode
+    - reset_sedge
+    - get_source_info
+    - get_equivalent_classes
+    - show_equivalent_classes
+    - analyze_radius
+    - analyze_sampling
+    - validate_topic_models
+    - validate_all_models_cd
+    - show_validation_results_e
+    - compute_citation_centralities
+    - show_all_citation_centralities
+    - visualize_bigraph
+
+# In the following, each menu option is described.
+# GENERIC FORMAT OF AN OPTION DESCRIPTOR:
+# optionName:
+#   title: <Here, the text describing the option, that will be show to the user>
+#   options: <Contains the list of submenu options>
+#     <The list of options can a simple list>
+#     - option
+#     - option
+#     - ...
+#     <Or a list of dictionaries with keys 'parameter', 'path' or 'get_method'>
+#     - parameter:
+#         param0: description
+#         param1: description
+#         ...
+#     - path: name  <Take the options from the filenames in the path
+#                    specified in paths2data[name], where paths2data is one the
+#                    dictionaries required to create a MenuNavigator object>
+#     - get_method: name  <Get options by calling the method name>
+#   post_opt: <Below, the options that will be activated after executiong the
+#              selected option>
+#     - option  
+#     - option
+#     - option
+#     - ...
+
+# ##########################
+# OPTIONS FROM THE ROOT MENU
+create: 
+  title: Create new project
+  post_opts:
+    - setup
+
+load:
+    title: Load existing project
+
+setup: 
+  title: Activate configuration file
+
+readData: 
+  title: Read dataset
+
+showSDBdata:
+  title: Show SQL data sources
+  options:
+    - parameters:
+        Pu: Publications
+        Pr: Projects
+        Pa: Patents
+
+show_SuperGraph:
+  title: Show supergraph structure
+
+reset_snode:
+  title: Reset supernode
+  options:
+    - path: graphs 
+
+reset_sedge:
+  title: Reset superedge
+  options:
+    - path: bigraphs
+
+get_source_info: 
+  title: Show available topic models
+
+get_equivalent_classes:
+  title: Get equivalent classes
+  options:
+    - parameters:
+        ACL: Topic models from corpus ACL
+        noACL: Topic models from the other corpora.
+
+show_equivalent_classes:
+  title: Show equivalent classes from ACL models
+
+analyze_radius:
+  title: Analyze the effect of thresholding over the similarity graph 
+  options:
+    - parameters:
+        CORDIS: Corpus CORDIS
+        CORDIS720: Corpus CORDIS720
+        FECYT: Corpus FECYT
+        SCOPUS: Corpus SCOPUS
+        PATSTAT: Corpus PATSTAT
+
+analyze_sampling: 
+  title: Analyze the relation radius vs sampling for fixed number of edges
+  options:
+    - parameters:
+        CORDIS: Corpus CORDIS
+        CORDIS720: Corpus CORDIS720
+        FECYT: Corpus FECYT
+        SCOPUS: Corpus SCOPUS
+        PATSTAT: Corpus PATSTAT
+
+validate_topic_models:
+  title: Validate topic models
+  options:
+    - path: ACL_models
+
+validate_all_models_cd:
+  title: Validate all models with respect to community metrics
+  options:
+    - parameters:
+        JS: Jensen-Shannon distance
+        He: Hellinger distance
+        l1: L1 distance
+
+show_validation_results_e:
+  title: Show fixed-n_edges validation results
+  options:
+    - path: validation
+
+compute_citation_centralities:
+  title: Compute all centralities for a given graph
+  options:
+    - path: graphs 
+
+show_all_citation_centralities:
+  title: Generate top n files for a given graph
+  options:
+    - path: graphs 
+
+visualize_bigraph:
+  title: Visualize bipartite graph

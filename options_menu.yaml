@@ -1,0 +1,486 @@
+# This file containt the complete list of options in the main script.
+# It must contain at least a root menu with several options, and a description
+# of each option in the root menu.
+# Each option in any menu should have a description
+
+# ROOT MENU
+root:
+  # type: branch
+  options: 
+    # - create   <I simply remove these two options becasue the appropriate one
+    # - load      has been selected by the starting command> 
+    - setup
+    - import_data
+    - manage_databases
+    - graph_previews
+    - reset_snode
+    - reset_sedge
+    - graph_tools
+    - gInference
+    - local_graph_analysis
+    - detectCommunities
+    - community_metric
+    - compare_communities
+    - display_graphs
+
+# In the following, each menu option is described.
+# GENERIC FORMAT OF AN OPTION DESCRIPTOR:
+# optionName:
+#   title: <Here, the text describing the option, that will be show to the user>
+#   options: <Contains the list of submenu options>
+#     <The list of options can a simple list>
+#     - option
+#     - option
+#     - ...
+#     <Or a list of dictionaries with keys 'parameter', 'path' or 'get_method'>
+#     - parameter:
+#         param0: description
+#         param1: description
+#         ...
+#     - path: name  <Take the options from the filenames in the path
+#                    specified in paths2data[name], where paths2data is one the
+#                    dictionaries required to create a MenuNavigator object>
+#     - get_method: name  <Get options by calling the method name>
+#   post_opt: <Below, the options that will be activated after executiong the
+#              selected option>
+#     - option  
+#     - option
+#     - option
+
+# #############################################################################
+# LEVEL 1: 
+# #############################################################################
+
+# ##########################
+# OPTIONS FROM THE ROOT MENU
+create: 
+  title: Create new project
+  post_opts:
+    - setup
+
+load:
+    title: Load existing project
+
+setup: 
+  title: Activate configuration file
+
+readData: 
+  title: Read dataset
+
+import_data:
+  title: Import data
+  options:
+    - import_snode_from_table
+    - import_nodes_and_model
+    - import_co_citations_graph
+    - import_SCOPUS_citations_graph
+    - import_SCOPUS_citations_subgraph
+    - import_node_atts
+    - import_agents
+
+manage_databases:
+  title: Manage SQL or Neo4J databases
+  options:
+    - showSDBdata
+    - manage_Neo4J
+
+graph_previews:
+  title: Pre-visualize supergraph
+  options:
+    - show_SuperGraph
+    - show_snode
+    - show_sedge
+
+reset_snode:
+  title: Reset graph (supernode)
+  options:
+    - path: graphs 
+
+reset_sedge:
+  title: Reset bigraph (superedge)
+  options:
+    - path: bigraphs
+
+graph_tools:
+  title: Graph tools
+  options:
+    - generate_minigraph
+    - subsample_graph
+    - largest_community_subgraph
+    - remove_isolated_nodes
+    - remove_snode_attributes
+
+gInference: 
+  title: Graph inference tools
+  options:
+    - equivalence_graph
+    - infer_sim_graph
+    - infer_eq_simgraph
+    - infer_sim_bigraph
+    - infer_ppr_graph
+    - inferBGfromA
+    - transduce
+    - inferTransit
+    # - inferSimBG
+
+detectCommunities:
+  title: Community detection tools
+  options:
+    - parameters:
+        leiden: Leiden
+        louvain: Louvain
+        fastgreedy: Fastgreedy
+        walktrap: Walktrap
+        infomap: Infomap
+        labelprop: Label Propagation
+        kmeans: kmeans
+        aggKmeans: Agglomerative Kmeans
+        cc: Connected components
+    - path: graphs
+
+local_graph_analysis:
+  title: Local graph analysis
+  options:
+    - parameters:
+        centrality: Eigenvector Centrality
+        degree: Degree Centrality
+        betweenness: Betweenness centrality
+        closeness: Closeness centrality
+        cluster_coef: Clustering Coefficient
+        pageRank: PageRank
+        katz: Katz centrality
+        abs_in_degree: Absolute (i.e. unnormalized) in-degree
+        abs_out_degree: Absolute (i.e. unnormalized) out_degree
+    - path: graphs
+
+community_metric:
+  title: Evaluate community partitions
+  options:
+    - path: graphs
+    - get_method: get_communities
+    - parameters:
+        coverage: Coverage
+        performance: Performance
+        modularity: Modularity
+
+compare_communities:
+  title: Compare two communities
+  options:
+    - path: graphs
+    - get_method: get_communities
+    - path: graphs
+    - get_method: _get_communities2
+    - parameters:
+        vi: 'VI: Variation of information metric, Meila (2003)'
+        nmi: 'NMI: Normalized mutual information, Danon et al (2005)'
+        rand: 'RI: Rand index, Rand (1971)'
+        adjusted_rand: 'ARI: Adjusted Rand index, Hubert and Arabie (1985)'
+        split-join: 'SJD: Split-join distance of van Dongen (2000)'
+        split-join-proj: 'SJP: Split-join projection of van Dongen (200)'
+
+display_graphs:
+  title: Graph visualization
+  options:
+    - show_top_nodes
+    - graph_layout
+    - display_bigraph
+
+# #############################################################################
+# LEVEL 2
+# #############################################################################
+
+# #######################
+# Options for import_data
+
+import_snode_from_table:
+  title: Import nodes and edges from table files
+  options:
+    - get_method: get_names_of_dataset_tables
+
+import_nodes_and_model:
+  title: Import nodes and feature_matrix into a zero-edge graph
+  options:
+    - path: topicmodels
+
+import_co_citations_graph: 
+  title: Import co-citations graph from DB
+
+import_SCOPUS_citations_graph:
+  title: Import complete citations graph from SCOPUS
+  options:
+    - parameters:
+        cite_to: Directed graph from citing papers to cited papers
+        cited_by: Directed graph from cited papers to citing papers
+        undirected: Undirected graph
+
+import_SCOPUS_citations_subgraph:
+  title: Import citations subgraph from SCOPUS
+  options:
+    - parameters:
+        cite_to: Directed graph from citing papers to cited papers
+        cited_by: Directed graph from cited papers to citing papers
+        undirected: Undirected graph
+
+import_node_atts:
+  title: Load node attributes from SQL databases
+  options:
+    - path: graphs
+    - parameters:
+        Pu: Publications
+        Pr: Projects
+        Pa: Patents
+    - get_method: get_sql_table_names
+    - get_method: get_table_atts
+    - get_method: get_table_atts
+
+import_agents:
+  title: Import project-researchers bipartite graph from file
+  options:
+    - path: agents
+    - path: graphs
+
+# ############################
+# Options for manage_databases
+
+showSDBdata:
+  title: Show SQL data sources
+  options:
+    - parameters:
+        Pu: Publications
+        Pr: Projects
+        Pa: Patents
+
+manage_Neo4J:
+  title: Manage Neo4J database
+  options:
+    - showGDBdata
+    - resetGDB
+    - export_graph
+    - export_bigraph
+
+# ##########################
+# Options for graph previews
+show_SuperGraph:
+  title: Show supergraph structure
+
+show_snode:
+  title: Quick preview of graph
+  options:
+    - path: graphs
+
+show_sedge:
+  title: Quick preview of bipartite graph 
+  options:
+    - path: bigraphs
+
+# #######################
+# Options for graph_tools
+
+generate_minigraph:
+  title: Generate a synthetic graph for simple testing
+
+subsample_graph:
+  title: Subsample snode
+  options:
+    - path: graphs
+    - parameters:
+        inplace: Replace the original snode
+        newgraph: Keep the original snode and create a new one 
+
+largest_community_subgraph:
+  title: Make a subgraph with the largest community
+  options:
+    - path: graphs
+    - get_method: get_communities
+
+remove_isolated_nodes:
+  title: Remove isolated nodes
+  options:
+    - path: graphs
+
+remove_snode_attributes:
+  title: Remove attribute from graph nodes
+  options:
+    - path: graphs
+    - get_method: get_attributes
+
+# ######################
+# Options for gInference
+
+equivalence_graph:
+  title: 'Cluster equivalence classes:     from A to eqA'
+  options:
+    - path: topicmodels
+
+infer_sim_graph:
+  title: 'Similarity graph:                from A_X to A-A'
+  options:
+    - path: topicmodels
+    - parameters:
+        He:  "He: 1 minus squared Hellinger's distance (JS) (sklearn-based)"
+        He2: 'He2: self implementation of He (faster)'
+        l1:  'l1: 1 minus l1 distance'
+        JS:  'JS: Jensen-Shannon similarity (too slow)'
+        Gauss: 'Gauss: An exponential function of the squared l2 distance'
+        He->JS: 'He->JS: JS through He and a theoretical bound'
+        He2->JS: 'He2->JS: Same as He->JS, but using implementation He2'
+        l1->JS: 'l1->JS: JS through l1 and a theoretical bound'
+
+infer_eq_simgraph:
+  title: 'Equivalent Similarity graph:     from A_X to eqA-eqA'
+  options:
+    - path: topicmodels
+    - parameters:
+        He:  "He: 1 minus squared Hellinger's distance (JS) (sklearn-based)"
+        He2: 'He2: self implementation of He (faster)'
+        l1:  'l1: 1 minus l1 distance'
+        JS:  'JS: Jensen-Shannon similarity (too slow)'
+        Gauss: 'Gauss: An exponential function of the squared l2 distance'
+        He->JS: 'He->JS: JS through He and a theoretical bound'
+        He2->JS: 'He2->JS: Same as He->JS, but using implementation He2'
+        l1->JS: 'l1->JS: JS through l1 and a theoretical bound'
+
+infer_sim_bigraph:
+  title: 'Similarity bipartite graph:      from A_X, B_X to A-B'
+  options:
+    - get_method: get_graphs_with_features
+    - get_method: get_graphs_with_features
+    - parameters:
+        He2: "He2: 1 minus squared Hellinger's distance"
+        He2->JS: 'Jensen-Shannon similarity'
+
+infer_ppr_graph:
+  title: 'PPR graph'
+  options:
+    - path: graphs
+
+inferBGfromA:
+  title: 'Bipartite graph from attributes: from A_B to A->B'
+  options:
+    - path: graphs
+    - get_method: get_attributes
+
+transduce:
+  title: 'Transductive graph:              from A-A->B to B-B'
+  options:
+    - path: bigraphs
+    - parameters:
+        1: "First-order graph (for transduced similarity graphs)"
+        0: "Zero-order graph (for cooperation graphs)"
+
+# inferSimBG:
+#   title: 'Similarity bipartite Graph:      from A_X, B_Y to A-B'
+
+inferTransit:
+  title: 'Transitive graph:                from A->B->C to A->C'
+  options:
+    - path: bigraphs
+    - path: bigraphs
+
+
+# ###########################
+# Optionas for display_graphs
+
+graph_layout: 
+  title: Graph layout
+  options:
+    - path: graphs
+    - get_method: get_attributes
+
+display_bigraph:
+  title: Visualize bipartite graph
+  options:
+    - path: bigraphs
+    - get_method: get_source_atts
+    - get_method: get_source_atts
+    - get_method: get_target_atts
+
+show_top_nodes:
+  title: Show top nodes ranked by attribute value
+  options:
+    - path: graphs
+    - get_method: get_local_features
+
+# #############################################################################
+# LEVEL 3
+# #############################################################################
+
+# ########################
+# Options for manage_Neo4J
+
+showGDBdata:
+  title: Show Neo4J Super Graph
+  options:
+    - show_Neo4J
+    - show_Neo4J_snode
+    - show_Neo4J_sedge
+
+resetGDB:
+  title: Reset Neo4J Graphs
+  options:
+    - reset_Neo4J
+    - reset_Neo4J_snode
+    - reset_Neo4J_sedge
+
+export_graph:
+  title: Export graphs to Neo4J
+  options:
+    - path: graphs
+    - parameters:
+        Pr: Project
+        Pu: Publication
+        Pa: Patent
+        AU: Author
+        Org: Organization
+
+export_bigraph:
+  title: Export bigraph to Neo4J
+  options:
+    - path: bigraphs
+    - parameters:
+        Pr: Project
+        Pu: Publication
+        Pa: Patent
+        AU: Author
+        Org: Organization
+    - parameters:
+        Pr: Project
+        Pu: Publication
+        Pa: Patent
+        AU: Author
+        Org: Organization
+
+# #######################
+# Options for resetGDBdata
+reset_Neo4J:
+  title: Reset the whole Neo4J graph databases
+
+reset_Neo4J_snode:
+  title: Reset a specific Neo4J snode
+  options:
+    - get_method: get_Neo4J_snodes
+
+reset_Neo4J_sedge:
+  title: Reset a specific Neo4J sedge
+  options:
+    - get_method: get_Neo4J_sedges
+
+# #############################################################################
+# LEVEL 4
+# #############################################################################
+
+# ########################
+# Options for showGDBdata
+show_Neo4J:
+  title: Overview of the whole graph databases
+
+show_Neo4J_snode:
+  title: Show information about a specific snode
+  options:
+    - get_method: get_Neo4J_snodes
+
+show_Neo4J_sedge:
+  title: Show information about a specific sedge
+  options:
+    - get_method: get_Neo4J_sedges
+

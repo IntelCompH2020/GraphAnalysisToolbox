@@ -11,8 +11,12 @@ from time import time
 from scipy.sparse import issparse
 from sklearn.neighbors import radius_neighbors_graph
 from collections import Counter, defaultdict
-import igraph   # "install -c conda-forge python-igraph"
 
+try:
+    import igraph   # "install -c conda-forge python-igraph"
+except:
+    print("WARNING: igraph could not be imported. Some methods will raise an"
+          "error")
 import matplotlib.pyplot as plt
 
 # import cupy.sparse

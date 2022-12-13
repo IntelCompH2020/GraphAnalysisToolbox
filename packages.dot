@@ -1,0 +1,14 @@
+digraph "packages" {
+charset="utf-8"
+rankdir=BT
+"0" [label="rdigraphs.datamanager", shape="box"];
+"1" [label="rdigraphs.datamanager.base_dm_neo4j", shape="box"];
+"2" [label="rdigraphs.datamanager.base_dm_sql", shape="box"];
+"3" [label="rdigraphs.datamanager.callbacks", shape="box"];
+"4" [label="rdigraphs.datamanager.cypher", shape="box"];
+"5" [label="rdigraphs.datamanager.datamanager", shape="box"];
+"6" [label="rdigraphs.datamanager.sql_to_neo4j", shape="box"];
+"7" [label="rdigraphs.datamanager.util", shape="box"];
+"5" -> "1" [arrowhead="open", arrowtail="none"];
+"5" -> "2" [arrowhead="open", arrowtail="none"];
+}

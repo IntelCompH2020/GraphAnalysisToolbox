@@ -1,0 +1,412 @@
+log:
+
+  # every cypher statement sent to neo4j is written into this file
+  # if blank, the file name is inferred from the name of *this* file replacing the *yaml* extension with *cypher*
+  cypher file:
+
+disambiguation:
+
+  authors:
+
+    # the path to the disambiguation map as a list of path elements
+    disambiguation_map: ['disambiguation_data', 'auth_result.csv']
+
+    # the name of the new field/column/neo4j property to be created for storing the final *disambiguated* id
+    new_id: &author_id 'disambiguated_id'
+
+  organizations:
+
+    # the path to the disambiguation map as a list of path elements
+    disambiguation_map: ['disambiguation_data', 'org_result.csv']
+
+    # the name of the new field/column/neo4j property to be created for storing the final *disambiguated* id
+    new_id: &disambiguated_organization_id 'disambiguated_org_id'
+
+databases:
+
+  # ================================================= PROJECTS =========================================================
+
+  - input:
+      database name: db_Pr_FECYT
+    output:
+      # if blank, the current working directory is used
+      auxiliar csv files' directory: tmp_projects
+    # how to translate SQL tables into neo4j
+    tables:
+      # ------------------------------------------ PROJECTS
+      # meant to specify the kind of cypher query/statement that must be run
+      - type: vanilla
+        # (existing) SQL table
+        SQL table: proyectos
+        # (to-be-created) neo4j label
+        neo4j label: &project_label project
+        SQL columns to neo4j properties:
+          # (existing) SQL column: (to-be-created) neo4j property
+          # if the (to-be-created) neo4j property is omitted, the column is included in the written csv file, but it is
+          # *not* stored (as a property of the corresponding node) in neo4j; this is useful, e.g., when the SQL column
+          # is a foreign key that is only necessary for making a relationship
+          # NOTE: the & part is just an *anchor* (name) to be "dereferenced" below (with *)
+          REFERENCIA: &project_ref ref
+          TIPO DE PROYECTO: type
+          TITULO: title
+          CIFEMPRESA: cif
+          CENTRO: center
+        # not important as long as there are no collisions
+        intermediate csv file: &project_csv_file projects.csv.gz
+        callbacks:
+          # a list of functions that will be run (blockwise) on the above SQL table *before* writing it to the csv file
+          # NOTE: it must be a function defined in the `callbacks.py` module that whose input and output are both
+          # `DataFrame`s
+          functions: [organizations_disambiguator.projects_projects]
+          # if the above functions create new columns, they must be indicated here (so that the script knows they are
+          # artificial columns, not to be read)
+          added columns: [*disambiguated_organization_id]
+        # neo4j properties that are to be indexed ("*" is useful to refer to one of the above properties)
+        unique properties: [*project_ref]
+        # indexed properties speed up queries involving them
+        # NOTE: unique properties already entail and index, and also including them here will trigger an exception
+        indexes:
+        # the maximum number of rows to be read from this table, regardless of how many there are
+        # if blank, the whole table is read and imported into neo4j
+        maximum number of rows: 10_000
+        # data is read from SQL in chunks of this size
+        # if blank, the whole table is read at once
+        block size: 500_000
+      # ------------------------------------------ RESEARCHERS
+      - type: vanilla
+        SQL table: investigadores
+        neo4j label: &researcher_label researcher
+        SQL columns to neo4j properties:
+          NIF: &researcher_nif nif
+          NOMBRE: &researcher_name name
+          *author_id : *author_id
+        intermediate csv file: researchers.csv.gz
+        callbacks:
+          functions: [projects_researchers, authors_disambiguator.projects_researchers]
+          added columns: [*author_id]
+        unique properties: [*author_id, *researcher_nif]
+        indexes: [*researcher_name]
+        maximum number of rows: 10_000
+        block size:
+        # ------------------------------------------ RESEARCHER-PROJECT
+        # a `join` table implements many-to-many relationship *with attributes*
+      - type: join
+        SQL table: investigadorproyecto
+        # the label for the edge connecting the nodes
+        relationship type: WORKED_ON
+        # if "true", 2 relationships in the SQL table, one from A to B, and another from B to A will give rise to a
+        # single relationship in the neo4j DB
+        merge reciprocated relationships: false
+        # the columns in the "join table" that will become *properties of the relationship" (no new nodes)
+        # NOTE: all these columns are read from SQL, but properties are only created for those providing
+        # a (non-null) property
+        SQL columns to neo4j properties:
+          ROL: role
+          # these two columns are read and written into the csv file, no neo4j properties are created *here* for them
+          NIF:
+          REFERENCIA:
+        # the 1st entity in the relationship
+        # NOTE: for the sake of consistency, references are used for neo4j (previously created) stuff
+        origin:
+          # already in neo4j:
+          neo4j label: *researcher_label
+          neo4j matching property: *author_id
+          # in this table:
+          SQL matching column: *author_id
+        # the 2nd entity in the relationship
+        destination:
+          # already in neo4j:
+          neo4j label: *project_label
+          neo4j matching property: *project_ref
+          # in this table:
+          SQL matching column: REFERENCIA
+        intermediate csv file: researcher_project.csv.gz
+        callbacks:
+          functions: [authors_disambiguator.projects_researcher_project]
+          added columns: [*author_id]
+        maximum number of rows:
+        block size: 500_000
+        # ------------------------------------------ ORGANIZATIONS
+      - type: vanilla
+        SQL table: organismos
+        neo4j label: &organization_label organization
+        SQL columns to neo4j properties:
+          CIF: &organization_id id
+          *disambiguated_organization_id : *disambiguated_organization_id
+          TIPO ENTIDAD: kind
+        intermediate csv file: organization.csv.gz
+        callbacks:
+          functions: [organizations_disambiguator.projects_organizations]
+          added columns: [*disambiguated_organization_id]
+        unique properties: [*organization_id,*disambiguated_organization_id]
+        maximum number of rows: 10_000
+        block size:
+    # *some* tables are revisited to build the relationships required by their foreign keys
+    # NOTE: technically, this implements a one-to-many relationship (`this table` corresponding to the *many* side)
+    relationships:
+      # ------------------------------------------ PROJECTS-MAIN RESEARCHER
+      # (exiting) SQL table
+      - SQL table: proyectos
+        # the label for the edge connecting the nodes
+        relationship type: IP_BELONGS_TO
+        # information related to the above table, which should contain one or more foreign keys
+        this table:
+          # primary key
+          SQL matching column: REFERENCIA
+          # the label (type) given to the rows of this table in neo4j (a "dereferenced" anchor to keep consistency)
+          neo4j label: *project_label
+          # the (neo4j) property that should match the above `SQL matching column` (a "dereferenced" anchor)
+          neo4j matching property: *project_ref
+        # information related to other table that was referenced (through the foreign key) by the above table
+        related entity:
+          # foreign key *in the first table*
+          SQL matching column: *disambiguated_organization_id
+          # the label given to the rows of the 2nd table in neo4j when imported earlier (a "dereferenced" anchor)
+          neo4j label: *organization_label
+          # the (neo4j) property created for the foreign key in the 2nd table (a "dereferenced" anchor)
+          neo4j matching property: *disambiguated_organization_id
+        # not important as long as there are no collisions
+        intermediate csv file: *project_csv_file
+
+  # ================================================= PATSTATS =========================================================
+
+  - input:
+      database name: db_Pa_PATSTATS
+    output:
+      auxiliar csv files' directory: tmp_patents
+    tables:
+      # ------------------------------------------ APPLICATIONS (PATENTS)
+      - type: vanilla
+        SQL table: tls201_appln
+        neo4j label: &application_label application
+        SQL columns to neo4j properties:
+          appln_id: &application_id id
+          docdb_family_id: family_id
+        intermediate csv file: applications.csv.gz
+        unique properties: [*application_id]
+        maximum number of rows: 100_000
+        block size: 500_000
+        # ------------------------------------------ APPLICATIONS-TITLES
+      - type: attributes
+        SQL table: tls202_appln_title
+        # only nodes with this (existing) neo4j label will be updated...
+        neo4j label: *application_label
+        # ...if this property matches...
+        neo4j property: *application_id
+        # ...with this column of in the SQL table
+        SQL column: appln_id
+        # columns without a mapping neo4j property are needed in the csv file, but will not yield *new* neo4j properties
+        SQL columns to neo4j properties:
+          appln_id:
+          appln_title: title
+        intermediate csv file: applications_titles.csv.gz
+        # an `attributes` table should *not* yield a new index
+        indexes:
+        maximum number of rows: 100_000
+        block size: 500_000
+      # ------------------------------------------ PERSON tls906 (tls206 is empty)
+      - type: update
+        # (exiting) SQL table
+        SQL table: tls906_person
+        # (existing) neo4j label of the nodes to be added
+        neo4j label: *researcher_label
+        # mapping from SQL columns to neo4j properties
+        SQL columns to neo4j properties:
+          # (existing) SQL column: (to-be-created) neo4j property
+          person_id: &person_id id_patstats
+          person_name: *researcher_name
+          doc_std_name: standard_name
+          doc_std_name_id: standard_name_id
+          *author_id : *author_id
+          *disambiguated_organization_id : *disambiguated_organization_id
+        # the above SQL column that is to be matched , if possible, against the property on the right-hand-side
+        # *in the existing nodes* (with label `neo4j label`)
+        merging column: *author_id
+        # not important as long as there are no collisions
+        intermediate csv file: person906.csv.gz
+        unique properties: [*person_id, *author_id]
+        callbacks:
+          functions: [patents_person, authors_disambiguator.patstats_person, organizations_disambiguator.patstats_person]
+          added columns: [*author_id, *disambiguated_organization_id]
+        # the maximum number of rows to be read from this table, regardless of how many there are
+        # if blank, the whole table is read and imported into neo4j
+        maximum number of rows: 100_000
+        block size:
+        # ------------------------------------------ PERSON-APPLICATION
+      - type: join
+        SQL table: tls207_pers_appln
+        relationship type: PARTICIPATED
+        merge reciprocated relationships: false
+        SQL columns to neo4j properties:
+          person_id:
+          appln_id:
+        origin:
+          neo4j label: *researcher_label
+          neo4j matching property: *author_id
+          SQL matching column: *author_id
+        destination:
+          neo4j label: *application_label
+          neo4j matching property: *application_id
+          SQL matching column: appln_id
+        intermediate csv file: person_application.csv.gz
+        callbacks:
+          functions: [authors_disambiguator.patstats_person_application]
+          added columns: [*author_id]
+        maximum number of rows: 100_000
+        block size: 500_000
+        # ------------------------------------------ PATENT PUBLICATIONS
+      - type: vanilla
+        SQL table: tls211_pat_publn
+        neo4j label: &publication_label publication
+        SQL columns to neo4j properties:
+          pat_publn_id: &publication_id id
+          appln_id:
+        intermediate csv file: &publications_csv_file publications.csv.gz
+        unique properties: [*publication_id]
+        maximum number of rows: 100_000
+        block size: 500_000
+        # ------------------------------------------ CITATIONS (PATENT-LITERATURE -> PATENT-LITERATURE)
+      - type: join
+        SQL table: tls212_citation
+        relationship type: CITES
+        merge reciprocated relationships: false
+        SQL columns to neo4j properties:
+          pat_publn_id:
+          cited_pat_publn_id:
+        origin:
+          neo4j label: *publication_label
+          neo4j matching property: *publication_id
+          SQL matching column: pat_publn_id
+        destination:
+          neo4j label: *publication_label
+          neo4j matching property: *publication_id
+          SQL matching column: cited_pat_publn_id
+        intermediate csv file: citation_patent_patent.csv.gz
+        callbacks:
+          functions: [patents_literature]
+          added columns: []
+        maximum number of rows: 100_000
+        block size: 500_000
+        # ------------------------------------------ NON PATENT PUBLICATIONS
+      - type: vanilla
+        SQL table: tls214_npl_publn
+        neo4j label: &non_patent_publication_label non_patent_publication
+        SQL columns to neo4j properties:
+          npl_publn_id: &non_patent_publication_id id
+          npl_author: author
+          npl_doi: doi
+        intermediate csv file: non_patent_publications.csv.gz
+        unique properties: [*non_patent_publication_id]
+        maximum number of rows: 100_000
+        block size: 500_000
+        # ------------------------------------------ CITATIONS (PATENT-LITERATURE -> NON PATENT-LITERATURE)
+      - type: join
+        SQL table: tls212_citation
+        relationship type: CITES_OUT
+        merge reciprocated relationships: false
+        SQL columns to neo4j properties:
+          pat_publn_id:
+          npl_publn_id:
+        origin:
+          neo4j label: *publication_label
+          neo4j matching property: *publication_id
+          SQL matching column: pat_publn_id
+        destination:
+          neo4j label: *non_patent_publication_label
+          neo4j matching property: *non_patent_publication_id
+          SQL matching column: npl_publn_id
+        intermediate csv file: citation_non_patent_patent.csv.gz
+        callbacks:
+          functions: [patents_non_literature]
+          added columns: []
+        maximum number of rows: 100_000
+        block size: 500_000
+    relationships:
+      # ------------------------------------------ APPLICATIONS-PUBLICATIONS
+      - SQL table: tls211_pat_publn
+        relationship type: MAKES_UP
+        this table:
+          SQL matching column: pat_publn_id
+          neo4j label: *publication_label
+          neo4j matching property: *publication_id
+        related entity:
+          SQL matching column: appln_id
+          neo4j label: *application_label
+          neo4j matching property: *application_id
+        intermediate csv file: *publications_csv_file
+
+  # ================================================== SCOPUS ==========================================================
+
+  - input:
+      database name: publicacionesScopus
+    output:
+      auxiliar csv files' directory: tmp_publications
+    tables:
+      # ------------------------------------------ DOCUMENT (SCOPUS)
+      - type: vanilla
+        SQL table: document
+        neo4j label: &document_label publication
+        SQL columns to neo4j properties:
+          doi: &document_doi DOI
+          title: title
+          eid: &document_scopus_id scopus_id
+        intermediate csv file: documents.csv.gz
+        unique properties: [*document_scopus_id]
+        indexes: [*document_doi]
+        maximum number of rows: 10_000
+        block size: 500_000
+      # ------------------------------------------ AUTHORSHIP (SCOPUS)
+      - type: update
+        SQL table: authorship
+        neo4j label: *researcher_label
+        SQL columns to neo4j properties:
+          author_id: id
+          affiliation: affiliation
+          affiliation_id: affiliation_id
+          fullname: *researcher_name
+          id: &authorship_id id_scopus
+          *author_id : *author_id
+          *disambiguated_organization_id : *disambiguated_organization_id
+          initials:
+          surname:
+          document_id:
+        merging column: *author_id
+        intermediate csv file: &authorship_csv_file authorship.csv.gz
+        callbacks:
+          functions: [publications_authorship, authors_disambiguator.scopus_authorship, organizations_disambiguator.scopus_authorship]
+          added columns: [fullname, *author_id, *disambiguated_organization_id]
+        unique properties: [*authorship_id, *author_id]
+        maximum number of rows: 10_000
+        block size:
+        # ------------------------------------------ CITATION (SCOPUS)
+      - type: join
+        SQL table: citation
+        relationship type: CITES
+        merge reciprocated relationships: false
+        SQL columns to neo4j properties:
+          cite_to:
+          cite_from:
+        origin:
+          neo4j label: *document_label
+          neo4j matching property: *document_scopus_id
+          SQL matching column: cite_from
+        destination:
+          neo4j label: *document_label
+          neo4j matching property: *document_scopus_id
+          SQL matching column: cite_to
+        intermediate csv file: citation.csv.gz
+        maximum number of rows: 10_000
+        block size: 500_000
+    relationships:
+      # ------------------------------------------ AUTHORSHIP-DOCUMENT
+      - SQL table: authorship
+        relationship type: AUTHORED
+        this table:
+          SQL matching column: id
+          neo4j label: *researcher_label
+          neo4j matching property: *authorship_id
+        related entity:
+          SQL matching column: document_id
+          neo4j label: *document_label
+          neo4j matching property: *document_scopus_id
+        intermediate csv file: *authorship_csv_file
