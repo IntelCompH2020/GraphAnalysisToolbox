@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taskmanager &mdash; SuperGraph 2023 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Supergraph" href="rdigraphs_supergraph.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SuperGraph
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Data access:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html">Datamanager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.base_dm_sql">SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.base_dm_neo4j">Neo4j</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.cypher">Cypher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.callbacks">Migration Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.util">Util</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Menu:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_menu_navigator.html">Menu</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Community:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_community_plus.html">Community Plus</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Similarity:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_sim_graph.html">Similarity graphs</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Supergraph:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_supergraph.html">Supergraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_supergraph.html#module-rdigraphs.supergraph.dgview">Data graph view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_supergraph.html#module-rdigraphs.supergraph.sedge">Super edge</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Task manager:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Taskmanager</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SuperGraph</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Taskmanager</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/rdigraphs_taskmanager.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-rdigraphs.labtaskmanager">
+<span id="taskmanager"></span><h1>Taskmanager<a class="headerlink" href="#module-rdigraphs.labtaskmanager" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.labtaskmanager.LabTaskManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.labtaskmanager.</span></span><span class="sig-name descname"><span class="pre">LabTaskManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paths2data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.labtaskmanager.LabTaskManager" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rdigraphs.sgtaskmanager.SgTaskManager" title="rdigraphs.sgtaskmanager.SgTaskManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">SgTaskManager</span></code></a></p>
+<p>Task Manager for the RDIgraph analyzer.</p>
+<p>The behavior of this class depends on the state of the project, in
+dictionary self.state, with the followin entries:</p>
+<ul class="simple">
+<li><p>‘isProject’   : If True, project created. Metadata variables loaded</p></li>
+<li><dl class="simple">
+<dt>‘configReady’<span class="classifier">If True, config file succesfully loaded. Datamanager</span></dt><dd><p>activated.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.labtaskmanager.LabTaskManager.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paths2data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.labtaskmanager.LabTaskManager.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes the LabTaskManager object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path2project</strong> (<em>str</em>) – Path to the graph processing project</p></li>
+<li><p><strong>paths2data</strong> (<em>dict</em>) – Paths to data sources</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.labtaskmanager.LabTaskManager.analyze_radius">
+<span class="sig-name descname"><span class="pre">analyze_radius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.labtaskmanager.LabTaskManager.analyze_radius" title="Permalink to this definition"></a></dt>
+<dd><p>This method analyzes the generation of similarity (semantic) graphs.
+More specifically, it explores the variation of several graph
+parameters as a function of the radius, for a fixed number of nodes,
+for a given corpus and for several topic models (from the same corpus)</p>
+<p>The radius is the bound on the JS distance used to sparsify the graph.
+The number of nodes is a subsample of the total number of nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>corpus</strong> (<em>str</em>) – Corpus. All topic models based on this corpus will be will be
+analyzed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.labtaskmanager.LabTaskManager.analyze_sampling">
+<span class="sig-name descname"><span class="pre">analyze_sampling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.labtaskmanager.LabTaskManager.analyze_sampling" title="Permalink to this definition"></a></dt>
+<dd><p>Analyze sampling for a given corpus</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>corpus</strong> (<em>str</em>) – Corpus. All topic models based on this corpus will be will be
+analyzed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.labtaskmanager.LabTaskManager.compute_citation_centralities">
+<span class="sig-name descname"><span class="pre">compute_citation_centralities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.labtaskmanager.LabTaskManager.compute_citation_centralities" title="Permalink to this definition"></a></dt>
+<dd><p>Computes all centralities for a given graph, and save in output file
+the top n nodes by centrality</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to snode</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.labtaskmanager.LabTaskManager.get_equivalent_classes">
+<span class="sig-name descname"><span class="pre">get_equivalent_classes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.labtaskmanager.LabTaskManager.get_equivalent_classes" title="Permalink to this definition"></a></dt>
+<dd><p>Extracts basic information about the doc-topic matrices in the source
+folders.</p>
+<p>For each matrix, plot the distribution of the number of nonzero topics</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>corpus</strong> (<em>str</em>) – Name of the corpus</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.labtaskmanager.LabTaskManager.get_keyword_descriptions">
+<span class="sig-name descname"><span class="pre">get_keyword_descriptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vocabfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">W</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_keywords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.labtaskmanager.LabTaskManager.get_keyword_descriptions" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a description o each row of a weight matrix. Each column of
+the weight matrix is assumed to contain the weights associated to
+a single word specified in a given vocabulary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vocabfile</strong> (<em>str</em>) – Path to vocabulary</p></li>
+<li><p><strong>W</strong> (<em>numpy array (n_words x n)</em>) – Weight matrix</p></li>
+<li><p><strong>n_keywords</strong> (<em>int, optional (default=10)</em>) – Number of keywords used to describe each row of the weight matrix</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.labtaskmanager.LabTaskManager.get_source_info">
+<span class="sig-name descname"><span class="pre">get_source_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.labtaskmanager.LabTaskManager.get_source_info" title="Permalink to this definition"></a></dt>
+<dd><p>Extracts basic information about the doc-topic matrices in the source
+folders.</p>
+<p>For each matrix, plot the distribution of the number of nonzero topics</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.labtaskmanager.LabTaskManager.read_vocabulary">
+<span class="sig-name descname"><span class="pre">read_vocabulary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vocab_filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.labtaskmanager.LabTaskManager.read_vocabulary" title="Permalink to this definition"></a></dt>
+<dd><p>Reads a vocabultary from file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vocab_filename</strong> (<em>str</em>) – Path to vocabulary</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>vocab_w2id</strong> (<em>dict</em>) – Vocabulary dictionary using words as keys {word_i : id_word_i}</p></li>
+<li><p><strong>vocab_id2w</strong> (<em>dict</em>) – Vocabulary dictionary using word ids as keys {i : word_i}</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.labtaskmanager.LabTaskManager.show_all_citation_centralities">
+<span class="sig-name descname"><span class="pre">show_all_citation_centralities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">400</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.labtaskmanager.LabTaskManager.show_all_citation_centralities" title="Permalink to this definition"></a></dt>
+<dd><p>Shows all available local parameters for a given graph, and save them
+in output files containing the top n nodes for each parameter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to snode</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.labtaskmanager.LabTaskManager.show_equivalent_classes">
+<span class="sig-name descname"><span class="pre">show_equivalent_classes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.labtaskmanager.LabTaskManager.show_equivalent_classes" title="Permalink to this definition"></a></dt>
+<dd><p>Show equivalent classes</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.labtaskmanager.LabTaskManager.show_validation_results_e">
+<span class="sig-name descname"><span class="pre">show_validation_results_e</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.labtaskmanager.LabTaskManager.show_validation_results_e" title="Permalink to this definition"></a></dt>
+<dd><p>Shows the results of the topic model validation in
+self.validate_topic_models()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.labtaskmanager.LabTaskManager.validate_all_models_cd">
+<span class="sig-name descname"><span class="pre">validate_all_models_cd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.labtaskmanager.LabTaskManager.validate_all_models_cd" title="Permalink to this definition"></a></dt>
+<dd><p>Analyzes the influence of the topic model and the similarity graph
+parameters on the quality of the community structures</p>
+<p>The similarity graph is validated using a citations graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>d</strong> (<em>str</em>) – Similarity measure: options are: JS, He(llinger) or l1.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.labtaskmanager.LabTaskManager.validate_topic_models">
+<span class="sig-name descname"><span class="pre">validate_topic_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2models</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.labtaskmanager.LabTaskManager.validate_topic_models" title="Permalink to this definition"></a></dt>
+<dd><p>Calls to self._validate_topic_models for a specific value of the radius
+and the sampling factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path2models</strong> (<em>str</em>) – Path specifying the class of models to validate.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.labtaskmanager.LabTaskManager.visualize_bigraph">
+<span class="sig-name descname"><span class="pre">visualize_bigraph</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.labtaskmanager.LabTaskManager.visualize_bigraph" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a bigraph visualization for a demo</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-rdigraphs.sgtaskmanager"></span><dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.sgtaskmanager.</span></span><span class="sig-name descname"><span class="pre">SgTaskManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paths2data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'metadata.pkl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'parameters.yaml'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_active</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Task Manager for the RDIgraph analyzer.</p>
+<p>The behavior of this class depends on the state of the project, in
+dictionary self.state, with the following entries:</p>
+<p>‘isProject’   : If True, project created. Metadata variables loaded
+‘configReady’ : If True, config file loaded. Datamanager activated.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paths2data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'metadata.pkl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'parameters.yaml'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_active</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Opens a corpus classification project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path2project</strong> (<em>str</em>) – Path to the project</p></li>
+<li><p><strong>paths2data</strong> (<em>dict, optional (default={})</em>) – Dictionary of paths</p></li>
+<li><p><strong>metadata_fname</strong> (<em>str, optional (default=’metadata.pkl’)</em>) – Name of the metadata file</p></li>
+<li><p><strong>config_fname</strong> (<em>str, optional (default=’parameters.yaml’)</em>) – Name of the file containing the configuration variables</p></li>
+<li><p><strong>keep_active</strong> (<em>bool, optional (default=False)</em>) – If False, graphs are removed from memory (but not from files)
+after the tasks.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.__weakref__">
+<span class="sig-name descname"><span class="pre">__weakref__</span></span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.__weakref__" title="Permalink to this definition"></a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.community_metric">
+<span class="sig-name descname"><span class="pre">community_metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">community</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.community_metric" title="Permalink to this definition"></a></dt>
+<dd><p>Compute a global metric for a graph partition resulting from a
+community detection algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>community</strong> (<em>str</em>) – Community detection algorithm</p></li>
+<li><p><strong>parameter</strong> (<em>str</em>) – Metric to compute</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.compare_communities">
+<span class="sig-name descname"><span class="pre">compare_communities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comm1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comm2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.compare_communities" title="Permalink to this definition"></a></dt>
+<dd><p>Compate two graph partitions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path1</strong> (<em>str</em>) – Path to 1st snode</p></li>
+<li><p><strong>comm1</strong> (<em>str</em>) – Name of the partition from 1st snode</p></li>
+<li><p><strong>path2</strong> (<em>str</em>) – Path to 2nd snode</p></li>
+<li><p><strong>comm2</strong> (<em>str</em>) – Name of the partition from 2nd snode</p></li>
+<li><p><strong>metric</strong> (<em>str</em>) – Metric used for the comparison</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_struct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.create" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a RDI graph analysis project.
+To do so, it defines the main folder structure, and creates (or cleans)
+the project folder, specified in self.path2project</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>f_struct</strong> (<em>dict or None, optional (default=None)</em>) – Contains all information related to the structure of project files
+and folders: paths (relative to ppath), file names, suffixes,
+prefixes or extensions that could be used to define other files
+or folders.
+(default names are used when not given)</p>
+<p>If None, default names are given to the whole folder tree</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.detectCommunities">
+<span class="sig-name descname"><span class="pre">detectCommunities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">algorithm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comm_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.detectCommunities" title="Permalink to this definition"></a></dt>
+<dd><p>Applies a community detection algorithm to a given snode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>algorithm</strong> (<em>str</em>) – Community detection algoritms</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to snode</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.disambiguate_node">
+<span class="sig-name descname"><span class="pre">disambiguate_node</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.disambiguate_node" title="Permalink to this definition"></a></dt>
+<dd><p>Disambiguate a given node from a given graph based on the topological
+structure of the related graphs and bigraphs in the supergraph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to snode</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.display_bigraph">
+<span class="sig-name descname"><span class="pre">display_bigraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2sedge</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_att1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_att2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_att</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_att2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_html</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bigraph_template.html'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_js</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'make_bigraph_template.js'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.display_bigraph" title="Permalink to this definition"></a></dt>
+<dd><p>Generates a bigraph visualization based on halo.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path2sedge</strong> (<em>str</em>) – Path to the bipartite graph. The bigraph (sedge) and both the
+source and target snodes must already exist in the supergraph
+structure.
+The name of the sedge and the source and target snodes is taken
+from the folder name.</p></li>
+<li><p><strong>s_att1</strong> (<em>str</em>) – Name of the first attribute of the source snode.
+It should be a string attribute (not tested with others)</p></li>
+<li><p><strong>s_att2</strong> (<em>str</em>) – Name of the second attribute of the source node.
+It should be a string attribute, though it could work with
+integers too (not fully tested).</p></li>
+<li><p><strong>t_att</strong> (<em>str</em>) – Name of the attribute of the target node.
+It should be a string attribute (not tested with others)</p></li>
+<li><p><strong>t_att2</strong> (<em>str or None, optional (default=None)</em>) – Name of the second attribute of the target node
+It should be a string attribute (not tested with others)</p></li>
+<li><p><strong>template_html</strong> (<em>str</em>) – Name of the template html file.</p></li>
+<li><p><strong>template_js</strong> (<em>str</em>) – Name of the template js file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.equivalence_graph">
+<span class="sig-name descname"><span class="pre">equivalence_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.equivalence_graph" title="Permalink to this definition"></a></dt>
+<dd><p>This method manages the equivalence graph, which is a graph that
+connects all nodes with the same topic vector into its equivalence
+class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to snode</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.export_bigraph">
+<span class="sig-name descname"><span class="pre">export_bigraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.export_bigraph" title="Permalink to this definition"></a></dt>
+<dd><p>Export bipartite graph from csv files to neo4J.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path2graph</strong> (<em>str</em>) – Path to graph</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.export_graph">
+<span class="sig-name descname"><span class="pre">export_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_nodes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.export_graph" title="Permalink to this definition"></a></dt>
+<dd><p>Export graphs from csv files to neo4J.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path2graph</strong> (<em>str</em>) – Path to graph</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.generate_minigraph">
+<span class="sig-name descname"><span class="pre">generate_minigraph</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.generate_minigraph" title="Permalink to this definition"></a></dt>
+<dd><p>Generates a hand-made minigraph for testing purposes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.getGDBstruct">
+<span class="sig-name descname"><span class="pre">getGDBstruct</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.getGDBstruct" title="Permalink to this definition"></a></dt>
+<dd><p>Get structure of the graph database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>snodes</strong> (<em>list</em>) – Name of snodes</p></li>
+<li><p><strong>sedges</strong> (<em>list</em>) – Name of sedges</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.get_Neo4J_sedges">
+<span class="sig-name descname"><span class="pre">get_Neo4J_sedges</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.get_Neo4J_sedges" title="Permalink to this definition"></a></dt>
+<dd><p>Get sedges in Neo4J db</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sedges</strong> – Name of sedges</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.get_Neo4J_snodes">
+<span class="sig-name descname"><span class="pre">get_Neo4J_snodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.get_Neo4J_snodes" title="Permalink to this definition"></a></dt>
+<dd><p>Get snodes in Neo4J db</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>snodes</strong> – Name of snodes</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.get_attributes">
+<span class="sig-name descname"><span class="pre">get_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.get_attributes" title="Permalink to this definition"></a></dt>
+<dd><p>Returns attributes of the graph in path. At this time, this version
+returns communities only. Eventually, it should be able to return all
+attributes that could be transformed in independent snodes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>c</strong> – List of attributes</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.get_communities">
+<span class="sig-name descname"><span class="pre">get_communities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.get_communities" title="Permalink to this definition"></a></dt>
+<dd><p>Returns community models of the graph in path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>atts</strong> – List of community models computed for the graph</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.get_graphs_with_features">
+<span class="sig-name descname"><span class="pre">get_graphs_with_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.get_graphs_with_features" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a list of the available snodes with saved attributes</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.get_local_features">
+<span class="sig-name descname"><span class="pre">get_local_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.get_local_features" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the local features available for the graph in path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>atts</strong> – List of local features computed for the graph</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.get_names_of_SQL_dbs">
+<span class="sig-name descname"><span class="pre">get_names_of_SQL_dbs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.get_names_of_SQL_dbs" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the list of available databases</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.get_names_of_dataset_tables">
+<span class="sig-name descname"><span class="pre">get_names_of_dataset_tables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.get_names_of_dataset_tables" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the list of available tables with raw graph data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.get_source_atts">
+<span class="sig-name descname"><span class="pre">get_source_atts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.get_source_atts" title="Permalink to this definition"></a></dt>
+<dd><p>Returns attributes of the source snode for the bipartite graph in path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to data</p></li>
+<li><p><strong>args</strong> (<em>tuple, optional</em>) – Possible extra arguments that are ignored</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>atts</strong> – List of available attributes at the selected snode</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.get_sql_table_names">
+<span class="sig-name descname"><span class="pre">get_sql_table_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.get_sql_table_names" title="Permalink to this definition"></a></dt>
+<dd><p>Get tables in the given database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>db</strong> (<em>str</em>) – Name of the database</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>table_names</strong> – Names of the tables in the database</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.get_table_atts">
+<span class="sig-name descname"><span class="pre">get_table_atts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.get_table_atts" title="Permalink to this definition"></a></dt>
+<dd><p>Get table attributes in the given database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> (<em>str</em>) – Not used</p></li>
+<li><p><strong>db</strong> (<em>str</em>) – Name of the database</p></li>
+<li><p><strong>table</strong> (<em>str</em>) – Name of the table to read attributes</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>table_names</strong> – Names of the tables in the database</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.get_target_atts">
+<span class="sig-name descname"><span class="pre">get_target_atts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.get_target_atts" title="Permalink to this definition"></a></dt>
+<dd><p>Returns attributes of the target snode for the bipartite graph in path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to data</p></li>
+<li><p><strong>args</strong> (<em>tuple, optional</em>) – Possible extra arguments that are ignored</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>atts</strong> – List of available attributes at the selected snode</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.graph_layout">
+<span class="sig-name descname"><span class="pre">graph_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2snode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.graph_layout" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the layout of the given graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path2snode</strong> (<em>str</em>) – Path to snode</p></li>
+<li><p><strong>attribute</strong> (<em>str</em>) – Snode attribute used to color the graph</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.import_SCOPUS_citations_graph">
+<span class="sig-name descname"><span class="pre">import_SCOPUS_citations_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_of_graph</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.import_SCOPUS_citations_graph" title="Permalink to this definition"></a></dt>
+<dd><p>Loads a citations graph from table citations in SCOPUS SQL database</p>
+<p>The graph is not restricted to the docs with Spanish authors. It
+includes all items in the citations table (about 5.8 M nodes).</p>
+<p>No attributes are included, because the SCOPUS database contains
+attributes from a small subset of papers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>type_of_graph</strong> (<em>str {‘undirected’, ‘cite_to’, ‘cited_by’}</em>) – Type of graph</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.import_SCOPUS_citations_subgraph">
+<span class="sig-name descname"><span class="pre">import_SCOPUS_citations_subgraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_of_graph</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.import_SCOPUS_citations_subgraph" title="Permalink to this definition"></a></dt>
+<dd><p>Loads a citations subgraph from table ‘citations’ in SCOPUS SQL
+database</p>
+<p>The subgraph contains the nodes with attributes in table ‘document’
+form the same databse.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>type_of_graph</strong> (<em>str {‘undirected’, ‘cite_to’, ‘cited_by’}</em>) – Type of graph</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.import_agents">
+<span class="sig-name descname"><span class="pre">import_agents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2tables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2snode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.import_agents" title="Permalink to this definition"></a></dt>
+<dd><p>Import agents</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path2tables</strong> (<em>str</em>) – Path to tables</p></li>
+<li><p><strong>path2snode</strong> (<em>str</em>) – Path to snode</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.import_and_infer_sim_graph">
+<span class="sig-name descname"><span class="pre">import_and_infer_sim_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_epn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.import_and_infer_sim_graph" title="Permalink to this definition"></a></dt>
+<dd><p>This method manages the generation of similarity (semantic) graphs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to the model</p></li>
+<li><p><strong>sim</strong> (<em>str</em>) – Similarity measure</p></li>
+<li><p><strong>n0</strong> (<em>int or float of None, optional (default=None)</em>) – Number of nodes. If None, it is requested to the user.
+If 0 &lt; n_epn &lt; 1, it is the fraction of the total no. of nodes
+If 0, all nodes are taken.</p></li>
+<li><p><strong>n_epn</strong> (<em>int or None, optional (default=None)</em>) – Average number of edges per node. If None, it is requested to the
+user. If 0, 10 nodes are taken.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.import_co_citations_graph">
+<span class="sig-name descname"><span class="pre">import_co_citations_graph</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.import_co_citations_graph" title="Permalink to this definition"></a></dt>
+<dd><p>Loads a co-citations-graph (only for ACL) and saves it in a new snode</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.import_node_atts">
+<span class="sig-name descname"><span class="pre">import_node_atts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dbname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">att</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">att_ref</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.import_node_atts" title="Permalink to this definition"></a></dt>
+<dd><p>Load attributes from a given table from a SQL database and add them to
+a given snode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to the graph to add the new attribute</p></li>
+<li><p><strong>db</strong> (<em>str</em>) – Type of the database storing the data</p></li>
+<li><p><strong>table</strong> (<em>str</em>) – Name of the table in the given db that contains tue attribute</p></li>
+<li><p><strong>att</strong> (<em>str</em>) – Name of the attribute</p></li>
+<li><p><strong>att_ref</strong> (<em>str</em>) – Name of the attribute containing the node identifier</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.import_nodes_and_model">
+<span class="sig-name descname"><span class="pre">import_nodes_and_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.import_nodes_and_model" title="Permalink to this definition"></a></dt>
+<dd><p>This method manages the generation of similarity (semantic)
+graphs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to the model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.import_snode_from_table">
+<span class="sig-name descname"><span class="pre">import_snode_from_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.import_snode_from_table" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.inferBGfromA">
+<span class="sig-name descname"><span class="pre">inferBGfromA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.inferBGfromA" title="Permalink to this definition"></a></dt>
+<dd><p>Infer bipartite graph from a categorical attribute</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to snode</p></li>
+<li><p><strong>attribute</strong> (<em>str</em>) – Name of the snode attribute used to generate the bipartite graph</p></li>
+<li><p><strong>t_label</strong> (<em>str or None, optional (default=None)</em>) – Name of the target s_node</p></li>
+<li><p><strong>e_label</strong> (<em>str or None, optional (default=None)</em>) – Name of the bipartite graph</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.inferSimBG">
+<span class="sig-name descname"><span class="pre">inferSimBG</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.inferSimBG" title="Permalink to this definition"></a></dt>
+<dd><p>Not available</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.inferTransit">
+<span class="sig-name descname"><span class="pre">inferTransit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_xm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_my</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.inferTransit" title="Permalink to this definition"></a></dt>
+<dd><p>Infer transitive graph from two bipartite graphs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_xm</strong> (<em>str</em>) – Path to first bipartite graph (sedge)</p></li>
+<li><p><strong>path_my</strong> (<em>str</em>) – Path to second bipartite graph (sedge)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.infer_eq_simgraph">
+<span class="sig-name descname"><span class="pre">infer_eq_simgraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.infer_eq_simgraph" title="Permalink to this definition"></a></dt>
+<dd><p>This method manages the generation of an equivalence similarity
+(semantic) graph.</p>
+<p>It is similar to a concatenatio of self.equivalence_graph() (to
+transform the original topic matrix into the reduced matrix without row
+repetitions) and infer_sim_graph() (to compute the similarity graph)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to the model</p></li>
+<li><p><strong>sim</strong> (<em>str</em>) – Similarity measure</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.infer_ppr_graph">
+<span class="sig-name descname"><span class="pre">infer_ppr_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.infer_ppr_graph" title="Permalink to this definition"></a></dt>
+<dd><p>Compute a transductive graph from a snode and a sedge</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to the sedge (snode is inferred from the sedge name)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.infer_sim_bigraph">
+<span class="sig-name descname"><span class="pre">infer_sim_bigraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.infer_sim_bigraph" title="Permalink to this definition"></a></dt>
+<dd><p>This method manages the generation of similarity (semantic) bipartite
+graphs.</p>
+<p>It assumes that the feature vectors in source and target nodes are
+comparable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s_label</strong> (<em>str</em>) – Name of the source graph (it must contain a feature matrix)</p></li>
+<li><p><strong>t_path</strong> (<em>str</em>) – Name of the source graph (it must contain a feature matrix that was
+comparable to that of the source graph)</p></li>
+<li><p><strong>sim</strong> (<em>str</em>) – Similarity measure</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.infer_sim_graph">
+<span class="sig-name descname"><span class="pre">infer_sim_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2snode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_epn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.infer_sim_graph" title="Permalink to this definition"></a></dt>
+<dd><p>This method manages the generation of similarity (semantic) graphs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path2snode</strong> (<em>str</em>) – Path to the snode</p></li>
+<li><p><strong>sim</strong> (<em>str</em>) – Similarity measure</p></li>
+<li><p><strong>n0</strong> (<em>int or float of None, optional (default=None)</em>) – Number of nodes. If None, it is requested to the user.
+If 0 &lt; n_epn &lt; 1, it is the fraction of the total no. of nodes
+If 0, all nodes are taken.</p></li>
+<li><p><strong>n_epn</strong> (<em>int or None, optional (default=None)</em>) – Average number of edges per node. If None, it is requested to the
+user. If 0, 10 nodes are taken.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.largest_community_subgraph">
+<span class="sig-name descname"><span class="pre">largest_community_subgraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.largest_community_subgraph" title="Permalink to this definition"></a></dt>
+<dd><p>Subsample graph taking the nodes from the largest community.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to graph</p></li>
+<li><p><strong>comm</strong> (<em>str</em>) – Name of the community</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_struct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.load" title="Permalink to this definition"></a></dt>
+<dd><p>Loads an existing project, by reading the metadata file in the project
+folder.</p>
+<p>It can be used to modify file or folder names, or paths, by specifying
+the new names/paths in the f_struct dictionary.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>f_struct</strong> (<em>dict or None, optional (default=None)</em>) – Contains all information related to the structure of project files
+and folders: paths (relative to ppath), file names, suffixes,
+prefixes or extensions that could be used to define other files
+or folders.
+(default names are used when not given)</p>
+<p>If None, default names are given to the whole folder tree</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.local_graph_analysis">
+<span class="sig-name descname"><span class="pre">local_graph_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.local_graph_analysis" title="Permalink to this definition"></a></dt>
+<dd><p>Computes a local parameter for a snode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parameter</strong> (<em>str</em>) – Local parameter to compute</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to snode</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.remove_isolated_nodes">
+<span class="sig-name descname"><span class="pre">remove_isolated_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.remove_isolated_nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Remove isolated nodes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to snode</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.remove_snode_attributes">
+<span class="sig-name descname"><span class="pre">remove_snode_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">att</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.remove_snode_attributes" title="Permalink to this definition"></a></dt>
+<dd><p>Load attributes from a given table from a SQL database and add them to
+a given snode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to the graph where the attribute must be removed</p></li>
+<li><p><strong>att</strong> (<em>str</em>) – Name of the attribute</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.resetGDBdata">
+<span class="sig-name descname"><span class="pre">resetGDBdata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sedges</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.resetGDBdata" title="Permalink to this definition"></a></dt>
+<dd><p>Reset (drop and create emtpy) tables from the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>option</strong> (<em>str</em>) – Selected node or edge to reset</p></li>
+<li><p><strong>snodes</strong> (<em>list</em>) – List of available nodes</p></li>
+<li><p><strong>sedges</strong> – List of available sedges</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.reset_Neo4J">
+<span class="sig-name descname"><span class="pre">reset_Neo4J</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.reset_Neo4J" title="Permalink to this definition"></a></dt>
+<dd><p>Reset the whole database</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.reset_Neo4J_sedge">
+<span class="sig-name descname"><span class="pre">reset_Neo4J_sedge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sedge</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.reset_Neo4J_sedge" title="Permalink to this definition"></a></dt>
+<dd><p>Reset (drop and create emtpy) tables from the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sedge</strong> (<em>str</em>) – Selected node or edge to reset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.reset_Neo4J_snode">
+<span class="sig-name descname"><span class="pre">reset_Neo4J_snode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.reset_Neo4J_snode" title="Permalink to this definition"></a></dt>
+<dd><p>Reset (drop and create emtpy) tables from the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>snode</strong> (<em>str</em>) – Selected node or edge to reset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.reset_sedge">
+<span class="sig-name descname"><span class="pre">reset_sedge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.reset_sedge" title="Permalink to this definition"></a></dt>
+<dd><p>Reset sedge in path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to sedge</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.reset_snode">
+<span class="sig-name descname"><span class="pre">reset_snode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.reset_snode" title="Permalink to this definition"></a></dt>
+<dd><p>Reset snode in path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to snode</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.save_metadata">
+<span class="sig-name descname"><span class="pre">save_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.save_metadata" title="Permalink to this definition"></a></dt>
+<dd><p>Save metadata into a pickle file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.set_logs">
+<span class="sig-name descname"><span class="pre">set_logs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.set_logs" title="Permalink to this definition"></a></dt>
+<dd><p>Configure logging messages.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.setup" title="Permalink to this definition"></a></dt>
+<dd><p>Set up the classification projetc. To do so:</p>
+<ol class="arabic simple">
+<li><p>Loads the configuration file and initializes the data manager.</p></li>
+<li><p>Creates a DB table.</p></li>
+</ol>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.showGDBdata">
+<span class="sig-name descname"><span class="pre">showGDBdata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sedges</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.showGDBdata" title="Permalink to this definition"></a></dt>
+<dd><p>Print a general overview of the selected database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>option</strong> (<em>str</em>) – Name of the db table</p></li>
+<li><p><strong>snodes</strong> (<em>list</em>) – List of snodes</p></li>
+<li><p><strong>sedges</strong> (<em>list</em>) – List of sedges</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.showSDBdata">
+<span class="sig-name descname"><span class="pre">showSDBdata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.showSDBdata" title="Permalink to this definition"></a></dt>
+<dd><p>Print a general overview of the selected source (SQL) database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>option</strong> (<em>str</em>) – Name of the db table</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.show_Neo4J">
+<span class="sig-name descname"><span class="pre">show_Neo4J</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.show_Neo4J" title="Permalink to this definition"></a></dt>
+<dd><p>Print a general overview of the whole database</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.show_Neo4J_sedge">
+<span class="sig-name descname"><span class="pre">show_Neo4J_sedge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sedge</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.show_Neo4J_sedge" title="Permalink to this definition"></a></dt>
+<dd><p>Print a general overview of the selected sedge</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sedge</strong> (<em>str</em>) – Name of the sedge</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.show_Neo4J_snode">
+<span class="sig-name descname"><span class="pre">show_Neo4J_snode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.show_Neo4J_snode" title="Permalink to this definition"></a></dt>
+<dd><p>Print a general overview of the selected snode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>snode</strong> (<em>str</em>) – Name of the snode</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.show_SuperGraph">
+<span class="sig-name descname"><span class="pre">show_SuperGraph</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.show_SuperGraph" title="Permalink to this definition"></a></dt>
+<dd><p>Show current supergraph structure</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.show_sedge">
+<span class="sig-name descname"><span class="pre">show_sedge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2sedge</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.show_sedge" title="Permalink to this definition"></a></dt>
+<dd><p>A quick preview of a superedge.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path2sedge</strong> (<em>str</em>) – Path to the superedge</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.show_snode">
+<span class="sig-name descname"><span class="pre">show_snode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2snode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.show_snode" title="Permalink to this definition"></a></dt>
+<dd><p>A quick preview of a supernode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path2snode</strong> (<em>str</em>) – Path to the supernode</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.show_top_nodes">
+<span class="sig-name descname"><span class="pre">show_top_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.show_top_nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Shows a reduced list of nodes from a given graph, ranked by the value
+of a single feature</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to the graph</p></li>
+<li><p><strong>feature</strong> (<em>str</em>) – Name of the local feature</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.subsample_graph">
+<span class="sig-name descname"><span class="pre">subsample_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.subsample_graph" title="Permalink to this definition"></a></dt>
+<dd><p>Subsample graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to graph</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) – If ‘newgraph’, create a new snode with the subgraph</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.transduce">
+<span class="sig-name descname"><span class="pre">transduce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.transduce" title="Permalink to this definition"></a></dt>
+<dd><p>Compute a transductive graph from a snode and a sedge</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to the sedge (snode is inferred from the sedge name)</p></li>
+<li><p><strong>order</strong> (<em>int</em>) – Order parameters of the transduced graph</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sgtaskmanager.SgTaskManager.update_folders">
+<span class="sig-name descname"><span class="pre">update_folders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_struct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sgtaskmanager.SgTaskManager.update_folders" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the project folder structure using the file and folder
+names in f_struct.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>f_struct</strong> (<em>dict or None, optional (default=None)</em>) – Contains all information related to the structure of project files
+and folders: paths (relative to ppath), file names, suffixes,
+prefixes or extensions that could be used to define other files
+or folders.
+(default names are used when not given)</p>
+<p>If None, default names are given to the whole folder tree</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="rdigraphs_supergraph.html" class="btn btn-neutral float-left" title="Supergraph" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, J. Cid-Sueiro, M. A. Vázquez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

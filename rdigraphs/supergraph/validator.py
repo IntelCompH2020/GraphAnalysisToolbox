@@ -216,7 +216,7 @@ class Validator(object):
                 # Note that node names are loaded as string type.
                 df_nodes = pd.read_csv(path2nodenames, usecols=[ref_col],
                                        lineterminator='\n', dtype=str)
-            except:
+            except Exception:
                 df_nodes = pd.read_csv(path2nodenames, usecols=[ref_col],
                                        dtype=str)
 

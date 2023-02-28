@@ -20,7 +20,7 @@ from dask.diagnostics import ProgressBar
 try:
     import tkinter as tk
     from tkinter import filedialog
-except:
+except Exception:
     print("WARNING: tkinter import failed. GUI will not work")
     pass
 
@@ -97,9 +97,9 @@ class DMneo4j(BaseDMneo4j):
 
 class DataManager(object):
     """
-    This is the datamanager for the RDI project. It provides functionality to
-    manage both the neo4j graph DB and the SQL databased containing the source
-    data. To do so, it uses generic managers for Neo4j and SQL.
+    This is the datamanager for a supergraph project. It provides functionality
+    to manage both the neo4j graph DB and the SQL databased containing the
+    source data. To do so, it uses generic managers for Neo4j and SQL.
     """
 
     def __init__(self, path2project, db_params, path2source=None):
@@ -110,7 +110,7 @@ class DataManager(object):
         File operation methods available.
 
         Also, several SQL and Neo4J DataManager objects are created to
-        facitlitate interaction with databases.
+        facilitate interaction with databases.
 
         Each SQL manager is stored in dictionary self.SQL. Tipically:
 
@@ -195,9 +195,9 @@ class DataManager(object):
 
             try:
                 self.Neo4j = DMneo4j(server, password, user)
-            except:
+            except Exception:
                 logging.warning("-- Neo4J DB connection failed. "
-                                "Graph data are not accessible")
+                                "Graph DB data are not accessible")
                 self.dbON = False
 
         return
@@ -660,8 +660,8 @@ class DataManager(object):
         external_nodes_set = citing_set - nodes_set
 
         # Mapping nodes to a binary flag indicating membership to df_nodes
-        nodes_dict = dict([(x, 1) for x in list(nodes_set)] +
-                          [(x, 0) for x in list(external_nodes_set)])
+        nodes_dict = dict([(x, 1) for x in list(nodes_set)]
+                          + [(x, 0) for x in list(external_nodes_set)])
 
         # Select edges connecting nodes in df_nodes only
         edges = [x for x in zip(source_nodes, target_nodes)

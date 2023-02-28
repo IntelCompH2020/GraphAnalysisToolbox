@@ -5,7 +5,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import logging
-import ipdb
 
 """
 This script contains several methods to logging.info(and visualize components
@@ -37,12 +36,11 @@ def printStats(df_nodes, label):
         is_data = np.array([0 if d == '' or d is None else 1
                             for d in df_nodes[tok]])
         n_data = np.count_nonzero(is_data)
-        if type(df_nodes[tok][0]) is np.float64:
+        if isinstance(df_nodes[tok][0], np.float64):
             n_nan = np.count_nonzero(
                 [np.isnan(d) for d in df_nodes[tok]])
             n_data -= n_nan
-        logging.info("-- -- Non empty values of field {0}: {1}".format(
-                     tok, n_data))
+        logging.info(f"-- -- Non empty values of field {tok}: {n_data}")
     logging.info('')
 
 
@@ -111,8 +109,8 @@ def plotSortedFeatures(X, fpath=None):
     ax.set_ylabel('Topic weight')
     ax.set_ylim([0, ax.get_ylim()[1]])
 
-    logging.info("-- -- The mean of the sorted topic distribution is " +
-                 "{0}".format(x_mean.dot(ind)))
+    logging.info(f"-- -- The mean of the sorted topic distribution is "
+                 f"{x_mean.dot(ind)}")
 
     plt.show(block=False)
 
@@ -174,14 +172,14 @@ def plotMainTopic(X, fpath=None):
     n_nodes = X.shape[0]
     num_x = []
     for i in ind:
-        num_x.append(float(np.count_nonzero(main_topics == i)) /
-                     n_nodes * 100)
+        num_x.append(float(np.count_nonzero(main_topics == i))
+                     / n_nodes * 100)
 
     # Count nodes with a highly dominant topic
     Xdom = X >= 0.5
     dom_x = np.sum(Xdom, axis=0).astype(float) / n_nodes * 100
 
-    logging.info(("-- -- There is as strong dominant topic (with weight > " +
+    logging.info(("-- -- There is as strong dominant topic (with weight > "
                   "0.5 in {0} % of nodes").format(np.sum(dom_x)))
 
     width = 0.8       # the width of the bars
@@ -299,7 +297,7 @@ def printClusters(M):
 
     #     logging.info(u"Clúster {0}: tópicos ".format(c), Tdict[c]
 
-    logging.info("Topicos que conjuntamente superan el 50 % del peso total")
+    logging.info("Topics that jointly surpass 50 % of total weight")
 
     for c in range(nc):
 
@@ -342,7 +340,7 @@ def rankEdges(df_edges, df_nodes, fields, n):
     """
 
     # Get indices of the n highest nodes.
-    ind = np.argsort(df_edges['Weight'].tolist())[-1:-n-1:-1]
+    ind = np.argsort(df_edges['Weight'].tolist())[-1:-n - 1:-1]
 
     logging.info("-- -- Most Similar Edges")
 
@@ -354,4 +352,3 @@ def rankEdges(df_edges, df_nodes, fields, n):
         tname = df_nodes[df_nodes[fields[0]] == target][fields[1]].tolist()[0]
         w = df_edges.loc[i]['Weight']
         logging.info(sname + ', ' + tname + ': ' + str(w))
-

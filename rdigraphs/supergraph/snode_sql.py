@@ -73,12 +73,12 @@ class DataGraph_sql(DataGraph):
 
         # Separate fields from the main table and fields to read from other
         # tables in the db.
-        self.base_fields = [x for x in self.fields if type(x) is not tuple]
+        self.base_fields = [x for x in self.fields if not isinstance(x, tuple)]
 
         # Each sub-field is a tuple whose first component is the name of the
         # table containing the data dn the second component is the list of
         # attributes to load.
-        self.sub_fields = [x for x in self.fields if type(x) is tuple]
+        self.sub_fields = [x for x in self.fields if isinstance(x, tuple)]
 
         # Read nodes and node attributes from database
         idREF = self.base_fields.index(self.REF)
@@ -182,7 +182,7 @@ class DataGraph_sql(DataGraph):
                 df_nodes[t] = map(lambda x: x[n], rawData)
                 # The following is necessary to save the graph data in a csv
                 # file to be read by gephi (not sure why)
-                if type(rawData[0][n]) == unicode:
+                if isinstance(rawData[0][n], unicode):
                     df_nodes[t] = df_nodes[t].str.encode('utf8')
 
         return nodes, df_nodes

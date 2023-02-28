@@ -20,6 +20,13 @@ from rdigraphs.sim_graph.sim_graph import SimGraph
 
 EPS = np.finfo(float).tiny
 
+# Upper bound of several distance measures between probability
+# distributions
+R2_MAX_HE = 2   # Maximum squared Hellinger distance
+R2_MAX_JS = 1   # Maximum squared JS divergence
+R2_MAX_L2 = 2   # Maximum squared L2 distance
+R_MAX_L1 = 2    # Maximum L1 distance
+
 
 class SimBiGraph(SimGraph):
 
@@ -55,6 +62,7 @@ class SimBiGraph(SimGraph):
         # Graph variables
         self.n_source = X.shape[0]
         self.n_target = Y.shape[0]
+        self.s_min = None       # Similarity threshold       
 
         # ###############
         # Other variables
@@ -75,38 +83,40 @@ class SimBiGraph(SimGraph):
 
         return
 
-    def computeGraph(self, R=None, n_edges=None, **kwargs):
+    def sim_graph(self, s_min=None, n_edges=None, **kwargs):
         """
         Computes a sparse graph for a given radius or for a given number of
         edges
 
         Parameters
         ----------
-        R : float
-            (only for rescale=True). Radius bound
+        s_min : float or None, optional (default=None)
+            Similarity threshold. Edges link all data pairs with similarity
+            higher than R. This forzes a sparse graph.
         n_edges : int
             Number of edges
         """
 
         # Check if the selected similarity measure is available
         if kwargs['sim'] in ['He2', 'He2->JS']:
-            super().computeGraph(R=R, n_edges=n_edges, **kwargs)
+            super().sim_graph(s_min=s_min, n_edges=n_edges, **kwargs)
         else:
-            logging.error(f"-- -- Similarity {kwargs['sim']} is not " +
+            logging.error(f"-- -- Similarity {kwargs['sim']} is not "
                           "available for bipartite graphs")
 
         return
 
-    def _computeGraph(self, R=None, sim='He', g=1, rescale=True, verbose=True):
+    def _compute_sim_graph_from_threshold(
+            self, s_min=None, sim='He2', mapping='linear', g=1, verbose=True):
         """
         Computes a sparse graph for the self graph structure.
-        The self graph must containg a T-matrix, self.T
+        The self graph must contain a feature matrix, self.X
 
         Parameters
         ----------
-        R : float
-            Radius. Edges link all data pairs at distance lower than R
-            This is to forze a sparse graph.
+        s_min : float or None, optional (default=None)
+            Similarity threshold. Edges link all data pairs with similarity
+            higher than R. This forzes a sparse graph.
         sim : string
             Similarity measure used to compute affinity matrix
             Available options are:
@@ -117,10 +127,7 @@ class SimBiGraph(SimGraph):
 
         g : float
             Exponent for the affinity mapping
-        rescale : boolean, optional (default=True)
-            If True, affinities are computed from distances by rescaling
-            values so that the minimum is zero and maximum is 1.
-        verbose : boolean
+        verbose : boolean, optional (default=True)
             (Only for he_neighbors_graph()). If False, block-by-block
             messaging is omitted
 
@@ -132,72 +139,99 @@ class SimBiGraph(SimGraph):
             in edge_ids)
         """
 
-        logging.info(f"-- Computing graph with {self.n_nodes} nodes")
-        logging.info(f"-- Similarity measure: {sim}")
-
-        # #########################
-        # Computing Distance Matrix
+        logging.info(f"-- Computing {sim} graph with {self.n_nodes} nodes")
+        t0 = time()
 
         # This is just to abbreviate
         X = self.X
         Y = self.Y
 
-        # Select secondary radius
-        if sim == 'He2->JS':
-            R0 = np.sqrt(2) * R
-            logging.info(f'-- -- Hellinger-radius bound for JS: {R0}')
-        else:
-            # The target radius
-            R0 = R
-
-        # Compute the connectivity graph of all pair of nodes at distance
-        # below R0
-        t0 = time()
-        logging.info(f'-- -- Computing neighbors_graph ...')
-        if sim == 'He2->JS':
-            # Compute connnectivity graph
-            self.edge_ids = self.he_neighbors_bigraph(
-                X, Y, R0, mode='connectivity', verbose=verbose)
-        elif sim == 'He2':
-            # Compute distance graph
-            self.edge_ids, he_dist2 = self.he_neighbors_bigraph(
-                X, Y, R0, mode='distance', verbose=verbose)
-        logging.info(f'       in {time()-t0} seconds')
-
-        # ####################
-        # Computing Affinities
-
-        n_edges = len(self.edge_ids)
-        logging.info(f"-- -- Computing affinities for {n_edges} edges...")
-        t0 = time()
-
-        if sim == 'He2->JS':
-            # For methods ->JS, the distance computed by the neighors_graph
-            # method is not the target distance JS.
-            # A new self.edge_ids is returned because the function filters out
-            # affinity values below th.
-            self.edge_ids, self.weights = self.JS_affinity(
-                X, Y, R=R, g=g, rescale=rescale)
-        else:
+        # Compute edges and weights of the similarity graph
+        if sim == 'He2':
+            R2 = self.sim2div(s_min, g=g, mapping=mapping, B=R2_MAX_HE)
+            self.edge_ids, d2 = self.he_neighbors_bigraph(
+                X, Y, R2=R2, mode='distance', verbose=verbose)
             # Transform list of distances into similarities
-            self.weights = self._d2_to_sim(he_dist2, sim, g, rescale, R)
+            self.weights = self.div2sim(
+                d2, mapping=mapping, g=g, B=R2_MAX_HE)
 
-        n_edges = len(self.edge_ids)
-        logging.info(f"      reduced to {n_edges} edges")
-        logging.info(f'      Computed in {time()-t0} seconds')
-        logging.info(f"-- -- Graph generated with {self.n_nodes} nodes and " +
-                     f" {n_edges} edges")
+        elif sim == 'He2->JS':
+            R2 = self.sim2div(s_min, g=g, mapping=mapping, B=R2_MAX_JS)
+            R_he = np.sqrt(2 * R2)
+            logging.info(f'-- -- Hellinger-radius bound for JS: {R_he}')
+            self.connectivity_graph(R=R_he, metric='He2', verbose=verbose)
+            n_edges = len(self.edge_ids)
+            logging.info(f"-- -- Computing affinities for {n_edges} edges...")
+            self.edge_ids, self.weights = self.JS2_affinity(X, Y, R2=R2, g=g)
+            n_edges = len(self.edge_ids)
+            logging.info(f"      reduced to {n_edges} edges")
+
+        else:
+            raise ValueError('Unknown similarity measure')
+
+        logging.info(f'      Computed in {time()-t0:.4f} seconds')
 
         return
 
-    def _compute_graph_from_nedges(self, n_edges, sim='He2', g=1, rescale=True,
-                                   verbose=True):
+    def connectivity_graph(self, R=None, metric='JS', verbose=True):
+        """
+        Computes a sparse connectivity graph for the self graph structure.
+        The self graph must contain matrix self.X
+
+        Parameters
+        ----------
+        R : float
+            Radius. Edges link all data pairs at distance lower than R
+            This is to forze a sparse graph.
+        metric : string
+            Similarity measure used to compute affinity matrix
+            Available options are:
+
+            'He2', 1 minus squared Hellinger distance (self implementation)
+
+        verbose : boolean, optional (default=True)
+            (Only for he_neighbors_graph()). If False, block-by-block
+            messaging is omitted
+
+        Returns
+        -------
+        self : object
+            Changes in attributes self.edge_ids (List of edges, as pairs (i, j)
+            of indices) and self.weights (list of affinity values for each pair
+            in edge_ids)
+        """
+
+        logging.info(f"-- -- Computing {metric} connectivity graph with "
+                     f"{self.n_nodes} nodes")
+
+        # #############################
+        # Computing Connectivity Matrix
+
+        # Compute the connectivity graph of all pair of nodes at distance
+        # below R
+        t0 = time()
+        if metric == 'He2':
+            self.edge_ids = self.he_neighbors_bigraph(
+                self.X, self.Y, R2=R**2, mode='connectivity', verbose=verbose)
+        else:
+            logging.error("connectivity_graph: Unknown similarity measure")
+            exit()
+
+        n_edges = len(self.edge_ids)
+        logging.info(f'      Computed in {time()-t0} seconds')
+        logging.info(f"-- -- Connectivity graph generated with {self.n_nodes} "
+                     f"nodes and {n_edges} edges")
+
+        return
+
+    def _compute_sim_graph_from_nedges(
+            self, n_edges, sim='He2', mapping='linear', g=1, verbose=True):
         """
         Computes a sparse graph for a fixed number of edges.
 
-        It computes the sparse graph form matrig X. The distance threshold R
-        to sparsify the graph is chosend in such a way that the resulting graph
-        has n_edges edges.
+        It computes the sparse graph from matrix self.X. The distance threshold
+        R to sparsify the graph is chosend in such a way that the resultin
+        graph has n_edges edges.
 
         Parameters
         ----------
@@ -213,9 +247,6 @@ class SimBiGraph(SimGraph):
 
         g : float
             Exponent for the affinity mapping (not used for 'Gauss')
-        rescale : boolean, optional (default=True)
-            If True, affinities are computed from distances by rescaling
-            values so that the minimum is zero and maximum is 1.
         verbose : boolean
             (Only for he_neighbors_graph()). If False, block-by-block
             messaging is omitted
@@ -235,9 +266,10 @@ class SimBiGraph(SimGraph):
         # n_edges, we will try to find a graph with approximately n_edges_top,
         # where n_edges_top > n_edges
         n_edges_top = n_edges     # Initial equality, but revised below
+
         while not size_ok:
             # Excess number of edges.
-            n_edges_top = int(1.2 * n_edges_top)
+            n_edges_top = int(1.2 * n_edges_top) + 1
 
             # ##############################################################
             # First goal: find a dense graph, with less nodes but n_edges...
@@ -251,8 +283,8 @@ class SimBiGraph(SimGraph):
                 int(np.sqrt(n_edges_top * self.n_target / self.n_source)) + 1,
                 self.n_target)
 
-            # Initial radius to guarantee a dense graph
-            R = 1e100    # A very large number higher than any upper bound ...
+            # Initial similarity threshold to guarantee a dense graph
+            s_min = -0.01    # Any number smaller than any lower bound ...
 
             # Take n_n nodes selected at random
             np.random.seed(3)
@@ -266,16 +298,16 @@ class SimBiGraph(SimGraph):
 
             # Compute dense graph
             subg = SimBiGraph(X_sg, Y_sg, blocksize=self.blocksize)
-            subg.computeGraph(R=R, sim=sim, g=g, rescale=False,
-                              verbose=verbose)
+            subg.sim_graph(
+                s_min=s_min, sim=sim, mapping=mapping, g=g, verbose=verbose)
 
             # Check if the number of edges is highet than the target. This
             # should not happen. Maybe only for X_sg with repeated rows
             n_e = len(subg.weights)
-            size_ok = ((n_e >= n_edges) |
-                       (n_s == self.n_source) & (n_t == self.n_target))
+            size_ok = ((n_e >= n_edges)
+                       | (n_s == self.n_source) & (n_t == self.n_target))
             if not size_ok:
-                logging.info(f'-- -- Insufficient graph with {n_e} < ' +
+                logging.info(f'-- -- Insufficient graph with {n_e} < '
                              f'{n_edges} edges. Trying with more nodes')
 
         # Scale factor for the expected number of edges in the second trial.
@@ -293,13 +325,6 @@ class SimBiGraph(SimGraph):
         # n_edges_subg, which should be approximately equal to the one
         # providing n_edges_top
 
-        # Compute the threshold required to get the target links
-        # This is the radius that should provide n_links edges.
-        if sim == 'He2->JS':
-            Rmax = 1
-        elif sim == 'He2':
-            Rmax = np.sqrt(2)
-
         if n_s == self.n_source and n_t == self.n_target:
             size_ok = True
             # The final graph has been computed. Just read it from
@@ -308,58 +333,53 @@ class SimBiGraph(SimGraph):
         else:
             size_ok = False
             # Compute the similarity value to get n_edges_subg
-            w = sorted(list(zip(subg.weights, range(n_e))), reverse=True)
-            w_min = w[n_edges_subg - 1][0]
-            R = Rmax * (1 - w_min) ** (1 / (2 * g))
+            s = sorted(list(zip(subg.weights, range(n_e))), reverse=True)
+            s_min = s[n_edges_subg - 1][0]
 
         while not size_ok:
 
             # Compute graph with the target number of links
-            self.computeGraph(R=R, sim=sim, g=g, rescale=False,
-                              verbose=verbose)
+            logging.info(f'-- -- Trying threshold s_min = {s_min:.4f}...')
+            self.sim_graph(
+                s_min=s_min, sim=sim, mapping=mapping, g=g, verbose=verbose)
 
             size_ok = (len(self.weights) >= n_edges)
 
             if not size_ok:
-                # It the method failed, increase the radius threshold
-                R = 1.2 * R
+                # It the method failed, reduce the similarity threshold
+                s_min = 0.8 * s_min
                 # This is to deal with the case R = 0
-                if R == 0:
-                    # Take the value of R corresponding to the highes w less
+                if s_min == 1:
+                    # Take the value of R corresponding to the highest w less
                     # than 1
-                    w_min = np.max([x if x < 1 else 0 for x in subg.weights])
-                    if w_min > 0:
-                        R = Rmax * (1 - w_min) ** (1 / (2 * g))
+                    s_min = np.max([x if x < 1 else 0 for x in subg.weights])
+                    if s_min > 0:
+                        s_min = s_min
                     else:
                         # If R is still zero, take a fixed value.
-                        R = 0.01
-                logging.warning(f'-- -- Too sparse graph. Trying R = {R}...')
+                        s_min = 0.99
+                logging.warning(
+                    f'-- -- Too sparse graph. Trying R = {s_min}...')
 
         # If we are here, we have got a graph with more than n_edges edges and
         # all nodes. We just need to fit the threshold to get exactpli n_edges
         n_e = len(self.weights)
         w = sorted(list(zip(self.weights, range(n_e))), reverse=True)
         w = w[:n_edges]
-        w_min = w[-1][0]
 
-        ew = [x for x in zip(self.edge_ids, self.weights) if x[1] >= w_min]
+        if len(w) > 0:
+            w_min = w[-1][0]
+            ew = [x for x in zip(self.edge_ids, self.weights) if x[1] >= w_min]
+        else:
+            ew = []
+
         if len(ew) > 0:
             self.edge_ids, self.weights = zip(*ew)
         else:
             self.edge_ids, self.weights = [], []
-        self.R = R
 
-        # Rescale weights if necessary
-        if rescale and R < Rmax:
-            # The following equation results from computing square distances
-            # from the weights, and recomputing the weight with rescaling:
-            # d2**g = (1 - w) * Rmax**(2*g)
-            # w = 1 - d2**g / R**(2*g)
-            # which is equivalent to...
-            self.weights = [max(1 - (1 - w) * (Rmax / (R + EPS))**(2 * g), 0)
-                            for w in self.weights]
-            # (The max operator is just to ensure no negative weighs caused
-            # by finite precision errors)
+        # Maybe not used inside the class, but useful outside
+        self.s_min = s_min
 
         return
 
@@ -395,7 +415,7 @@ class SimBiGraph(SimGraph):
 
         return
 
-    def he_affinity(self, X, Y=None, R=2, g=1, rescale=True):
+    def he_affinity(self, X, Y=None, R2=10, mapping='linear', g=1):
         """
         Compute all Hellinger's affinities between all feature vectors in X
         and all feature vectors in self.Y
@@ -471,7 +491,7 @@ class SimBiGraph(SimGraph):
         # Filtering
 
         # Filter out edges with He distance above R.
-        ed = [z for z in zip(self.edge_ids, d2_he) if z[1] < R**2]
+        ed = [z for z in zip(self.edge_ids, d2_he) if z[1] < R2]
         if len(ed) > 0:
             edge_id, d2 = zip(*ed)
         else:
@@ -480,90 +500,9 @@ class SimBiGraph(SimGraph):
         # ####################
         # Computing affinities
 
-        # Transform distances into affinity values.
-        weights = self._d2_to_sim(d2, 'He', g, rescale, R)
+        # Transform squared distances into affinity values.
+        # Note that we set B equal to the tightest bound on the
+        # squared He distance
+        weights = self.div2sim(d2, mapping=mapping, g=g, B=R2_MAX_HE)
 
         return edge_id, weights
-
-    def JS_affinity(self, X, Y=None, R=1, g=1, rescale=True):
-        """
-        Compute all Jensen-Shannon affinities between all feature vectors in X
-        and all feature vectors in self.Y
-
-        It assumes that all attribute vectors are normalized to sum up to 1
-        Attribute matrix X can be sparse
-
-        Parameters
-        ----------
-        X : numpy array
-            Input matrix of probabilistic attribute vectors
-        Y : numpy array or None, optional (default=None)
-            Input matrix of probabilistic attribute vectors. If None, it is
-            assumed Y=X
-        R : float, optional (default=1)
-            Radius (maximum L1 distance. Edges with higher distance are
-            removed)
-        g : float, optional (default=1)
-            Exponent for the final affinity mapping
-        rescale : boolean, optional (deafault=True)
-            If True, affinity values are rescaled so that the minimum value is
-            zero and the maximum values is one.
-
-        Returns
-        -------
-        edge_id : list of tuples
-            List of edges
-        weights : list
-            List of edge weights
-
-        Notes
-        -----
-        If X is sparse, self.Y must be sparse too.
-        If X is dense, self.Y must be dense too.
-        """
-
-        # ################
-        # Set right matrix
-        if Y is None:
-            Y = X
-
-        # ################################
-        # Compute affinities for all edges
-
-        # Divergences are compute by blocks. This is much faster than a
-        # row-by-row computation, specially when X is sparse.
-        divJS = []
-        for i in range(0, len(self.edge_ids), self.blocksize):
-            edge_ids = self.edge_ids[i: i + self.blocksize]
-            i0, i1 = zip(*edge_ids)
-
-            if issparse(X):
-                P = X[list(i0)].toarray() + EPS
-                Q = Y[list(i1)].toarray() + EPS
-            else:
-                P = X[list(i0)] + EPS
-                Q = Y[list(i1)] + EPS
-
-            M = 0.5 * (P + Q)
-            divJS += list(0.5 * (np.sum(P * np.log2(P / M), axis=1) +
-                                 np.sum(Q * np.log2(Q / M), axis=1)))
-
-        # #########
-        # Filtering
-
-        # Filter out edges with JS distance not below R
-        # (divergence above R**2).
-        ed = [z for z in zip(self.edge_ids, divJS) if z[1] < R**2]
-        if len(ed) > 0:
-            edge_id, d2 = zip(*ed)
-        else:
-            edge_id, d2 = [], []
-
-        # ####################
-        # Computing affinities
-
-        # Transform distances into affinity values.
-        weights = self._d2_to_sim(d2, 'JS', g, rescale, R)
-
-        return edge_id, weights
-

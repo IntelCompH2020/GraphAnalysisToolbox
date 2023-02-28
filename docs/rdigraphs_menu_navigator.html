@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu &mdash; SuperGraph 2023 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Community Plus" href="rdigraphs_community_plus.html" />
+    <link rel="prev" title="Datamanager" href="rdigraphs_datamanager.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SuperGraph
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Data access:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html">Datamanager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.base_dm_sql">SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.base_dm_neo4j">Neo4j</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.cypher">Cypher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.callbacks">Migration Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.util">Util</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Menu:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Menu</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Community:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_community_plus.html">Community Plus</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Similarity:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_sim_graph.html">Similarity graphs</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Supergraph:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_supergraph.html">Supergraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_supergraph.html#module-rdigraphs.supergraph.dgview">Data graph view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_supergraph.html#module-rdigraphs.supergraph.sedge">Super edge</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Task manager:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_taskmanager.html">Taskmanager</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SuperGraph</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Menu</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/rdigraphs_menu_navigator.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-rdigraphs.menu_navigator.menu_navigator">
+<span id="menu"></span><h1>Menu<a class="headerlink" href="#module-rdigraphs.menu_navigator.menu_navigator" title="Permalink to this heading"></a></h1>
+<p>A generic class to manage the user navigation through a multilevel options
+menu.</p>
+<p>Created on March. 04, 2019</p>
+<dl class="simple">
+<dt>&#64;author: Jesús Cid Sueiro</dt><dd><p>Based on former menu manager scripts by Jerónimo Arenas.</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.menu_navigator.menu_navigator.MenuNavigator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.menu_navigator.menu_navigator.</span></span><span class="sig-name descname"><span class="pre">MenuNavigator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="rdigraphs_taskmanager.html#rdigraphs.sgtaskmanager.SgTaskManager" title="rdigraphs.sgtaskmanager.SgTaskManager"><span class="pre">SgTaskManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2menu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paths2data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">option1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.menu_navigator.menu_navigator.MenuNavigator" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to manage the user navigation through a multilevel options menu.</p>
+<p>The structure of multilevel menu options with their associated
+actions and parameters should be defined in a yaml file.</p>
+<p>A taskmanager class is required to take the selected actions with the
+given parameters.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.menu_navigator.menu_navigator.MenuNavigator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="rdigraphs_taskmanager.html#rdigraphs.sgtaskmanager.SgTaskManager" title="rdigraphs.sgtaskmanager.SgTaskManager"><span class="pre">SgTaskManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2menu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paths2data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">option1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.menu_navigator.menu_navigator.MenuNavigator.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes a menu navigator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tm</strong> (<em>object</em>) – A task manager object, that will be in charge of executing all
+actions selected by the user through the menu interaction. Thus, it
+must contain:
+(1) One action method per method specified in the menu structure
+(2) Data collection methods, required for some menus with dynamic
+options.</p></li>
+<li><p><strong>path2menu</strong> (<em>str</em>) – The route to the yaml file containing the menu structure</p></li>
+<li><p><strong>paths2data</strong> (<em>dict or None, optional (default=None)</em>) – A dictionary of paths to data repositories. The key is a name of
+the path, and the value is the path.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rdigraphs.menu_navigator.menu_navigator.MenuNavigator.__weakref__">
+<span class="sig-name descname"><span class="pre">__weakref__</span></span><a class="headerlink" href="#rdigraphs.menu_navigator.menu_navigator.MenuNavigator.__weakref__" title="Permalink to this definition"></a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.menu_navigator.menu_navigator.MenuNavigator.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.menu_navigator.menu_navigator.MenuNavigator.clear" title="Permalink to this definition"></a></dt>
+<dd><p>Cleans terminal window</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.menu_navigator.menu_navigator.MenuNavigator.front_page">
+<span class="sig-name descname"><span class="pre">front_page</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.menu_navigator.menu_navigator.MenuNavigator.front_page" title="Permalink to this definition"></a></dt>
+<dd><p>Prints a simple title heading the application user screen</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>title</strong> (<em>str</em>) – Title message to be printed</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.menu_navigator.menu_navigator.MenuNavigator.navigate">
+<span class="sig-name descname"><span class="pre">navigate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.menu_navigator.menu_navigator.MenuNavigator.navigate" title="Permalink to this definition"></a></dt>
+<dd><p>Manages the menu navigation loop</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>options</strong> (<em>dict</em>) – A dictionary of options</p></li>
+<li><p><strong>active_options</strong> (<em>list or None, optional (default=None)</em>) – List of option keys indicating the available options to print.
+If None, all options are shown.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.menu_navigator.menu_navigator.MenuNavigator.query_options">
+<span class="sig-name descname"><span class="pre">query_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_option</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'exit'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.menu_navigator.menu_navigator.MenuNavigator.query_options" title="Permalink to this definition"></a></dt>
+<dd><p>Prints a heading mnd the subset of options indicated in the list of
+active_options, and returns the one selected by the used</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>options</strong> (<em>dict</em>) – A dictionary of options</p></li>
+<li><p><strong>active_options</strong> (<em>list or None, optional (default=None)</em>) – List of option keys indicating the available options to print.
+If None, all options are shown.</p></li>
+<li><p><strong>msg</strong> (<em>str or None, optional (default=None)</em>) – Heading message to be printed before the list of available options</p></li>
+<li><p><strong>zero_option</strong> (<em>str {‘exit’, ‘up’}, optional (default=’exit’)</em>) – If ‘exit’, an exit option is shown
+If ‘up’, an option to go back to the main menu</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>option</strong> – Selected option</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.menu_navigator.menu_navigator.MenuNavigator.request_confirmation">
+<span class="sig-name descname"><span class="pre">request_confirmation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'</span>&#160;&#160;&#160;&#160; <span class="pre">Are</span> <span class="pre">you</span> <span class="pre">sure?'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.menu_navigator.menu_navigator.MenuNavigator.request_confirmation" title="Permalink to this definition"></a></dt>
+<dd><p>Request confirmation from user</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>str, optional (default=”    Are you sure?”)</em>) – Message printed to request confirmation</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>r</strong> – User respones</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str {‘yes’, ‘no’}</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="rdigraphs_datamanager.html" class="btn btn-neutral float-left" title="Datamanager" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rdigraphs_community_plus.html" class="btn btn-neutral float-right" title="Community Plus" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, J. Cid-Sueiro, M. A. Vázquez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

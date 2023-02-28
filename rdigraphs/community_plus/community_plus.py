@@ -15,12 +15,12 @@ import community      # "install python-louvain"
 
 try:
     import leidenalg      # "install -c conda-forge leidenalg"
-except:
+except ImportError:
     print("WARNING: leidenalg import error. Some methods will fail")
 
 try:
     import igraph         # "install -c conda-forge python-igraph"
-except:
+except ImportError:
     print("WARNING: igraph import error. Some methods will fail")
 
 
@@ -102,7 +102,7 @@ class CommunityPlus(object):
         l_min = min(cluster_labels)
         if l_min != 0:
             logging.warning(
-                f'-- -- The minimum label value is {l_min}. Label values ' +
+                f'-- -- The minimum label value is {l_min}. Label values '
                 f'will be shifted to get minimum label value equal to 0')
         cluster_labels = np.array(cluster_labels) - l_min
 
@@ -119,7 +119,7 @@ class CommunityPlus(object):
         N_to_posN = dict(zip(new_indices, range(nc)))
 
         # Reassign labels
-        new_cluster_labels = np.array([N_to_posN[l] for l in cluster_labels])
+        new_cluster_labels = np.array([N_to_posN[x] for x in cluster_labels])
 
         # Order clusters sizes
         cluster_sizes = cluster_sizes[new_indices]
@@ -293,8 +293,8 @@ class CommunityPlus(object):
             # q = nxalg.community.quality.coverage(G, partition)
             sources, targets = zip(*edges)
             clabels = np.array(clabels)
-            is_intra = (clabels[np.array(sources)] ==
-                        clabels[np.array(targets)])
+            is_intra = (clabels[np.array(sources)]
+                        == clabels[np.array(targets)])
 
             # Compute coverage.
             sum_intra = np.sum(is_intra * np.array(weights))
@@ -310,8 +310,8 @@ class CommunityPlus(object):
             n_nodes = len(clabels)
             sources, targets = zip(*edges)
             clabels = np.array(clabels)
-            is_intra = (clabels[np.array(sources)] ==
-                        clabels[np.array(targets)])
+            is_intra = (clabels[np.array(sources)]
+                        == clabels[np.array(targets)])
 
             # Compute coverage.
             sum_intra = np.sum(is_intra)

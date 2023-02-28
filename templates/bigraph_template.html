@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Bipartite graph: [[TITLE]]</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto|Raleway:600,400,200' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="styles/examples.css">
+    <link rel="stylesheet" href="../lib/styles/vizuly.css">
+    <link rel="stylesheet" href="../lib/styles/vizuly_halo.css">
+
+    <!-- Test Index Files -->
+    <!-- Supporting test container files:  Vizuly does NOT rely on these -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="../lib/styles/cssmenu.css">
+    <script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+    <script src="../lib/cssmenu.js"></script>
+
+    <!-- D3.js ... of course! -->
+    <script src="lib/d3.min.js"></script>
+
+    <!-- debug source scripts: start --> <!--
+    <script src="src/core/_namespace.js"></script>
+    <script src="src/theme/halo.js"></script>
+    <script src="src/core/component.js"></script>
+    <script src="src/core/util.js"></script>
+    <script src="src/svg/gradient.js"></script>
+    <script src="src/svg/filter.js"></script>
+
+    <script src="src/viz/halo.js"></script>
+
+    --> <!-- debug source scripts: end -->
+
+    <script src="lib/vizuly_core.min.js"></script>
+	<script src="lib/vizuly_halo.min.js"></script>
+
+    <script src="make_bigraph.js"></script>
+
+</head>
+
+<body>
+
+<div id='cssmenu'>
+    <ul class="main-menu">
+        <li class='active'>
+            <a><span>Display</span><br><span class="setting"></span></a>
+            <ul class="options" callback="changeSize">
+                <li id="currentDisplay" class="selected"><a></a></li>
+                <li item_value="1000,1000"><a>1000px - 1000px</a></li>
+                <li item_value="800,600"><a>800px - 600px</a></li>
+                <li item_value="375,667"><a>375px - 667px</a></li>
+                <li item_value="320,568"><a>320px - 568px</a></li>
+            </ul>
+        </li>
+        <li class='active'><a><span>Theme </span><br><span class="setting"></span></a>
+            <ul class="options" callback="changeSkin">
+                <li item_value="custom" class="selected"><a>Bipartite graph: [[TITLE]]</a></li>
+                <li item_value="Fire"><a>Fire</a></li>
+                <li item_value="Sunset"><a>Sunset</a></li>
+                <li item_value="Neon"><a>Neon</a></li>
+                <li item_value="Ocean"><a>Ocean</a></li>
+            </ul>
+        </li>
+        <!--
+        <li class='active'><a><span>House&nbsp;or&nbsp;Sentate</span><br><span class="setting"></span></a>
+            <ul class="options" callback="changeData">
+                <li item_value="house" class="selected"><a>House</a></li>
+                <li item_value="senate"><a>Senate</a></li>
+            </ul>
+        </li>
+        -->
+    </ul>
+</div>
+
+
+<div class="container" style="width:100%">
+    <div id="viz_container" class="z-depth-3"></div>
+    <div style="margin-left:0px; height:0px; width:90%; margin:0px auto; margin-top:20px; font-family:Raleway; font-size:14px;">
+        The size of each circle is proporcional to the sum of weights of the incoming arcs.
+        <br><br>
+        Source: [[SOURCE]]
+        <br>
+        Target: [[TARGET]]
+        <br><br>
+        Plan de Tecnologías del Lenguaje
+    </div>
+</div>
+
+
+<script>
+    //Once the document is ready we set javascript and page settings
+    var screenWidth;
+    var screenHeight;
+
+    $(document).ready(function () {
+
+        var rect;
+        if (self==top) {
+            rect = document.body.getBoundingClientRect();
+        }
+        else {
+            rect =  parent.document.body.getBoundingClientRect();
+        }
+
+        //Set display size based on window size.
+        screenWidth = (rect.width < 960) ? Math.round(rect.width*.95) : Math.round((rect.width - 210) *.95)
+        screenHeight = Math.min(parent.innerHeight * 0.75, screenWidth);
+        screenWidth = screenHeight;
+
+        d3.select("#currentDisplay")
+                .attr("item_value", screenWidth + "," + screenHeight)
+                .attr("class", "selected")
+                .html("<a>" + screenWidth + "px - " + screenHeight + "px</a>");
+
+        $("#cssmenu").menumaker({
+            title: "[[TITLE]]",
+            format: "multitoggle"
+        });
+
+        // Set the size of our container element.
+        viz_container = d3.selectAll("#viz_container")
+                .style("width", screenWidth + "px")
+                .style("height", screenHeight + "px");
+
+        loadData();
+
+    });
+
+</script>
+
+</body>
+
+
+</html>

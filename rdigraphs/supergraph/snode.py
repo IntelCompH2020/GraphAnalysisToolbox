@@ -7,7 +7,7 @@ import pandas as pd
 import logging
 import pprint
 import yaml
-import os
+import pathlib
 import copy
 
 from time import time
@@ -24,10 +24,13 @@ import matplotlib
 matplotlib.use("Agg")
 import seaborn as sns
 
-# Graph layout
+# Graph layout.
+# fa2 is not available for python>3.8 as of Dec. 2022.
+# To allow using the rest of the code for python>3.8, we catch the error
+# to keep running.
 try:
     from fa2 import ForceAtlas2   # "pip install fa2"
-except:
+except Exception:
     print("WARNING: fa2 could not be imported."
           "Force-atlas layout not available")
 
@@ -70,7 +73,10 @@ class DataGraph(object):
         self.label = label     # Name of the datagraph
 
         # Paths...
-        self.path2graph = path   # to the graph folder
+        if path is not None:
+            self.path2graph = pathlib.Path(path)   # to the graph folder
+        else:
+            self.path2graph = path
         self.path2nodes = None   # to nodes
         self.path2edges = None   # to edges
         self.path2mdata = None   # to metadata
@@ -125,10 +131,14 @@ class DataGraph(object):
 
         if path:
             # paths to nodes, edges, metadata and feature matrix
-            self.path2nodes = os.path.join(path, label + '_nodes.csv')
-            self.path2edges = os.path.join(path, label + '_edges.csv')
-            self.path2mdata = os.path.join(path, label + '_mdata.yml')
-            self.path2T = os.path.join(path, 'modelo_sparse.npz')
+            path = pathlib.Path(path)
+            self.path2nodes = path / (label + '_nodes.csv')
+            self.path2edges = path / (label + '_edges.csv')
+            self.path2mdata = path / (label + '_mdata.yml')
+            self.path2T = path / 'feature_matrix.npz'
+            # This is for backward compatibility. The name has been changed
+            # because the feature matrix might be non-sparse.
+            self.path2T_old = path / 'modelo_sparse.npz'
 
         # Read metadata
         self.load_metadata()
@@ -136,7 +146,7 @@ class DataGraph(object):
             try:
                 # Read edge_class from metadata, if available
                 self.edge_class = self.metadata['graph']['edge_class']
-            except:
+            except Exception:
                 # Use default
                 self.edge_class = 'undirected'
 
@@ -187,7 +197,7 @@ class DataGraph(object):
         """
 
         # Load metadata
-        if self.path2mdata and os.path.isfile(self.path2mdata):
+        if self.path2mdata and self.path2mdata.is_file():
             with open(self.path2mdata, 'r') as f:
                 self.metadata = yaml.safe_load(f)
         else:
@@ -197,7 +207,11 @@ class DataGraph(object):
 
     def has_saved_features(self):
 
-        if (self.path2T is not None) and os.path.isfile(self.path2T):
+        if (self.path2T is not None) and self.path2T.is_file():
+            return True
+        # This elif is for backward compatibility with old names of the
+        # feature matrix
+        elif (self.path2T is not None) and self.path2T_old.is_file():
             return True
         else:
             return False
@@ -238,7 +252,7 @@ class DataGraph(object):
             Path to a csv file with the edges.
         '''
 
-        if os.path.isfile(self.path2nodes):
+        if self.path2nodes.is_file():
 
             logging.info(f'-- -- Loading GRAPH from {self.path2graph}')
 
@@ -248,7 +262,7 @@ class DataGraph(object):
             # The following is required because if the node ids are integers
             # they are loaded by pandas as int, even though they were saved
             # as str.
-            if any(type(x) != str for x in self.df_nodes[self.REF]):
+            if any(not isinstance(x, str) for x in self.df_nodes[self.REF]):
                 self.df_nodes[self.REF] = self.df_nodes[self.REF].astype(str)
 
             self._df_nodes_2_atts()
@@ -259,25 +273,51 @@ class DataGraph(object):
 
             # ##########
             # Load edges
-            if os.path.isfile(self.path2edges):
+            if self.path2edges.is_file():
                 self.df_edges = pd.read_csv(self.path2edges)
 
                 # The following is required because if the source node ids are
-                # integers, they are loaded by pandas as int, despite they are
-                # saved as str.
-                if any(type(x) != str for x in self.df_edges['Source']):
+                # integers, they are loaded by pandas as int, no matter if
+                # they are saved as str
+                if any(not isinstance(x, str)
+                       for x in self.df_edges['Source']):
                     self.df_edges['Source'] = self.df_edges['Source'].astype(
                         str)
                 # The same for target node ids
-                if any(type(x) != str for x in self.df_edges['Target']):
+                if any(not isinstance(x, str)
+                       for x in self.df_edges['Target']):
                     self.df_edges['Target'] = self.df_edges['Target'].astype(
                         str)
 
                 # Copy edge info in other
                 self._df_edges_2_atts()
 
-            if os.path.isfile(self.path2T):
-                self.T = load_npz(self.path2T)
+            if self.path2T.is_file():
+                # Since we do not know if the feature matrix is sparse or not,
+                # we try first with the sparse case.
+                # Note that we could use np.load for both the sparse and non
+                # sparse cases, but I prefer to used load_npz because I am
+                # not sure if some parameters would be needed for the np.load()
+                # in the sparse case.
+                try:
+                    self.T = load_npz(self.path2T)
+                except ValueError:
+                    self.T = np.load(self.path2T)['T']
+
+                # This is just a flag indicating that this graph has a saved
+                # feature file
+                self.save_T = True
+
+            # This is for backward compatibility with old name of feature file
+            elif self.path2T_old.is_file():
+                try:
+                    self.T = load_npz(self.path2T_old)
+                except ValueError:
+                    self.T = np.load(self.path2T_old)['T']
+
+                # This is just a flag indicating that this graph has a saved
+                # feature file
+                self.save_T = True
 
         return
 
@@ -473,7 +513,11 @@ class DataGraph(object):
             # The input node is the first node in the graph
             self.df_nodes = pd.DataFrame([row])
         else:
-            self.df_nodes = self.df_nodes.append(row, ignore_index=True)
+            self.df_nodes2 = self.df_nodes.append(row, ignore_index=True)
+            # Using pandas.concat() to add a row
+            new_row = pd.DataFrame(row, index=[0])
+            self.df_nodes = pd.concat([self.df_nodes, new_row]).reset_index(
+                drop=True)
 
         self.n_nodes += 1
         self.nodes.append(node)
@@ -614,7 +658,7 @@ class DataGraph(object):
             A matrix of feature vectors: one row per node, one column per
             feature.
         save_T : bool, optional (default=False)
-            If True, the feature matrix T is saved into an  npz file.
+            If True, the feature matrix T is saved into an npz file.
         '''
 
         # This is just a marker to indicate the graph saver to save the
@@ -800,7 +844,7 @@ class DataGraph(object):
             If scalar, all NaN's are replaced by the given scalar value
         """
 
-        if isinstance(values, pd.DataFrame) or type(values) == dict:
+        if isinstance(values, pd.DataFrame) or isinstance(values, dict):
 
             if isinstance(values, pd.DataFrame):
                 df_atts = values
@@ -809,7 +853,7 @@ class DataGraph(object):
                 # duplication during merge
                 df_atts.rename(columns={names: self.REF}, inplace=True)
             else:
-                if type(names) == str:
+                if isinstance(names, str):
                     names = [names]
                 df_atts = pd.DataFrame(
                     values.items(), columns=[self.REF] + names)
@@ -823,12 +867,12 @@ class DataGraph(object):
             try:
                 self.df_nodes = self.df_nodes.merge(
                     df_atts, how='left', on=self.REF)
-            except:
+            except Exception:
                 self.df_nodes = self.df_nodes.merge(
                     df_atts.astype({self.REF: 'str'}), how='left', on=self.REF)
 
         else:
-            if type(names) == str:
+            if isinstance(names, str):
                 names = [names]
                 values = [values]
 
@@ -857,7 +901,7 @@ class DataGraph(object):
             Attribute name or names
         """
 
-        if type(names) == str:
+        if isinstance(names, str):
             names = [names]
 
         for name in names:
@@ -898,7 +942,7 @@ class DataGraph(object):
 
         if value is None:
             df = self.df_nodes[self.df_nodes[att].isnull()]
-        elif type(value) == list:
+        elif isinstance(value, list):
             df = self.df_nodes[self.df_nodes[att].isin(value)]
         else:
             df = self.df_nodes[self.df_nodes[att] == value]
@@ -981,7 +1025,7 @@ class DataGraph(object):
     # ################
     # Graph processing
     # ################
-    def filter_edges(self, th, rescale=False):
+    def filter_edges(self, th):
         """
         Removes all edges with a similarity value below th
 
@@ -989,17 +1033,10 @@ class DataGraph(object):
         ----------
         th : float
             Threshold
-        rescale : bool, optional (default=True)
-            If True, the edge weights are linearly re-scaled to transform range
-            [th, 1] into [0, 1]
         """
 
         # Remove edges
         self.df_edges = self.df_edges[self.df_edges['Weight'] >= th]
-
-        # Rescaling
-        if rescale:
-            self.df_edges['Weight'] = (self.df_edges['Weight'] - th) / (1 - th)
 
         # Update redundant snode attributes
         self._df_edges_2_atts()
@@ -1073,19 +1110,18 @@ class DataGraph(object):
 
         return
 
-    def computeSimGraph(self, R=None, n_gnodes=None, n_edges=None,
-                        similarity='JS', g=1, th_gauss=0.1, rescale=False,
-                        blocksize=25_000, useGPU=False, tmp_folder=None,
-                        save_every=1e300, verbose=True):
+    def computeSimGraph(self, s_min=None, n_gnodes=None, n_edges=None,
+                        similarity='JS', g=1, blocksize=25_000, useGPU=False,
+                        tmp_folder=None, save_every=1e300, verbose=True):
         """
         Computes a sparse similarity graph for the self graph structure.
         The self graph must contain a T-matrix, self.T
 
         Parameters
         ----------
-        R : float or None, optional (default=None)
-            Radius. Edges link all data pairs at distance lower than R
-            This is to forze a sparse graph.
+        s_min : float or None, optional (default=None)
+            Similarity threshold. Edges link all data pairs with similarity
+            higher than R. This forzes a sparse graph.
         n_gnodes : int or None, optional (default=None)
             Number of nodes in the subgraph.
             If None, all nodes are used
@@ -1110,14 +1146,7 @@ class DataGraph(object):
             preselecting edges using He distances and a theoretical bound
             'He2->JS' (same as He-Js, but using the self implementation of He)
         g : float, optional (default=1)
-            Exponent for the affinity mapping (not used for 'Gauss')
-        th_gauss : float, optional (default=0.1)
-            Similarity threshold All similarity values below this threshold are
-            set to zero. This is only for the gauss method, the rest of them
-            compute the threshold automatically from R
-        rescale : bool, optional (default=False)
-            If True, affinities are computed from distances by rescaling values
-            so that the minimum is zero and maximum is 1.
+            Exponent for the affinity mapping
         blocksize : int, optional (default=25_000)
             Size of each block for the computation of affinity values. Large
             sizes might imply a large memory consumption.
@@ -1179,8 +1208,9 @@ class DataGraph(object):
             root_logger = logging.getLogger()
             root_logger.disabled = True
 
-        sg.computeGraph(R=R, n_edges=n_edges, sim=similarity, g=g,
-                        th_gauss=th_gauss, rescale=rescale, verbose=verbose)
+        sg.sim_graph(s_min=s_min, n_edges=n_edges, sim=similarity, g=g,
+                     verbose=verbose)
+
         if not verbose:
             # Re-enable log messages
             root_logger = logging.getLogger()
@@ -1192,7 +1222,6 @@ class DataGraph(object):
         self.n_edges = len(self.edge_ids)
 
         # Create pandas structures for edges.
-        # Each node is a project, indexed by field REFERENCIA.
         orig_REF = [self.nodes[m] for m, n in self.edge_ids]
         dest_REF = [self.nodes[n] for m, n in self.edge_ids]
         self.df_edges = pd.DataFrame(
@@ -1209,7 +1238,8 @@ class DataGraph(object):
         # Update metadate entries that are specific of the similarity graph
         self.metadata['edges'].update({
             'metric': similarity,
-            'R': float(sg.R),    # float to avoid yaml errors with np.float
+            # float to avoid yaml errors with np.float
+            's_min': float(sg.s_min),
             'g': g,
             'time': tm,
             'n_sampled_nodes': n_gnodes,
@@ -1222,7 +1252,7 @@ class DataGraph(object):
 
         return
 
-    def sub_graph(self, ynodes, sampleT=False):
+    def sub_graph(self, ynodes, sampleT=True):
         """
         Returns a subgraph from the given graph by selecting a subset of nodes
         and all the edges between them.
@@ -1237,8 +1267,8 @@ class DataGraph(object):
             If list: List of nodes of the output subgraph.
             If int: Number of nodes to sample. The list of nodes is taken
             at random without replacement from the graph nodes
-        sampleT : bool, optional (default=False)
-            If True, a sampled T is  computed and returned
+        sampleT : bool, optional (default=True)
+            If True, a sampled T is computed and returned
 
         Returns
         -------
@@ -1253,7 +1283,7 @@ class DataGraph(object):
 
         subgraph = {}
 
-        if type(ynodes) == int:
+        if isinstance(ynodes, int):
             n = ynodes
             if n > self.n_nodes:
                 # Take all nodes from the self graph, in the original order
@@ -1555,11 +1585,11 @@ class DataGraph(object):
             Whether to remove None entries from the membership lists.
         """
 
-        if type(comm1) == str:
+        if isinstance(comm1, str):
             clabels1 = self.df_nodes[comm1].tolist()
         else:
             clabels1 = comm1
-        if type(comm2) == str:
+        if isinstance(comm2, str):
             clabels2 = self.df_nodes[comm2].tolist()
         else:
             clabels2 = comm2
@@ -1705,6 +1735,12 @@ class DataGraph(object):
             Name of the community detection algorithm
         parameter : str
             Name of the global parameter to compute
+
+        Returns
+        -------
+        q :: float
+            Value of the metric. This value is saved into the self.metadata
+            attribute
         """
 
         # Start
@@ -1731,7 +1767,7 @@ class DataGraph(object):
         tm = time() - t0
         logging.info(f"-- {parameter} computed in {tm} seconds")
 
-        return
+        return q
 
     def graph_layout(self, alg='fa2', color_att=None, gravity=1,
                      save_gexf=True):
@@ -1838,10 +1874,10 @@ class DataGraph(object):
 
         if save_gexf:
             # Save graph in file
-            if not os.path.exists(self.path2graph):
-                os.makedirs(self.path2graph)
+            if not self.path2graph.is_dir():
+                self.path2graph.mkdir()
 
-            path = os.path.join(self.path2graph, self.label + '.gexf')
+            path = self.path2graph / (self.label + '.gexf')
             nx.write_gexf(G, path)
         else:
             # Store positions in nodes dataframe
@@ -1922,8 +1958,8 @@ class DataGraph(object):
 
     def save_nodes(self):
 
-        if not os.path.exists(self.path2graph):
-            os.makedirs(self.path2graph)
+        if not self.path2graph.is_dir():
+            self.path2graph.mkdir()
 
         # Save nodes
         self.df_nodes.to_csv(self.path2nodes, index=False,

@@ -30,8 +30,8 @@ class MenuNavigator(object):
     """
 
     def __init__(self, tm: SgTaskManager, path2menu: str,
-                 paths2data: typing.Optional[str]=None,
-                 option1: typing.Optional[str]=None):
+                 paths2data: typing.Optional[str] = None,
+                 option1: typing.Optional[str] = None):
         """
         Initializes a menu navigator.
 
@@ -54,7 +54,7 @@ class MenuNavigator(object):
         """
 
         self.tm = SgTaskManager('')    # A fake object just to forze a link in
-                                       # the UML diagram made with pyreverse
+        #                              # the UML diagram made with pyreverse
         self.tm = tm                   # The true task manager object
         self.paths2data = paths2data   # Dictionary of paths to input data
         self.path2menu = path2menu     # Location of the menu description file
@@ -132,7 +132,7 @@ class MenuNavigator(object):
                 str(range_opt[0]), range_opt[-1]))
             try:
                 n_option = int(n_option)
-            except:
+            except Exception:
                 print('Write a number')
                 n_option = None
 
@@ -242,8 +242,8 @@ class MenuNavigator(object):
                     active_options = copy.copy(default_opt)
                     zero_opt = 'exit'
 
-            elif ('options' in menu[option] and
-                  type(menu[option]['options'][0]) != dict):
+            elif ('options' in menu[option]
+                  and not isinstance(menu[option]['options'][0], dict)):
                 # Select new options to query
                 active_options = menu[option]['options']
                 zero_opt = 'up'
@@ -265,7 +265,7 @@ class MenuNavigator(object):
                 param = None
 
                 # Select parameers for the selected method
-                # for type_arg, arg in menu[option]['options'].items():
+                # for type_arg, arg in menu[option]['options'].items():
                 for opt in opts:
 
                     type_arg, arg = list(*opt.items())
@@ -277,11 +277,12 @@ class MenuNavigator(object):
 
                         # Query parameter to user from the values given in the
                         # menu
-                        if type(arg) == list:
+                        if isinstance(arg, list):
                             param_opts = {p: p for p in arg}
                         else:
                             param_opts = copy.copy(arg)
-                        param = self.query_options(param_opts, zero_option='up')
+                        param = self.query_options(
+                            param_opts, zero_option='up')
                         all_params.append(param)
 
                     elif type_arg[:10] == 'get_method':
@@ -304,7 +305,8 @@ class MenuNavigator(object):
                                              if x != '.DS_Store']
 
                         param_opts = {f: f for f in files_and_folders}
-                        param = self.query_options(param_opts, zero_option='up')
+                        param = self.query_options(
+                            param_opts, zero_option='up')
                         if param != 'zero':
                             param = os.path.join(path2opts, param)
                             all_params.append(param)

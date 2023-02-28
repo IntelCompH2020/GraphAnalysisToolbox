@@ -1,0 +1,73 @@
+# This file contains the complete list of options in the main script.
+# It must contain at least a root menu with several options, and a description
+# of each option in the root menu.
+# Each option in any menu should have a description
+
+# ROOT MENU
+root:
+  options: 
+    # - create   <Some true options may be missed because the appropriate one
+    # - load      may have been selected by the starting command>
+    - setup
+    - show_SuperGraph
+    - compute_reference_graph
+    - subsample_reference_graph
+    - compute_all_sim_graphs
+    - validate_topic_models
+    - show_validation_results
+    - analyze_variability
+    - show_variability_results
+    - analyze_scalability
+    - show_scalability_results
+    - validate_subtrain_models
+    - show_subtrain_results
+
+# ##########################
+# OPTIONS FROM THE ROOT MENU
+create: 
+  title: Create new project
+  post_opts:
+    - setup
+
+load:
+    title: Load existing project
+
+setup: 
+  title: Activate configuration file
+
+show_SuperGraph:
+  title: Show supergraph structure
+
+compute_reference_graph:
+  title: Compute reference graph
+
+subsample_reference_graph:
+  title: Get reference graph by subsampling a large version
+
+compute_all_sim_graphs:
+  title: Compute all similarity graphs for validation
+
+validate_topic_models:
+  title: Validate topic models using the reference graph
+
+show_validation_results:
+  title: Generate graphical validation results
+
+analyze_variability:
+  title: Validate topic models using semantic variability
+
+show_variability_results:
+  title: Generate graphical result from the variability analysis
+
+analyze_scalability:
+  title: Analize the scalability of graph generatio for validation
+
+show_scalability_results:
+  title: Generate graphical results of the scalability analysis
+
+validate_subtrain_models:
+  title: Validate subtrained models
+
+show_subtrain_results:
+  title: Generar graphical results of the subtrained model validation
+

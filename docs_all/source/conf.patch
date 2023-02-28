@@ -1,0 +1,32 @@
+--- conf.py	2019-10-07 19:15:00.918547026 +0200
++++ new_conf.py	2019-10-07 19:16:52.376665372 +0200
+@@ -9,10 +9,10 @@
+ # If extensions (or modules to document with autodoc) are in another directory,
+ # add these directories to sys.path here. If the directory is relative to the
+ # documentation root, use os.path.abspath to make it absolute, like shown here.
+-#
+-# import os
+-# import sys
+-# sys.path.insert(0, os.path.abspath('.'))
++
++import os
++import sys
++sys.path.insert(0, os.path.abspath('../..'))
+ 
+ 
+ # -- Project information -----------------------------------------------------
+@@ -31,8 +31,14 @@
+ # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
+ # ones.
+ extensions = [
++    'sphinx.ext.autodoc', 'sphinx.ext.coverage', 'sphinx.ext.napoleon'
+ ]
+ 
++# Napoleon settings
++napoleon_google_docstring = False
++napoleon_use_param = False
++napoleon_use_ivar = True
++
+ # Add any paths that contain templates here, relative to this directory.
+ templates_path = ['_templates']
+ 

@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Datamanager &mdash; SuperGraph 2023 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Menu" href="rdigraphs_menu_navigator.html" />
+    <link rel="prev" title="SuperGraph documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SuperGraph
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Data access:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Datamanager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#module-rdigraphs.datamanager.base_dm_sql">SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#module-rdigraphs.datamanager.base_dm_neo4j">Neo4j</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#module-rdigraphs.datamanager.cypher">Cypher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#module-rdigraphs.datamanager.callbacks">Migration Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#module-rdigraphs.datamanager.util">Util</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Menu:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_menu_navigator.html">Menu</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Community:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_community_plus.html">Community Plus</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Similarity:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_sim_graph.html">Similarity graphs</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Supergraph:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_supergraph.html">Supergraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_supergraph.html#module-rdigraphs.supergraph.dgview">Data graph view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_supergraph.html#module-rdigraphs.supergraph.sedge">Super edge</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Task manager:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_taskmanager.html">Taskmanager</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SuperGraph</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Datamanager</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/rdigraphs_datamanager.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-rdigraphs.datamanager.datamanager">
+<span id="datamanager"></span><h1>Datamanager<a class="headerlink" href="#module-rdigraphs.datamanager.datamanager" title="Permalink to this heading"></a></h1>
+<p>The classes in this file provide functionality to interact with the specific
+databases provided for the PTL projects.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.datamanager.DMneo4j">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.datamanager.</span></span><span class="sig-name descname"><span class="pre">DMneo4j</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_server</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'neo4j'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.datamanager.DMneo4j" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j" title="rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDMneo4j</span></code></a></p>
+<p>This class is an extension of BaseDMneo4j to include some additional
+functionality</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.datamanager.DMsql">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.datamanager.</span></span><span class="sig-name descname"><span class="pre">DMsql</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_connector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_server</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unix_socket</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf8mb4'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.datamanager.DMsql" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rdigraphs.datamanager.base_dm_sql.BaseDMsql" title="rdigraphs.datamanager.base_dm_sql.BaseDMsql"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDMsql</span></code></a></p>
+<p>This class is an extension of BaseDMsql to include some additional
+functionality</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.datamanager.DataManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.datamanager.</span></span><span class="sig-name descname"><span class="pre">DataManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.datamanager.DataManager" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is the datamanager for a supergraph project. It provides functionality
+to manage both the neo4j graph DB and the SQL databased containing the
+source data. To do so, it uses generic managers for Neo4j and SQL.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.datamanager.DataManager.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.datamanager.DataManager.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes datamanager object, which facilities read and write
+operations.</p>
+<p>File operation methods available.</p>
+<p>Also, several SQL and Neo4J DataManager objects are created to
+facilitate interaction with databases.</p>
+<p>Each SQL manager is stored in dictionary self.SQL. Tipically:</p>
+<blockquote>
+<div><p>self.SQL[‘db1’]  : SQL database named db1
+self.SQL[‘db2’]  : SQL database named db2
+…
+self.Neo4j      : Neo4j graph database</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path2project</strong> (<em>str</em>) – Path to the project folder</p></li>
+<li><p><strong>db_params</strong> (<em>dict</em>) – Parameters to stablish db connections.</p></li>
+<li><p><strong>path2source</strong> (<em>str or None, optional (default=None)</em>) – Path to the folder containing several data sources.
+This parameter is optional to allow backward compatibility.
+Future versions of this datamanager will modify all methods to
+use this variable, that will be ncessarily string-like.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.datamanager.DataManager.__weakref__">
+<span class="sig-name descname"><span class="pre">__weakref__</span></span><a class="headerlink" href="#rdigraphs.datamanager.datamanager.DataManager.__weakref__" title="Permalink to this definition"></a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.datamanager.DataManager.import_graph_data_from_tables">
+<span class="sig-name descname"><span class="pre">import_graph_data_from_tables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.datamanager.DataManager.import_graph_data_from_tables" title="Permalink to this definition"></a></dt>
+<dd><p>Loads a dataframe of documents from one or several files in tabular
+format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>table_name</strong> (<em>str</em>) – Name of the tabular dataset. It should be the name of a folder in
+self.path2source</p></li>
+<li><p><strong>sampling_factor</strong> (<em>float, optional (default=1)</em>) – Fraction of documents to be taken from the original corpus.
+(Used for SemanticScholar and patstat only)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.datamanager.DataManager.load_SCOPUS_citations_all">
+<span class="sig-name descname"><span class="pre">load_SCOPUS_citations_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cite_to'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.datamanager.DataManager.load_SCOPUS_citations_all" title="Permalink to this definition"></a></dt>
+<dd><p>Extracts all data from table ‘citations’ in SCOPUS SQL database</p>
+<p>The graph contains all nodes in the citation graph, no matter if
+they have attributes in table ‘document’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>col_ref</strong> (<em>str</em>) – Column in sql table that will be used as index</p></li>
+<li><p><strong>atts</strong> (<em>list of str</em>) – Columns in sql table that will be taken as attributes</p></li>
+<li><p><strong>mode</strong> (<em>str {‘cite_to’, ‘cited_by’}</em>) – If ‘cite_to’, source nodes are the citing papers
+If ‘cited_by’, source nodes are the cited papers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>nodes</strong> (<em>list</em>) – Nodes with attributes in table ‘document’</p></li>
+<li><p><strong>df_atts</strong> (<em>pandas dataframe</em>) – Attributes of the nodes</p></li>
+<li><p><strong>source_nodes</strong> (<em>list</em>) – Source of all edges between nodes in the list of nodes</p></li>
+<li><p><em>target_nodes</em> – Target of all edges between nodes in the list of nodes.
+Edges are assumed to be in the same order in source_nodes and
+target_nodes</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.datamanager.DataManager.load_SCOPUS_citations_with_atts">
+<span class="sig-name descname"><span class="pre">load_SCOPUS_citations_with_atts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cite_to'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.datamanager.DataManager.load_SCOPUS_citations_with_atts" title="Permalink to this definition"></a></dt>
+<dd><p>Extracts data from table ‘citations’ in SCOPUS SQL database</p>
+<p>The subgraph contains the nodes with attributes in table ‘document’
+form the same databse.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>col_ref</strong> (<em>str</em>) – Column in sql table that will be used as index</p></li>
+<li><p><strong>atts</strong> (<em>list of str</em>) – Columns in sql table that will be taken as attributes</p></li>
+<li><p><strong>mode</strong> (<em>str {‘cite_to’, ‘cited_by’}</em>) – If ‘cite_to’, source nodes are the citing papers
+If ‘cited_by’, source nodes are the cited papers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>nodes</strong> (<em>list</em>) – Nodes with attributes in table ‘document’</p></li>
+<li><p><strong>df_atts</strong> (<em>pandas dataframe</em>) – Attributes of the nodes</p></li>
+<li><p><strong>source_nodes</strong> (<em>list</em>) – Source of all edges between nodes in the list of nodes</p></li>
+<li><p><em>target_nodes</em> – Target of all edges between nodes in the list of nodes.
+Edges are assumed to be in the same order in source_nodes and
+target_nodes</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.datamanager.DataManager.readCoordsFromFile">
+<span class="sig-name descname"><span class="pre">readCoordsFromFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['thetas']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sparse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2nodenames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'corpusid'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.datamanager.DataManager.readCoordsFromFile" title="Permalink to this definition"></a></dt>
+<dd><p>Reads a data matrix from a given path.
+This method assumes a particular data structure of the PTL projects</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fpath</strong> (<em>str or None, optional (default=None)</em>) – Path to the file that contains the topic model.
+(the data file is assumed to be modelo.npz or modelo_sparse.npz
+inside that folder)</p></li>
+<li><p><strong>fields</strong> (<em>str or list, optional (default=[‘thetas’])</em>) – Name of the field or fields containing the doc-topic matrix</p></li>
+<li><p><strong>sparse</strong> (<em>bool, optional (default=False)</em>) – If True, the doc-topic matrix is sparse, otherwise dense</p></li>
+<li><p><strong>path2nodenames</strong> (<em>str or None, optional (default=None)</em>) – path to file containing metadata (in particular node names). If
+None, the file is assumed to be in fpath, with name
+docs_metadata.csv</p></li>
+<li><p><strong>ref_col</strong> (<em>str, optional (default=’corpusid’)</em>) – Name of the column in the metadata file (given by path2nodenames)
+that contains the doc id.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>data_out</strong> (<em>dict</em>) – Output data dictionary</p></li>
+<li><p><strong>df_nodes</strong> (<em>dataframe</em>) – Dataframe of nodes</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-rdigraphs.datamanager.base_dm_sql">
+<span id="sql"></span><h1>SQL<a class="headerlink" href="#module-rdigraphs.datamanager.base_dm_sql" title="Permalink to this heading"></a></h1>
+<p>This class provides functionality for managing a generig sqlite or mysql
+database:</p>
+<ul class="simple">
+<li><p>reading specific fields (with the possibility to filter by field values)</p></li>
+<li><p>storing calculated values in the dataset</p></li>
+</ul>
+<p>Created on May 11 2018</p>
+<p>&#64;author: Jerónimo Arenas García</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_sql.BaseDMsql">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.base_dm_sql.</span></span><span class="sig-name descname"><span class="pre">BaseDMsql</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_connector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_server</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unix_socket</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf8mb4'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_sql.BaseDMsql" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Data manager base class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_sql.BaseDMsql.__del__">
+<span class="sig-name descname"><span class="pre">__del__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_sql.BaseDMsql.__del__" title="Permalink to this definition"></a></dt>
+<dd><p>When destroying the object, it is necessary to commit changes
+in the database and close the connection</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_sql.BaseDMsql.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_connector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_server</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unix_socket</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf8mb4'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_sql.BaseDMsql.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes a DataManager object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db_name</strong> (<em>str</em>) – Name of the DB</p></li>
+<li><p><strong>db_connector</strong> (<em>str {‘mysql’, ‘sqlite’}</em>) – Connector</p></li>
+<li><p><strong>path2db</strong> (<em>str or None, optional (default=None)</em>) – Path to the project folder (sqlite only)</p></li>
+<li><p><strong>db_server</strong> (<em>str or None, optional default=None)</em>) – Server (mysql only)</p></li>
+<li><p><strong>db_user</strong> (<em>str or None, optional (default=None)</em>) – User (mysql only)</p></li>
+<li><p><strong>db_password</strong> (<em>str or None, optional (default=None)</em>) – Password (mysql only)</p></li>
+<li><p><strong>db_port</strong> (<em>str or None, optional (default=None)</em>) – Port(mysql via TCP only) Necessary if not 3306</p></li>
+<li><p><strong>unix_socket</strong> (<em>str or None, optional (default=None)</em>) – Socket for local connectivity. If available, connection is slightly
+faster than through TCP.</p></li>
+<li><p><strong>charset</strong> (<em>str, optional (default=’utf8mb4’)</em>) – Coding to use by default in the connection</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_sql.BaseDMsql.__weakref__">
+<span class="sig-name descname"><span class="pre">__weakref__</span></span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_sql.BaseDMsql.__weakref__" title="Permalink to this definition"></a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_sql.BaseDMsql.addTableColumn">
+<span class="sig-name descname"><span class="pre">addTableColumn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columnname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columntype</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_sql.BaseDMsql.addTableColumn" title="Permalink to this definition"></a></dt>
+<dd><p>Add a new column to the specified table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tablename</strong> (<em>str</em>) – Table to which the column will be added</p></li>
+<li><p><strong>columnname</strong> (<em>str</em>) – Name of new column</p></li>
+<li><p><strong>columntype</strong> – Type of new column.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>For mysql, if type is TXT or VARCHAR, the character set if forzed to
+be utf8.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_sql.BaseDMsql.deleteDBtables">
+<span class="sig-name descname"><span class="pre">deleteDBtables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_sql.BaseDMsql.deleteDBtables" title="Permalink to this definition"></a></dt>
+<dd><p>Delete existing database, and regenerate empty tables</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tables</strong> (<em>str or list or None, optional (default=None)</em>) – If string, name of the table to reset.
+If list, list of tables to reset
+If None, all tables are deleted, and all tables
+(inlcuding those that might not exist previously)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_sql.BaseDMsql.dropTableColumn">
+<span class="sig-name descname"><span class="pre">dropTableColumn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columnname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_sql.BaseDMsql.dropTableColumn" title="Permalink to this definition"></a></dt>
+<dd><p>Remove column from the specified table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tablename</strong> (<em>str</em>) – Table containing the column to be removed</p></li>
+<li><p><strong>columnname</strong> (<em>str</em>) – Name of column to be removed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_sql.BaseDMsql.exportTable">
+<span class="sig-name descname"><span class="pre">exportTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileformat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_sql.BaseDMsql.exportTable" title="Permalink to this definition"></a></dt>
+<dd><p>Export columns from a table to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tablename</strong> (<em>str</em>) – Name of the table</p></li>
+<li><p><strong>fileformat</strong> (<em>str {‘xlsx’, ‘pkl’}</em>) – Type of output file</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Route to the output folder</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – Name of the output file</p></li>
+<li><p><strong>cols</strong> (<em>list or str</em>) – Columns to save. It can be a list or a string of comma-separated
+columns.
+If None, all columns saved.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_sql.BaseDMsql.export_table_to_csv">
+<span class="sig-name descname"><span class="pre">export_table_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_rows</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gzipped</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">select_options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order_options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_sql.BaseDMsql.export_table_to_csv" title="Permalink to this definition"></a></dt>
+<dd><p>Exports a table to csv.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>table_name</strong> (<em>str</em>) – Name of the SQL table.</p></li>
+<li><p><strong>output_file</strong> (<em>str</em>) – Name of the output csv file.</p></li>
+<li><p><strong>block_size</strong> (<em>int, optional</em>) – Table is read blockwise (to avoid running out of memory) in batches
+of this size.</p></li>
+<li><p><strong>max_rows</strong> (<em>int, optional</em>) – Maximum number of rows to be read. If <cite>None</cite>, the whole table is
+read.</p></li>
+<li><p><strong>gzipped</strong> (<em>bool, optional (default=T)</em>) – Whether to write a gzipped csv file (as opposed to plain text).</p></li>
+<li><p><strong>callbacks</strong> (<em>list or None, optional (default=None)</em>) – List of callable receiving a <cite>DataFrame</cite> and returning another one
+with the same structure
+A list of functions to be called on every block read before
+actually writing to disk.</p></li>
+<li><p><strong>select_options</strong> (<em>str or None, optional (default=None)</em>) – “select” options to be passed <cite>readDBtable</cite></p></li>
+<li><p><strong>filter_options</strong> (<em>str or None, optional (default=None)</em>) – “filter” options to be passed <cite>readDBtable</cite></p></li>
+<li><p><strong>order_options</strong> (<em>str or None, optional (default=None)</em>) – “order” options to be passed <cite>readDBtable</cite></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_sql.BaseDMsql.getColumnNames">
+<span class="sig-name descname"><span class="pre">getColumnNames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_sql.BaseDMsql.getColumnNames" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a list with the names of all columns in the indicated table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tablename</strong> (<em>str</em>) – Table to be read from</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>columnames</strong> – Names of all columns in the selected table</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_sql.BaseDMsql.getTableInfo">
+<span class="sig-name descname"><span class="pre">getTableInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_sql.BaseDMsql.getTableInfo" title="Permalink to this definition"></a></dt>
+<dd><p>Get information about the given table (size and columns)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tablename</strong> (<em>str</em>) – Table to be read from</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>cols</strong> (<em>list</em>) – Names of all columns in the table</p></li>
+<li><p><strong>n_rows</strong> (<em>int</em>) – Number of rows in table</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_sql.BaseDMsql.getTableNames">
+<span class="sig-name descname"><span class="pre">getTableNames</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_sql.BaseDMsql.getTableNames" title="Permalink to this definition"></a></dt>
+<dd><p>Provides acces to table names</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tbnames</strong> – Names of all tables in the database</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_sql.BaseDMsql.insertInTable">
+<span class="sig-name descname"><span class="pre">insertInTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_sql.BaseDMsql.insertInTable" title="Permalink to this definition"></a></dt>
+<dd><p>Insert new records into table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tablename</strong> (<em>str</em>) – Name of table in which the data will be inserted</p></li>
+<li><p><strong>columns</strong> (<em>list</em>) – Name of columns for which data are provided</p></li>
+<li><p><strong>arguments</strong> (<em>list of list of tuples</em>) – A list of lists of tuples, each element associated to one new entry
+for the table</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_sql.BaseDMsql.readDBtable">
+<span class="sig-name descname"><span class="pre">readDBtable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selectOptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filterOptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orderOptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_sql.BaseDMsql.readDBtable" title="Permalink to this definition"></a></dt>
+<dd><p>Read data from a table in the database can choose to read only some
+specific fields</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tablename</strong> (<em>str</em>) – Table to be read from</p></li>
+<li><p><strong>limit</strong> (<em>int or None, optional (default=None)</em>) – The maximum number of records to retrieve</p></li>
+<li><p><strong>selectOptions</strong> (<em>str or None, optional (default=None)</em>) – string with fields that will be retrieved
+(e.g. ‘REFERENCIA, Resumen’)</p></li>
+<li><p><strong>filterOptions</strong> (<em>str or None, optional (default=None)</em>) – Filtering options for the SQL query
+(e.g., ‘WHERE UNESCO_cd=23’)</p></li>
+<li><p><strong>orderOptions</strong> (<em>str or None, optional (default=None)</em>) – Field that will be used for sorting the
+results of the query (e.g, ‘Cconv’)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_sql.BaseDMsql.setField">
+<span class="sig-name descname"><span class="pre">setField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyfld</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueflds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_sql.BaseDMsql.setField" title="Permalink to this definition"></a></dt>
+<dd><p>Update records of a DB table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tablename</strong> (<em>str</em>) – Table that will be modified</p></li>
+<li><p><strong>keyfld</strong> (<em>str</em>) – Name of the column that will be used as key (e.g. ‘REFERENCIA’)</p></li>
+<li><p><strong>valueflds</strong> (<em>list</em>) – Names of the columns that will be updated (e.g., ‘Lemas’)</p></li>
+<li><p><strong>values</strong> (<em>list of tuples</em>) – A list of tuples in the format (keyfldvalue, valuefldvalue)
+(e.g., [(‘Ref1’, ‘gen celula’), (‘Ref2’, ‘big_data, algorithm’)])</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_sql.BaseDMsql.upsert">
+<span class="sig-name descname"><span class="pre">upsert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyfld</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robust</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_sql.BaseDMsql.upsert" title="Permalink to this definition"></a></dt>
+<dd><p>Update records of a DB table with the values in the df
+This function implements the following additional functionality:
+* If there are columns in df that are not in the SQL table, columns will be added
+* New records will be created in the table if there are rows in the dataframe without
+an entry already in the table. For this, keyfld indicates which is the column that will be used as an index</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tablename</strong> (<em>str</em>) – Table that will be modified</p></li>
+<li><p><strong>keyfld</strong> (<em>str</em>) – Name of the column that will be used as key (e.g. ‘REFERENCIA’)</p></li>
+<li><p><strong>df</strong> (<em>dataframe</em>) – Dataframe that we wish to save in table tablename</p></li>
+<li><p><strong>robust</strong> (<em>bool, optional (default=True)</em>) – If False, verifications are skipped (for a faster execution)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-rdigraphs.datamanager.base_dm_neo4j">
+<span id="neo4j"></span><h1>Neo4j<a class="headerlink" href="#module-rdigraphs.datamanager.base_dm_neo4j" title="Permalink to this heading"></a></h1>
+<p>This class provides general functionality for managing a Neo4J database</p>
+<ul class="simple">
+<li><p>reading specific fields (with the possibility to filter by field values)</p></li>
+<li><p>storing calculated values in the dataset</p></li>
+</ul>
+<p>Created on Sep 06 2018</p>
+<p>&#64;author: Manu A. Vázquez</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.base_dm_neo4j.</span></span><span class="sig-name descname"><span class="pre">BaseDMneo4j</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_server</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'neo4j'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for interacting with a Neo4j database.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.__del__">
+<span class="sig-name descname"><span class="pre">__del__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.__del__" title="Permalink to this definition"></a></dt>
+<dd><p>Tidy up stuff after before deleting the object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_server</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'neo4j'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db_server</strong> (<em>str</em>) – The URL for the server</p></li>
+<li><p><strong>db_password</strong> (<em>str</em>) – User Password</p></li>
+<li><p><strong>db_user</strong> (<em>str, optional</em>) – User login</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.__weakref__">
+<span class="sig-name descname"><span class="pre">__weakref__</span></span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.__weakref__" title="Permalink to this definition"></a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.drop_node_property">
+<span class="sig-name descname"><span class="pre">drop_node_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.drop_node_property" title="Permalink to this definition"></a></dt>
+<dd><p>Deletes a property from nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – The label of the node</p></li>
+<li><p><strong>property</strong> (<em>str</em>) – The name of the property</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.drop_relationship">
+<span class="sig-name descname"><span class="pre">drop_relationship</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">relationship_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.drop_relationship" title="Permalink to this definition"></a></dt>
+<dd><p>Deletes a relationship.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>relationship_type</strong> (<em>str</em>) – The type of the relationship</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.export_graph">
+<span class="sig-name descname"><span class="pre">export_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label_nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_ref_nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_edges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2edges</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.export_graph" title="Permalink to this definition"></a></dt>
+<dd><p>Export graph to Neo4J</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label_nodes</strong> (<em>str or tuple of str</em>) – If str, all nodes of the same type
+If tuple, one type for sources, the other for destinations</p></li>
+<li><p><strong>path2nodes</strong> (<em>str</em>) – Path to the file of nodes: a csv file with one column for the
+node names, and possibly other columns for attributes (that may
+be numeric or str)</p></li>
+<li><p><strong>col_ref_nodes</strong> (<em>str</em>) – Name of the column in the file of nodes containing the node names</p></li>
+<li><p><strong>label_edges</strong> (<em>str</em>) – Type of relationship for all edges.</p></li>
+<li><p><strong>path2edges</strong> (<em>str</em>) – Path to the edges file: a csv file with 3 columns:
+Source, Target, Weight</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.get_db_structure">
+<span class="sig-name descname"><span class="pre">get_db_structure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.get_db_structure" title="Permalink to this definition"></a></dt>
+<dd><p>Returns meta-data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>out</strong> – Metadata</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.make_edges">
+<span class="sig-name descname"><span class="pre">make_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relationship</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.make_edges" title="Permalink to this definition"></a></dt>
+<dd><p>Makes edges between nodes as specified in a dataframe; if the requested nodes don’t exist, they are created</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas Dataframe</em>) – The data</p></li>
+<li><p><strong>source</strong> (<em>tuple of a str and a tuple of two str</em>) – The first element is the name of the column (within this DataFrame) specifying the <cite>source</cite> node; the second
+is a tuple whose first element is the <em>label</em> in the graph and whose second is the property (in the nodes
+with the aforementioned label) that must match the values in the column.</p></li>
+<li><p><strong>destination</strong> (<em>tuple of a str and a tuple of two str</em>) – The first element is the name of the column (within this DataFrame) specifying the <cite>destination</cite> node;
+the second is a tuple whose first element is the <em>label</em> in the graph and whose second is the property (in
+the nodes with the aforementioned label) that must match the values in the column.</p></li>
+<li><p><strong>relationship</strong> (<em>tuple of a str and a dict</em>) – The first element is the <em>type</em> of the relationship to be created between nodes; the second is a dictionary
+that maps columns in this DataFrame to <em>properties</em> of the relationship.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.properties_of_label">
+<span class="sig-name descname"><span class="pre">properties_of_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.properties_of_label" title="Permalink to this definition"></a></dt>
+<dd><p>Returns all the properties (across all the nodes) of a given label.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>label</strong> (<em>str</em>) – The label (type)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – A list with the properties</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.properties_of_relationship">
+<span class="sig-name descname"><span class="pre">properties_of_relationship</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">relationship_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.properties_of_relationship" title="Permalink to this definition"></a></dt>
+<dd><p>Returns all the properties of a given relationship.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>relationship_type</strong> (<em>str</em>) – The type of the relationship</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – A list with the properties</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.read_edges">
+<span class="sig-name descname"><span class="pre">read_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">relationship_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.read_edges" title="Permalink to this definition"></a></dt>
+<dd><p>Reads edges from the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>relationship_type</strong> (<em>str</em>) – Type of the relationship</p></li>
+<li><p><strong>limit</strong> (<em>int</em>) – Maximum number of edges</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Every row contains information about a single edge</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.read_nodes">
+<span class="sig-name descname"><span class="pre">read_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">select_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.read_nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Reads nodes from the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – Label of the nodes</p></li>
+<li><p><strong>limit</strong> (<em>int</em>) – Maximum number of nodes</p></li>
+<li><p><strong>select_options</strong> (<em>unused</em>)</p></li>
+<li><p><strong>filter_options</strong> (<em>unused</em>)</p></li>
+<li><p><strong>order_options</strong> (<em>unused</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Every row contains information about a node</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.reset_database">
+<span class="sig-name descname"><span class="pre">reset_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.reset_database" title="Permalink to this definition"></a></dt>
+<dd><p>Reset the database, deleting everything.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.write_dataframe">
+<span class="sig-name descname"><span class="pre">write_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.base_dm_neo4j.BaseDMneo4j.write_dataframe" title="Permalink to this definition"></a></dt>
+<dd><p>Writes a dataframe in the database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas Dataframe</em>) – The data</p></li>
+<li><p><strong>source</strong> (<em>tuple of a str and a list of str</em>) – The first element in the tuple is the label for the <cite>source</cite> node,
+and the second one is a list with the columns of the dataframe that
+will become the properties of the node</p></li>
+<li><p><strong>destination</strong> (<em>tuple of a str and a list of str</em>) – The first element in the tuple is the label for the <cite>destination</cite>
+node, and the second one is a list withthe columns of the dataframe
+that will become the properties of the node</p></li>
+<li><p><strong>edge</strong> (<em>tuple of a str and a list of str</em>) – The first element in the tuple is the label for the <cite>edge</cite> node,
+and the second one is a list with the columns of the dataframe that
+will become the properties of the node</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-rdigraphs.datamanager.cypher">
+<span id="cypher"></span><h1>Cypher<a class="headerlink" href="#module-rdigraphs.datamanager.cypher" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.DataLoadingStatement">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">DataLoadingStatement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_files_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'line'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_access</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'file://'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.cypher.DataLoadingStatement" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rdigraphs.datamanager.cypher.Statement" title="rdigraphs.datamanager.cypher.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a></p>
+<p>Class to load data from csv files into Neo4j.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.DataLoadingStatement.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_files_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'line'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_access</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'file://'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.DataLoadingStatement.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>csv_files_path</strong> (<em>pathlib’s Path</em>) – Path to the csv files</p></li>
+<li><p><strong>csv_line</strong> (<em>str, optional</em>) – Name of a line from the file when referred to in another statement</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.DataLoadingStatement.flatten_dic">
+<span class="sig-name descname"><span class="pre">flatten_dic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">':'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property_name_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.cypher.DataLoadingStatement.flatten_dic" title="Permalink to this definition"></a></dt>
+<dd><p>Takes a dictionary specifying SQL to neo4j conversions and returns a string amenable to be used in cypher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>d</strong> (<em>dict</em>) – A dictionary mapping properties to values.</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – Separator between the property and the value</p></li>
+<li><p><strong>property_name_prefix</strong> (<em>str</em>) – A string to prepend to every property name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – A piece of cypher statement specifying a mapping between properties and values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.DataLoadingStatement.load_clause">
+<span class="sig-name descname"><span class="pre">load_clause</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">using_periodic_commit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.DataLoadingStatement.load_clause" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a clause to load data from a csv file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parameters</strong> (<em>dictionary</em>) – Settings</p></li>
+<li><p><strong>using_periodic_commit</strong> (<em>bool</em>) – Whether to use the “periodic commit” operation mode</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>statement</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.DataLoadingStatement.match_clause">
+<span class="sig-name descname"><span class="pre">match_clause</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matching_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matching_properties</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['origin',</span> <span class="pre">'destination']</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.DataLoadingStatement.match_clause" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a clause to match data read from the file with that in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>labels</strong> (<em>list</em>) – Labels of the nodes to be matched</p></li>
+<li><p><strong>matching_columns</strong> (<em>list</em>) – Columns in the csv file</p></li>
+<li><p><strong>matching_properties</strong> (<em>list</em>) – Properties of the nodes to be matched</p></li>
+<li><p><strong>nodes</strong> (<em>list</em>) – Names of the nodes to be matched when referred to in another statement</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.LoadAttributesTable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">LoadAttributesTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_files_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'line'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_access</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'file://'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.cypher.LoadAttributesTable" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rdigraphs.datamanager.cypher.DataLoadingStatement" title="rdigraphs.datamanager.cypher.DataLoadingStatement"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoadingStatement</span></code></a></p>
+<p>Class to load data from a csv file representing an “attributes” table.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.LoadAttributesTable.assemble">
+<span class="sig-name descname"><span class="pre">assemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.LoadAttributesTable.assemble" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a statement to load data from a csv file representing an “attributes” table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<em>dictionary</em>) – Settings</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.LoadJoinTable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">LoadJoinTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_files_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'line'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_access</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'file://'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.cypher.LoadJoinTable" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rdigraphs.datamanager.cypher.DataLoadingStatement" title="rdigraphs.datamanager.cypher.DataLoadingStatement"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoadingStatement</span></code></a></p>
+<p>Class to load data from a csv file representing a “join” table.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.LoadJoinTable.assemble">
+<span class="sig-name descname"><span class="pre">assemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.LoadJoinTable.assemble" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a statement to load data from a csv file representing a “join” table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<em>dictionary</em>) – Settings</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.LoadTable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">LoadTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_files_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'line'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_access</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'file://'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.cypher.LoadTable" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rdigraphs.datamanager.cypher.DataLoadingStatement" title="rdigraphs.datamanager.cypher.DataLoadingStatement"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoadingStatement</span></code></a></p>
+<p>Class to load a table from a csv file.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.LoadTable.assemble">
+<span class="sig-name descname"><span class="pre">assemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.LoadTable.assemble" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a statement to load data from a csv file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<em>dictionary</em>) – Settings</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.MakeRelationship">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">MakeRelationship</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_files_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'line'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_access</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'file://'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.cypher.MakeRelationship" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rdigraphs.datamanager.cypher.DataLoadingStatement" title="rdigraphs.datamanager.cypher.DataLoadingStatement"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoadingStatement</span></code></a></p>
+<p>Class to load data from a csv file representing a “relationship” table.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.MakeRelationship.assemble">
+<span class="sig-name descname"><span class="pre">assemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.MakeRelationship.assemble" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a statement to load data from a csv file representing a “relationship” table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<em>dictionary</em>) – Settings</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.Statement">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">Statement</span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.Statement" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for a Neo4j statement.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.Statement.__weakref__">
+<span class="sig-name descname"><span class="pre">__weakref__</span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.Statement.__weakref__" title="Permalink to this definition"></a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.UpdateTable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">UpdateTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_files_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'line'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_access</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'file://'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.cypher.UpdateTable" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rdigraphs.datamanager.cypher.DataLoadingStatement" title="rdigraphs.datamanager.cypher.DataLoadingStatement"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoadingStatement</span></code></a></p>
+<p>Class to update an existing table using data from a csv file.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.UpdateTable.assemble">
+<span class="sig-name descname"><span class="pre">assemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.UpdateTable.assemble" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a statement to update an existing table using data from a csv file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<em>dictionary</em>) – Settings</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.assert_uniqueness_clause">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">assert_uniqueness_clause</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">property</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'node'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.assert_uniqueness_clause" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the <em>part</em> of a statement that ensures a property of a node is unique.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>property</strong> (<em>str</em>) – Name of the mean-to-be-unique property</p></li>
+<li><p><strong>node</strong> (<em>str, optional</em>) – Name of the node (coming from other statement)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.create_constraint_clause">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">create_constraint_clause</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'node'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.create_constraint_clause" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the <em>part</em> of a statement that creates a constraint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – The label (node type) on which to create the index</p></li>
+<li><p><strong>node</strong> (<em>str, optional</em>) – Name of the node when referred in another statement</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.create_indexes">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">create_indexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.create_indexes" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a statement that creates indexes on a given label.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – The label (node type) on which to create the index</p></li>
+<li><p><strong>properties</strong> (<em>list</em>) – A list of properties to be indexed on the given label</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.create_or_merge_node">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">create_or_merge_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'A'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.create_or_merge_node" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a statement that creates or merges a new node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – The label of the node</p></li>
+<li><p><strong>properties</strong> (<em>dictionary</em>) – The properties of the node</p></li>
+<li><p><strong>name</strong> (<em>str, optional</em>) – Name of the node when referred in another statement</p></li>
+<li><p><strong>merge</strong> (<em>boolean</em>) – Whether a “merge” statement rather than a “create” one is to be returned</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.create_or_merge_relationship">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">create_or_merge_relationship</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rel_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'rel'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.create_or_merge_relationship" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a statement that creates or merges a new relationship.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>origin</strong> (<em>str</em>) – Name (identifier/variable) of the origin node</p></li>
+<li><p><strong>destination</strong> (<em>str</em>) – Name (identifier/variable) of the destination node</p></li>
+<li><p><strong>rel_type</strong> (<em>str</em>) – Relationship type</p></li>
+<li><p><strong>properties</strong> (<em>dictionary</em>) – Properties to be added to the relationship</p></li>
+<li><p><strong>name</strong> (<em>str, optional</em>) – Name of the relationship when referred to in another statement</p></li>
+<li><p><strong>merge</strong> (<em>boolean</em>) – Whether a “merge” statement rather than a “create” one is to be returned</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.create_unique_constraint">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">create_unique_constraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.create_unique_constraint" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a statement to creates a unique constraint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – The label of the node</p></li>
+<li><p><strong>property</strong> (<em>str</em>) – The property of the node</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.dic_to_properties">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">dic_to_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.cypher.dic_to_properties" title="Permalink to this definition"></a></dt>
+<dd><p>Takes a dictionary and returns a string amenable to be used in cypher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>d</strong> (<em>dict</em>) – A dictionary mapping properties to values.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – A piece of cypher statement specifying properties and values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.drop_null_valued_keys">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">drop_null_valued_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.cypher.drop_null_valued_keys" title="Permalink to this definition"></a></dt>
+<dd><p>Convenience function to get rid of null (<cite>None</cite>) values in a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>d</strong> (<em>dict</em>) – Any dictionary</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – The input dictionary without null values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.get_metadata">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">get_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.get_metadata" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a statement to get the “schema” of the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.labels">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">labels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.labels" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a statement to get all the labels (node types) in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.make_relationship">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">make_relationship</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relationship_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin_properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relationship_properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination_properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.cypher.make_relationship" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a statement to make a relationship while merging properties in the nodes involved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>origin_label</strong> (<em>str</em>) – Label of the origin node</p></li>
+<li><p><strong>destination_label</strong> (<em>str</em>) – Label of the destination node</p></li>
+<li><p><strong>relationship_type</strong> (<em>str</em>) – Type of the relationship</p></li>
+<li><p><strong>origin_properties</strong> (<em>dictionary</em>) – Properties of the origin node</p></li>
+<li><p><strong>relationship_properties</strong> (<em>dictionary</em>) – Properties of the relationship</p></li>
+<li><p><strong>destination_properties</strong> (<em>dictionary</em>) – Properties of the destination node</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.match_label">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">match_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dummy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'node'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.match_label" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a statement that matches and returns a label.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – The label of the node</p></li>
+<li><p><strong>limit</strong> (<em>int, optional</em>) – The maximum number of matches</p></li>
+<li><p><strong>dummy</strong> (<em>str, optional</em>) – Name of the node when referred in another statement</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.match_relationship">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">match_relationship</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">relationship</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surrogate_relationship</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'rel'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surrogate_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'path'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.match_relationship" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a statement that matches relationships.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>relationship</strong> (<em>str</em>) – The (type of the) relationship</p></li>
+<li><p><strong>limit</strong> (<em>int, optional</em>) – The maximum number of matches</p></li>
+<li><p><strong>surrogate_relationship</strong> (<em>str, optional</em>) – Name of the relationship when referred in another statement</p></li>
+<li><p><strong>surrogate_path</strong> (<em>str, optional</em>) – Name of the path when referred in another statement</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.merge_relationship_with_properties_clause">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">merge_relationship_with_properties_clause</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'origin'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'destination'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relationship_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin_properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relationship_properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination_properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relationship</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'rel'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arrowhead</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'&gt;'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.cypher.merge_relationship_with_properties_clause" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a clause that merges a relationship specifying properties for each entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>origin</strong> (<em>str</em>) – Name (identifier/variable) of the origin node</p></li>
+<li><p><strong>destination</strong> (<em>str</em>) – Name (identifier/variable) of the destination node</p></li>
+<li><p><strong>origin_label</strong> (<em>str</em>) – Label of the origin node</p></li>
+<li><p><strong>destination_label</strong> (<em>str</em>) – Label of the destination node</p></li>
+<li><p><strong>relationship_type</strong> (<em>str</em>) – Type of the relationship</p></li>
+<li><p><strong>origin_properties</strong> (<em>dictionary</em>) – Properties of the origin node</p></li>
+<li><p><strong>relationship_properties</strong> (<em>dictionary</em>) – Properties of the relationship</p></li>
+<li><p><strong>destination_properties</strong> (<em>dictionary</em>) – Properties of the destination node</p></li>
+<li><p><strong>relationship</strong> (<em>str, optional</em>) – Name of the relationship when referred to in another statement</p></li>
+<li><p><strong>arrowhead</strong> (<em>string</em>) – Suffix controlling whether the relationship is (bi)directional or not</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.relationship_types">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">relationship_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.relationship_types" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a statement to get all the relationship types in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.remove_property">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">remove_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surrogate_node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'node'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.remove_property" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a statement that removes a property from a node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – The label of the node</p></li>
+<li><p><strong>property</strong> (<em>str</em>) – The name of the property</p></li>
+<li><p><strong>surrogate_node</strong> (<em>str, optional</em>) – Name of the node when referred in another statement</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.remove_relationship">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">remove_relationship</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">relationship_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'r'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.remove_relationship" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a statement that removes a relationship.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>relationship_type</strong> (<em>str</em>) – The type of the relationship</p></li>
+<li><p><strong>var</strong> (<em>str, optional</em>) – Name of the relationship when referred in another statement</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.cypher.reset_database">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.cypher.</span></span><span class="sig-name descname"><span class="pre">reset_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rdigraphs.datamanager.cypher.reset_database" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a statement that resets the database, i.e., deletes everything.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>out</strong> – Neo4j statement</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rdigraphs.datamanager.callbacks">
+<span id="migration-callbacks"></span><h1>Migration Callbacks<a class="headerlink" href="#module-rdigraphs.datamanager.callbacks" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.AuthorsDisambiguator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.callbacks.</span></span><span class="sig-name descname"><span class="pre">AuthorsDisambiguator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">disambiguation_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.AuthorsDisambiguator" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rdigraphs.datamanager.callbacks.Disambiguator" title="rdigraphs.datamanager.callbacks.Disambiguator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Disambiguator</span></code></a></p>
+<p>Class containing callbacks methods needed for disambiguating authors.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.AuthorsDisambiguator.patstats_person">
+<span class="sig-name descname"><span class="pre">patstats_person</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.AuthorsDisambiguator.patstats_person" title="Permalink to this definition"></a></dt>
+<dd><p>Callback function for “person” table in “patstats” database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>Pandas dataframe</em>) – Input data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>df</strong> – Output data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.AuthorsDisambiguator.patstats_person_application">
+<span class="sig-name descname"><span class="pre">patstats_person_application</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.AuthorsDisambiguator.patstats_person_application" title="Permalink to this definition"></a></dt>
+<dd><p>Callback function for “application” table in “patstats” database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>Pandas dataframe</em>) – Input data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>df</strong> – Output data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.AuthorsDisambiguator.projects_researcher_project">
+<span class="sig-name descname"><span class="pre">projects_researcher_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.AuthorsDisambiguator.projects_researcher_project" title="Permalink to this definition"></a></dt>
+<dd><p>Callback function for “researcher_project” table in “projects”
+database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>Pandas dataframe</em>) – Input data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>df</strong> – Output data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.AuthorsDisambiguator.projects_researchers">
+<span class="sig-name descname"><span class="pre">projects_researchers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.AuthorsDisambiguator.projects_researchers" title="Permalink to this definition"></a></dt>
+<dd><p>Callback function for “researchers” table in “projects” database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>Pandas dataframe</em>) – Input data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>df</strong> – Output data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.AuthorsDisambiguator.scopus_authorship">
+<span class="sig-name descname"><span class="pre">scopus_authorship</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.AuthorsDisambiguator.scopus_authorship" title="Permalink to this definition"></a></dt>
+<dd><p>Callback function for “authorship” table in “scopus” database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>Pandas dataframe</em>) – Input data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>df</strong> – Output data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.Disambiguator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.callbacks.</span></span><span class="sig-name descname"><span class="pre">Disambiguator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">disambiguation_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.Disambiguator" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to process disambiguation data.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.Disambiguator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">disambiguation_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.Disambiguator.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>disambiguation_map</strong> (<em>list</em>) – Path to the disambiguation map</p></li>
+<li><p><strong>new_id</strong> (<em>str</em>) – The name of the new field/column/neo4j property to be created for
+storing the final <em>disambiguated</em> id</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.Disambiguator.__weakref__">
+<span class="sig-name descname"><span class="pre">__weakref__</span></span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.Disambiguator.__weakref__" title="Permalink to this definition"></a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.Disambiguator.handle_duplicates">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_duplicates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.Disambiguator.handle_duplicates" title="Permalink to this definition"></a></dt>
+<dd><p>Get rid of duplicated (disambiguated) ids.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>Pandas dataframe</em>) – Data with duplicates</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>unmapped</strong> – Input data with the only row with the value “left_only” in column
+<cite>source</cite>, or the 1st row of the input
+dataframe if there are several.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.Disambiguator.merge">
+<span class="sig-name descname"><span class="pre">merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.Disambiguator.merge" title="Permalink to this definition"></a></dt>
+<dd><p>Replace within the passed <cite>DataFrame</cite> the values of <cite>field</cite> that are
+present in the disambiguation map, while at the same time ensuring that
+the new disambiguated values are unique.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mapping</strong> (<em>Pandas dataframe</em>) – Disambiguation map</p></li>
+<li><p><strong>df</strong> (<em>Pandas dataframe</em>) – Data to be disambiguated</p></li>
+<li><p><strong>field</strong> (<em>str</em>) – Column to be used in <cite>df</cite></p></li>
+<li><p><strong>prefix</strong> (<em>str</em>) – Prefix to be added to a “new” identifier built from the already
+existing (not present in the disambiguation map)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>merge</strong> – Input data with the disambiguation map applied.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.Disambiguator.replace">
+<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.Disambiguator.replace" title="Permalink to this definition"></a></dt>
+<dd><p>Replace within the passed <cite>DataFrame</cite> the values of <cite>field</cite> that are
+present in the disambiguation map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mapping</strong> (<em>Pandas dataframe</em>) – Disambiguation map</p></li>
+<li><p><strong>df</strong> (<em>Pandas dataframe</em>) – Data to be disambiguated</p></li>
+<li><p><strong>field</strong> (<em>str</em>) – Column to be used in <cite>df</cite></p></li>
+<li><p><strong>prefix</strong> (<em>str</em>) – Prefix to be added to a “new” identifier built from the already
+existing (not present in the disambiguation map)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>merge</strong> – Input data with the disambiguation map applied.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.OrganizationsDisambiguator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.callbacks.</span></span><span class="sig-name descname"><span class="pre">OrganizationsDisambiguator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">disambiguation_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.OrganizationsDisambiguator" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rdigraphs.datamanager.callbacks.AuthorsDisambiguator" title="rdigraphs.datamanager.callbacks.AuthorsDisambiguator"><code class="xref py py-class docutils literal notranslate"><span class="pre">AuthorsDisambiguator</span></code></a></p>
+<p>Class containing callbacks methods needed for disambiguating organizations.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.OrganizationsDisambiguator.projects_organizations">
+<span class="sig-name descname"><span class="pre">projects_organizations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.OrganizationsDisambiguator.projects_organizations" title="Permalink to this definition"></a></dt>
+<dd><p>Callback function for “organizations” table in “projects” database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>Pandas dataframe</em>) – Input data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>df</strong> – Output data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.OrganizationsDisambiguator.projects_projects">
+<span class="sig-name descname"><span class="pre">projects_projects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.OrganizationsDisambiguator.projects_projects" title="Permalink to this definition"></a></dt>
+<dd><p>Callback function for “projects” table in “projects” database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>Pandas dataframe</em>) – Input data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>df</strong> – Output data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.OrganizationsDisambiguator.scopus_authorship">
+<span class="sig-name descname"><span class="pre">scopus_authorship</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.OrganizationsDisambiguator.scopus_authorship" title="Permalink to this definition"></a></dt>
+<dd><p>Callback function for “authorship” table in “scopus” database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>Pandas dataframe</em>) – Input data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>df</strong> – Output data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.initialize">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.callbacks.</span></span><span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.initialize" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes this module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<em>dictionary</em>) – Settings</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.patents_literature">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.callbacks.</span></span><span class="sig-name descname"><span class="pre">patents_literature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.patents_literature" title="Permalink to this definition"></a></dt>
+<dd><p>Callback function for relating patents literature with itself in “patents”
+database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>Pandas dataframe</em>) – Input data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>df</strong> – Output data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.patents_non_literature">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.callbacks.</span></span><span class="sig-name descname"><span class="pre">patents_non_literature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.patents_non_literature" title="Permalink to this definition"></a></dt>
+<dd><p>Callback function for relating patents literature with non-patents
+literature in “patents” database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>Pandas dataframe</em>) – Input data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>df</strong> – Output data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.patents_person">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.callbacks.</span></span><span class="sig-name descname"><span class="pre">patents_person</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.patents_person" title="Permalink to this definition"></a></dt>
+<dd><p>Callback function for “person” table in “patents” database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>Pandas dataframe</em>) – Input data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>df</strong> – Output data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.projects_researchers">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.callbacks.</span></span><span class="sig-name descname"><span class="pre">projects_researchers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'NOMBRE'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.projects_researchers" title="Permalink to this definition"></a></dt>
+<dd><p>Callback function for “researchers” table in “projects” database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>Pandas dataframe</em>) – Input data</p></li>
+<li><p><strong>name_col</strong> (<em>str, optional</em>) – Name of the colum with the researchers’ names</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>df</strong> – Output data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.callbacks.publications_authorship">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.callbacks.</span></span><span class="sig-name descname"><span class="pre">publications_authorship</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.callbacks.publications_authorship" title="Permalink to this definition"></a></dt>
+<dd><p>Callback function for “authorship” table in “publications” database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>Pandas dataframe</em>) – Input data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>df</strong> – Output data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rdigraphs.datamanager.util">
+<span id="util"></span><h1>Util<a class="headerlink" href="#module-rdigraphs.datamanager.util" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.datamanager.util.simple_http_server">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.datamanager.util.</span></span><span class="sig-name descname"><span class="pre">simple_http_server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'0.0.0.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.datamanager.util.simple_http_server" title="Permalink to this definition"></a></dt>
+<dd><p>Sets up a http server for files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>host</strong> (<em>str</em>) – The IP where the host will “listen”</p></li>
+<li><p><strong>port</strong> (<em>int</em>) – The port where the host will “listen”</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – The path to be served</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>start</strong> (<em>function</em>) – It starts the server</p></li>
+<li><p><strong>stop</strong> (<em>function</em>) – It stops the server</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="SuperGraph documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rdigraphs_menu_navigator.html" class="btn btn-neutral float-right" title="Menu" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, J. Cid-Sueiro, M. A. Vázquez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

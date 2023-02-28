@@ -6,8 +6,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
-import ipdb
-
 # A constant for the smallest positive real.
 EPS = np.nextafter(0, 1)
 
@@ -24,8 +22,8 @@ def compute_div(q, eta, div_name):
     q : array, shape (dimension, 1)
         Estimate of the posterior
     div_name : str {'L2', 'L1', 'KL', 'JS', 'dH'}
-        Divergence meeasure. Available options are 'L2'  (square div), 'L1' 
-        (L1 distance), 'KL' (Kullback-Leibler), 'JS' (Jensen-Shannon, 
+        Divergence meeasure. Available options are 'L2'  (square div), 'L1'
+        (L1 distance), 'KL' (Kullback-Leibler), 'JS' (Jensen-Shannon,
         divergence), 'dH' (absolute difference between entropies, this is not
         a true divergence)
 
@@ -65,8 +63,8 @@ def compute_simplex(div_name, eta, N=300):
     Parameters
     ----------
     div_name : str {'L2', 'L1', 'KL', 'JS', 'dH'}
-        Divergence meeasure. Available options are 'L2'  (square div), 'L1' 
-        (L1 distance), 'KL' (Kullback-Leibler), 'JS' (Jensen-Shannon, 
+        Divergence meeasure. Available options are 'L2'  (square div), 'L1'
+        (L1 distance), 'KL' (Kullback-Leibler), 'JS' (Jensen-Shannon,
         divergence), 'dH' (absolute difference between entropies, this is not
         a true divergence)
     eta : array, shape (dimension, 1)
@@ -96,8 +94,8 @@ def compute_simplex(div_name, eta, N=300):
 
             # ## Compute class probabilities corresponding to delta[i], p[j]
             q2 = p[j]
-            q1 = (1 - q2 + delta[i])/2
-            q0 = (1 - q2 - delta[i])/2
+            q1 = (1 - q2 + delta[i]) / 2
+            q0 = (1 - q2 - delta[i]) / 2
             q = np.array([q0, q1, q2])
 
             # Since q may lie out of the probability triengle, we must check
@@ -233,4 +231,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

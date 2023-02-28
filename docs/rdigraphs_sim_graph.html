@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Similarity graphs &mdash; SuperGraph 2023 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Supergraph" href="rdigraphs_supergraph.html" />
+    <link rel="prev" title="Community Plus" href="rdigraphs_community_plus.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SuperGraph
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Data access:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html">Datamanager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.base_dm_sql">SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.base_dm_neo4j">Neo4j</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.cypher">Cypher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.callbacks">Migration Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.util">Util</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Menu:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_menu_navigator.html">Menu</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Community:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_community_plus.html">Community Plus</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Similarity:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Similarity graphs</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Supergraph:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_supergraph.html">Supergraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_supergraph.html#module-rdigraphs.supergraph.dgview">Data graph view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_supergraph.html#module-rdigraphs.supergraph.sedge">Super edge</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Task manager:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_taskmanager.html">Taskmanager</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SuperGraph</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Similarity graphs</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/rdigraphs_sim_graph.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-rdigraphs.sim_graph.sim_graph">
+<span id="similarity-graphs"></span><h1>Similarity graphs<a class="headerlink" href="#module-rdigraphs.sim_graph.sim_graph" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.sim_graph.sim_graph.JSdist">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.sim_graph.sim_graph.</span></span><span class="sig-name descname"><span class="pre">JSdist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sim_graph.sim_graph.JSdist" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the Jensen-Shannon distance between probability distributions p
+and q.
+It assumes that both p and q are normalized and sum up to 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> (<em>numpy array</em>) – Probability distribution</p></li>
+<li><p><strong>q</strong> (<em>numpy array</em>) – Probability distribution (with the same size as p)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>d</strong> – JS distance</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.sim_graph.sim_graph.JSdist_sp">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.sim_graph.sim_graph.</span></span><span class="sig-name descname"><span class="pre">JSdist_sp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sim_graph.sim_graph.JSdist_sp" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the Jensen-Shannon distance between probability distributions p
+and q.
+It assumes that both p and q are normalized and sum up to 1 p and q can
+be sparse vectors (this is the main difference wrt JSdist())</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> (<em>numpy array or sparse vector</em>) – Probability distribution</p></li>
+<li><p><strong>q</strong> (<em>numpy array or sparse vector</em>) – Probability distribution (with the same size as p)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>d</strong> – JS distance</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.sim_graph.sim_graph.SimGraph">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.sim_graph.sim_graph.</span></span><span class="sig-name descname"><span class="pre">SimGraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blocksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useGPU</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmp_folder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_every</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e+300</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sim_graph.sim_graph.SimGraph" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ThOps</span></code></p>
+<p>Generic class to generate similarity graphs from data</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sim_graph.sim_graph.SimGraph.JS2_affinity">
+<span class="sig-name descname"><span class="pre">JS2_affinity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sim_graph.sim_graph.SimGraph.JS2_affinity" title="Permalink to this definition"></a></dt>
+<dd><p>Compute all truncated affinities, based on the squared Jensen-Shannon
+divergence, between all pairs of connected nodes in the graph based on
+the node attribute vectors</p>
+<p>It assumes that all attribute vectors are normalized to sum up to 1
+Attribute matrices in X and Y can be sparse</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>numpy array</em>) – Input matrix of probabilistic attribute vectors</p></li>
+<li><p><strong>Y</strong> (<em>numpy array or None, optional (default=None)</em>) – Input matrix of probabilistic attribute vectors. If None, it is
+assumed Y=X</p></li>
+<li><p><strong>R2</strong> (<em>float, optional (default=2)</em>) – Radius (maximum squared JS distance). Edges at higher distance are
+removed). The default is a large value (larger than the maximum
+possible squared distance between two probability distributions),
+which implies no edge filtering</p></li>
+<li><p><strong>mapping</strong> (<em>str in {‘linear’, ‘polynomial’, ‘exponential’}</em>) – Type of mapping from distances to similarities.</p></li>
+<li><p><strong>g</strong> (<em>float</em>) – Exponent for the final affinity mapping</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>edge_id</strong> (<em>list of tuples</em>) – List of edges</p></li>
+<li><p><strong>weights</strong> (<em>list</em>) – List of edge weights</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>edge_id</strong> (<em>list of tuples</em>) – List of edges</p></li>
+<li><p><strong>weights</strong> (<em>list</em>) – List of edge weights</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sim_graph.sim_graph.SimGraph.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blocksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useGPU</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmp_folder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_every</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e+300</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sim_graph.sim_graph.SimGraph.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Stores the main attributes of a class instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>scipy.sparse.csr or numpy.array</em>) – Matrix of node attribute vectors</p></li>
+<li><p><strong>blocksize</strong> (<em>int, optional (default=25_000)</em>) – Size (number of rows) of each block in blocwise processing.</p></li>
+<li><p><strong>useGPU</strong> (<em>bool, optional (default=False)</em>) – If True, matrix operations are accelerated using GPU</p></li>
+<li><p><strong>tmp_folder</strong> (<em>str or None, optional (defautl = None)</em>) – Name of the folder to save temporary files</p></li>
+<li><p><strong>save_every</strong> (<em>int, optional (default=0)</em>) – Maximum size of the growing lists. The output lists are constructed
+incrementally. To avooy memory overload, growing lists are saved
+every time they reach this size limit. The full liests are thus
+incrementally saved in files.
+The default value is extremely large, which de facto implies no
+temporary saving.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sim_graph.sim_graph.SimGraph.cluster_equivalent_nodes">
+<span class="sig-name descname"><span class="pre">cluster_equivalent_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reduceX</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sim_graph.sim_graph.SimGraph.cluster_equivalent_nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Computes a graph where each node is formed by all nodes at zero
+distance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reduceX</strong> (<em>boolean</em>) – If True, it computes self.Xeq, a data matrix without rows at zero
+distance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sim_graph.sim_graph.SimGraph.computeXeq">
+<span class="sig-name descname"><span class="pre">computeXeq</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sim_graph.sim_graph.SimGraph.computeXeq" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the reduced feature matrix X, with a single row per each
+equivalent class.</p>
+<p>self.X[i] contains the feature vector of all nodes from equivalence
+class i.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sim_graph.sim_graph.SimGraph.compute_id_graph">
+<span class="sig-name descname"><span class="pre">compute_id_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sim_graph.sim_graph.SimGraph.compute_id_graph" title="Permalink to this definition"></a></dt>
+<dd><p>Computes identity graph.</p>
+<p>The identity graph connects nodes a and b with weight 1 iff a and b
+have the same feature vector in self.T. Otherwise, a and be are
+disconnected</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>R</strong> (<em>float</em>) – Radius. Edges link all data pairs at distance lower than R.
+It should be a very small value in order to link nodes with almost
+equal attribute. Nonzero values may be used to allow slight
+deviations from equality.</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em>) – If False, block-by-block messaging is omitted in the call to
+he_neighbors graph.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – Updated attribute self.edge_ids (list of edges, as pairs (i, j) of
+indices)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sim_graph.sim_graph.SimGraph.connectivity_graph">
+<span class="sig-name descname"><span class="pre">connectivity_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'JS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sim_graph.sim_graph.SimGraph.connectivity_graph" title="Permalink to this definition"></a></dt>
+<dd><p>Computes a sparse connectivity graph for the self graph structure.
+The self graph must contain matrix self.X</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul>
+<li><p><strong>R</strong> (<em>float</em>) – Radius. Edges link all data pairs at distance lower than R
+This is to forze a sparse graph.</p></li>
+<li><p><strong>metric</strong> (<em>string</em>) – Similarity measure used to compute affinity matrix
+Available options are:</p>
+<p>‘JS’, 1 minus Jensen-Shannon (JS) divergence (too slow);</p>
+<p>‘l1’, 1 minus l1 distance</p>
+<p>‘l2’, Euclidean distance</p>
+<p>‘He’, 1-squared Hellinger’s distance (sklearn-based implementation)</p>
+<p>‘He2’, 1 minus squared Hellinger distance (self implementation)</p>
+<p>‘cosine’, cosine distance</p>
+</li>
+<li><p><strong>verbose</strong> (<em>boolean, optional (default=True)</em>) – (Only for he_neighbors_graph()). If False, block-by-block
+messaging is omitted</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – Changes in attributes self.edge_ids (List of edges, as pairs (i, j)
+of indices) and self.weights (list of affinity values for each pair
+in edge_ids)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sim_graph.sim_graph.SimGraph.div2sim">
+<span class="sig-name descname"><span class="pre">div2sim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">div</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sim_graph.sim_graph.SimGraph.div2sim" title="Permalink to this definition"></a></dt>
+<dd><p>Transforms a list of divergence scores (tipically, distances or squared
+distances) into a list of similarity values</p>
+<p>The model considers three types of mappings:</p>
+<ul class="simple">
+<li><p>Linear: s = (1 - div / R)</p></li>
+<li><p>Polynomial: s = 1 - (div / R)**g</p></li>
+<li><p>Exponential: s = exp(-g div)</p></li>
+</ul>
+<p>Note that the linear mapping is equivalent to polynomial with g=1.
+Both linear and polynomial mappings are defined for founded distances
+in [0, div]. Otherwise, the similarity values would be negative.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>div</strong> (<em>float or list of float</em>) – A a divergence or a list of divergence values</p></li>
+<li><p><strong>mapping</strong> (<em>str in {‘linear’, ‘polynomial’, ‘exponential’}</em>) – Type of mapping from distances to similarities.</p></li>
+<li><p><strong>g</strong> (<em>int or float, optional (default=1)</em>) – Power factor. Use g != 1 to apply nonlinear mapping</p></li>
+<li><p><strong>B</strong> (<em>float or None, optional (default=None)</em>) – (only for linear or polynomial mappings). Radius bound. For values
+in d2 higher than B, the output similarity will be negative.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>s</strong> – A list of similarity values with the same size than d</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sim_graph.sim_graph.SimGraph.he_affinity">
+<span class="sig-name descname"><span class="pre">he_affinity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sim_graph.sim_graph.SimGraph.he_affinity" title="Permalink to this definition"></a></dt>
+<dd><p>Compute all Hellinger’s affinities between all nodes in the graph based
+on the node attribute vectors in matrix</p>
+<p>It assumes that all attribute vectors are normalized to sum up to 1
+Attribute matrix X can be sparse</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>numpy array</em>) – Input matrix of probabilistic attribute vectors</p></li>
+<li><p><strong>R2</strong> (<em>float, optional (default=2)</em>) – Squared radius (maximum squared He distance). Edges at higher
+distance are removed). The default is a large value (larger than
+any possible Hellinger distance between two probability
+distributions), which implies no edge filtering</p></li>
+<li><p><strong>mapping</strong> (<em>str in {‘linear’, ‘polynomial’, ‘exponential’}</em>) – Type of mapping from distances to similarities.</p></li>
+<li><p><strong>g</strong> (<em>float</em>) – Exponent for the final affinity mapping</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>edge_id</strong> (<em>list of tuples</em>) – List of edges</p></li>
+<li><p><strong>weights</strong> (<em>list</em>) – List of edge weights</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sim_graph.sim_graph.SimGraph.l1_affinity">
+<span class="sig-name descname"><span class="pre">l1_affinity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sim_graph.sim_graph.SimGraph.l1_affinity" title="Permalink to this definition"></a></dt>
+<dd><p>Compute all l1’s affinities between all nodes in the graph based on the
+node attribute vectors</p>
+<p>It assumes that all attribute vectors are normalized to sum up to 1
+Attribute matrix X can be sparse</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>numpy array</em>) – Input matrix of probabilistic attribute vectors</p></li>
+<li><p><strong>R</strong> (<em>float, optional (default=2)</em>) – Radius (maximum l1 distance). Edges at higher distance are
+removed). The default is a large value (larger than the maximum
+possible l1 distance between two probability distributions), which
+implies no edge filtering</p></li>
+<li><p><strong>mapping</strong> (<em>str in {‘linear’, ‘polynomial’, ‘exponential’}</em>) – Type of mapping from distances to similarities.</p></li>
+<li><p><strong>g</strong> (<em>float</em>) – Exponent for the final affinity mapping</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>edge_id</strong> (<em>list of tuples</em>) – List of edges</p></li>
+<li><p><strong>weights</strong> (<em>list</em>) – List of edge weights</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sim_graph.sim_graph.SimGraph.l2_affinity">
+<span class="sig-name descname"><span class="pre">l2_affinity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'exponential'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sim_graph.sim_graph.SimGraph.l2_affinity" title="Permalink to this definition"></a></dt>
+<dd><p>Compute all l2’s affinities between all nodes in the graph based on the
+node attribute vectors</p>
+<p>It assumes that all attribute vectors are normalized to sum up to 1
+Attribute matrix X can be sparse</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>numpy array</em>) – Input matrix of probabilistic attribute vectors</p></li>
+<li><p><strong>R2</strong> (<em>float, optional (default=2)</em>) – Radius (maximum squared l2 distance). Edges at higher distance are
+removed). The default is a large value (larger than the maximum
+possible squared distance between two probability distributions),
+which implies no edge filtering</p></li>
+<li><p><strong>mapping</strong> (<em>str in {‘linear’, ‘polynomial’, ‘exponential’}</em>) – Type of mapping from distances to similarities.</p></li>
+<li><p><strong>g</strong> (<em>float</em>) – Exponent for the final affinity mapping</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>edge_id</strong> (<em>list of tuples</em>) – List of edges</p></li>
+<li><p><strong>weights</strong> (<em>list</em>) – List of edge weights</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sim_graph.sim_graph.SimGraph.show_JS_bounds">
+<span class="sig-name descname"><span class="pre">show_JS_bounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sim_graph.sim_graph.SimGraph.show_JS_bounds" title="Permalink to this definition"></a></dt>
+<dd><p>Computes JS bounds for a given similarity measure.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul>
+<li><p><strong>s_min</strong> (<em>float</em>) – Radius. Edges link all data pairs at distance lower than R
+This is to forze a sparse graph.</p></li>
+<li><p><strong>sim</strong> (<em>string</em>) – Similarity measure used to compute affinity matrix
+Available options are:</p>
+<p>‘l1-&gt;JS’, same as JS, but the graph is computed after preselecting
+edges using l1 distances and a theoretical bound</p>
+<p>‘He-&gt;JS’, same as JS, but the graph is computed after preselecting
+edges using Hellinger’s distances and a theoretical bound</p>
+<p>‘He2-&gt;JS’, same as He-Js, but using the self implementation of He.</p>
+</li>
+<li><p><strong>g</strong> (<em>float</em>) – Exponent for the affinity mapping</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em>) – (Only for he_neighbors_graph()). If False, block-by-block
+messaging is omitted</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – Modifies self.edge_ids (ist of edges, as pairs (i, j) of indices)
+and self.weights (list of affinity values for each pair in
+edge_ids)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sim_graph.sim_graph.SimGraph.sim2div">
+<span class="sig-name descname"><span class="pre">sim2div</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sim_graph.sim_graph.SimGraph.sim2div" title="Permalink to this definition"></a></dt>
+<dd><p>Transforms a list of similarity values into a list of divergences
+(tipically, distances or squared distances)</p>
+<p>This is the inverse of method <a class="reference internal" href="#rdigraphs.sim_graph.sim_graph.SimGraph.div2sim" title="rdigraphs.sim_graph.sim_graph.SimGraph.div2sim"><code class="xref py py-func docutils literal notranslate"><span class="pre">div2sim()</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> (<em>list</em>) – A list of similarity values</p></li>
+<li><p><strong>g</strong> (<em>int or float, optional (default=1)</em>) – Power factor. Use g != 1 to apply nonlinear mapping</p></li>
+<li><p><strong>B</strong> (<em>float or None, optional (default=None)</em>) – (only for linear or polynomial mappings). Radius bound. For values
+in div higher than B, the output similarity will be negative.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>div</strong> – A list of divergences</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sim_graph.sim_graph.SimGraph.simTest">
+<span class="sig-name descname"><span class="pre">simTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'l1'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sim_graph.sim_graph.SimGraph.simTest" title="Permalink to this definition"></a></dt>
+<dd><p>Plot the values in weights vs the values in D selected by the indices
+in edge_id.</p>
+<p>This is used to visualize the efect of selecting samples using one
+measure (l1, l2) as a first step to reduce the sample set used to
+elect edges based on the Jensen-Shannon divergence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>D</strong> (<em>2D array</em>) – Data matrix</p></li>
+<li><p><strong>R</strong> (<em>float</em>) – Radius bound</p></li>
+<li><p><strong>sim</strong> (<em>string</em>) – Name of the similarity function</p></li>
+<li><p><strong>g</strong> (<em>float</em>) – Exponent value</p></li>
+<li><p><strong>fpath</strong> (<em>string</em>) – Output path</p></li>
+<li><p><strong>label</strong> (<em>string</em>) – Label for the figure plot</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.sim_graph.sim_graph.SimGraph.sim_graph">
+<span class="sig-name descname"><span class="pre">sim_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_edges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sim_graph.sim_graph.SimGraph.sim_graph" title="Permalink to this definition"></a></dt>
+<dd><p>Computes a sparse graph for a given radius or for a given number of
+edges</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s_min</strong> (<em>float or None, optional (default=None)</em>) – Similarity threshold. Edges link all data pairs with similarity
+higher than R. This forzes a sparse graph.</p></li>
+<li><p><strong>n_edges</strong> (<em>int</em>) – Number of edges</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="rdigraphs_community_plus.html" class="btn btn-neutral float-left" title="Community Plus" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rdigraphs_supergraph.html" class="btn btn-neutral float-right" title="Supergraph" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, J. Cid-Sueiro, M. A. Vázquez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -101,7 +101,6 @@ class SgTaskManager(object):
         # Other parameters
         self.blocksize = None
         self.useGPU = False
-        self.rescale = False
 
         # Supergraph
         self.SG = None
@@ -183,7 +182,7 @@ class SgTaskManager(object):
 
         # Place a copy of a default configuration file in the project folder.
         # This file should be adapted to the new project settings.
-        shutil.copyfile('parameters.default.yaml', self.path2config)
+        shutil.copyfile('config/parameters.default.yaml', self.path2config)
 
         # Update the state of the project.
         self.state['isProject'] = True
@@ -367,14 +366,14 @@ class SgTaskManager(object):
         """
         Set up the classification projetc. To do so:
 
-        (1) Loads the configuration file and initialize the data manager.
+        (1) Loads the configuration file and initializes the data manager.
 
         (2) Creates a DB table.
         """
 
         if self.ready2setup is False:
             # Here, print, and not logging, because the logger has not been
-            # set up.
+            # set up yet.
             print("---- Error: you cannot setup a project that has not been "
                   "created or loaded")
             return
@@ -421,8 +420,6 @@ class SgTaskManager(object):
         self.blocksize = self.global_parameters['algorithms']['blocksize']
         if 'useGPU' in self.global_parameters['algorithms']:
             self.useGPU = self.global_parameters['algorithms']['useGPU']
-        if 'rescale' in self.global_parameters['algorithms']:
-            self.rescale = self.global_parameters['algorithms']['rescale']
         # Path to Halo software for visualization of bipartite graphs
         self.path2halo = self.global_parameters['path2halo']
 
@@ -434,6 +431,13 @@ class SgTaskManager(object):
     # ##################################
     # Get methods for the menu navigator
     # ##################################
+    def get_names_of_SQL_dbs(self):
+        """
+        Returns the list of available databases
+        """
+
+        return list(self.DM.SQL.keys())
+
     def get_names_of_dataset_tables(self):
         """
         Returns the list of available tables with raw graph data
@@ -447,7 +451,8 @@ class SgTaskManager(object):
 
         Parameters
         ----------
-        db : Name of the database
+        db : str
+            Name of the database
 
         Returns
         -------
@@ -482,6 +487,10 @@ class SgTaskManager(object):
             Names of the tables in the database
         """
 
+        if self.DM.Neo4j is None:
+            logging.info("-- Neo4j database is not available")
+            return []
+
         if db in self.db_tables:
             col_names = self.DM.SQL[db].getColumnNames(table)
         else:
@@ -500,6 +509,10 @@ class SgTaskManager(object):
             Name of snodes
         """
 
+        if self.DM.Neo4j is None:
+            logging.info("-- Neo4j database is not available")
+            return []
+
         gdb_struct = self.DM.Neo4j.get_db_structure()
         snodes = [k for k, v in gdb_struct.items() if v['type'] == 'node']
 
@@ -514,6 +527,10 @@ class SgTaskManager(object):
         sedges : list
             Name of sedges
         """
+
+        if self.DM.Neo4j is None:
+            logging.info("-- Neo4j database is not available")
+            return []
 
         gdb_struct = self.DM.Neo4j.get_db_structure()
         sedges = [k for k, v in gdb_struct.items()
@@ -694,7 +711,8 @@ class SgTaskManager(object):
         if option in self.db_tables:
             self.DM.SQL[option].showDBview()
         else:
-            print('---- Option not available')
+            logging.info('---- Option not available. Likely, the DB could not '
+                         'be successfully connected')
         return
 
     def showGDBdata(self, option, snodes, sedges):
@@ -736,7 +754,12 @@ class SgTaskManager(object):
         Print a general overview of the whole database
         """
 
+        if self.DM.Neo4j is None:
+            logging.info("-- Neo4j database is not available")
+            return
+
         self.DM.Neo4j.showDBview()
+
         return
 
     def show_Neo4J_snode(self, snode):
@@ -748,6 +771,10 @@ class SgTaskManager(object):
         snode : str
             Name of the snode
         """
+
+        if self.DM.Neo4j is None:
+            logging.info("-- Neo4j database is not available")
+            return
 
         # Overview the selected snode
         attribs = self.DM.Neo4j.properties_of_label(snode)
@@ -764,6 +791,10 @@ class SgTaskManager(object):
         sedge : str
             Name of the sedge
         """
+
+        if self.DM.Neo4j is None:
+            logging.info("-- Neo4j database is not available")
+            return
 
         # Overview the selected snode
         attribs = self.DM.Neo4j.properties_of_relationship(sedge)
@@ -782,6 +813,10 @@ class SgTaskManager(object):
         sedges : list
             Name of sedges
         """
+
+        if self.DM.Neo4j is None:
+            logging.info("-- Neo4j database is not available")
+            return
 
         gdb_struct = self.DM.Neo4j.get_db_structure()
         snodes = [k for k, v in gdb_struct.items() if v['type'] == 'node']
@@ -804,7 +839,10 @@ class SgTaskManager(object):
             List of available sedges
         """
 
-        breakpoint()
+        if self.DM.Neo4j is None:
+            logging.info("-- Neo4j database is not available")
+            return
+
         if option == 'Neo4j':
             self.DM.Neo4j.resetDB()
             logging.info("---- Graph database has been reset")
@@ -822,7 +860,10 @@ class SgTaskManager(object):
         Reset the whole database
         """
 
-        breakpoint()
+        if self.DM.Neo4j is None:
+            logging.info("-- Neo4j database is not available")
+            return
+
         print("---- This will reset the entire database. All data will be "
               "lost.")
         if self._request_confirmation():
@@ -843,11 +884,14 @@ class SgTaskManager(object):
             Selected node or edge to reset
         """
 
+        if self.DM.Neo4j is None:
+            logging.info("-- Neo4j database is not available")
+            return
+
         print("---- WARNING: This will reset the snode from the database.")
-        breakpoint()
         if self._request_confirmation():
             self.DM.Neo4j.dropNodes(snode)
-            logging.info("---- Nodes of type {snode} have been reset.")
+            logging.info(f"---- Nodes of type {snode} have been reset.")
         else:
             logging.info("---- Reset cancelled")
 
@@ -862,6 +906,10 @@ class SgTaskManager(object):
         sedge : str
             Selected node or edge to reset
         """
+
+        if self.DM.Neo4j is None:
+            logging.info("-- Neo4j database is not available")
+            return
 
         print("---- WARNING: This will reset the sedge from the database.")
         breakpoint()
@@ -882,6 +930,10 @@ class SgTaskManager(object):
         path2graph : str
             Path to graph
         """
+
+        if self.DM.Neo4j is None:
+            logging.info("-- Neo4j database is not available")
+            return
 
         # Load graph object
         graph_name = path2graph.split(os.path.sep)[-1]
@@ -904,6 +956,10 @@ class SgTaskManager(object):
         path2graph : str
             Path to graph
         """
+
+        if self.DM.Neo4j is None:
+            logging.info("-- Neo4j database is not available")
+            return
 
         # Load bigraph object
         graph_name = path2graph.split(os.path.sep)[-1]
@@ -945,8 +1001,6 @@ class SgTaskManager(object):
 
         df_nodes = self.DM.import_graph_data_from_tables(
             table_name, sampling_factor=0.1)
-
-        breakpoint()
 
         # Take feature matrix from embeddings
         T = np.array(df_nodes['embeddings'].tolist())
@@ -1482,7 +1536,12 @@ class SgTaskManager(object):
         else:
             new_graph_name = graph_name
 
-        self.SG.sub_snode(graph_name, n0, new_graph_name)
+        # It the original graph has a feature matrix, it is sampled too.
+        sampleT = self.SG.snodes[graph_name].T is not None
+        # If the original feature matrix has been save, it is saved too
+        save_T = self.SG.snodes[graph_name].save_T
+        self.SG.sub_snode(graph_name, n0, new_graph_name, sampleT=sampleT,
+                          save_T=save_T)
 
         if mode == 'newgraph':
             # Remove the original graph from memory to avoid saving it.
@@ -1599,6 +1658,33 @@ class SgTaskManager(object):
 
         return
 
+    def disambiguate_node(self):
+        """
+        Disambiguate a given node from a given graph based on the topological
+        structure of the related graphs and bigraphs in the supergraph
+
+        Parameters
+        ----------
+        path : str
+            Path to snode
+        """
+
+        # Modularity threshold
+        th = 0.9
+
+        # Ask for node name:
+        node_name = input('\n-- Write the node name to disambigate: ')
+
+        bgs, total_score = self.SG.disambiguate_node(node_name)
+
+        print("-- Summary of scores:")
+        print(bgs)
+
+        if total_score > th:
+            logging.info(f'-- Node {node_name} should be split')
+
+        return
+
     # ###############
     # Graph inference
     # ###############
@@ -1611,7 +1697,7 @@ class SgTaskManager(object):
         Parameters
         ----------
         path : str
-            Path to the model
+            Path to snode
         """
 
         s_label = os.path.split(path)[-1]
@@ -1740,8 +1826,7 @@ class SgTaskManager(object):
         self.SG.sub_snode(t_label, n_gnodes, ylabel=t_label, sampleT=True)
         self.SG.computeSimGraph(
             t_label, n_edges=n_edges, n_gnodes=n_gnodes, similarity=sim,
-            g=1, rescale=self.rescale, blocksize=self.blocksize,
-            useGPU=self.useGPU)
+            g=1, blocksize=self.blocksize, useGPU=self.useGPU)
 
         # #####################
         # SHOW AND SAVE RESULTS
@@ -1764,7 +1849,74 @@ class SgTaskManager(object):
 
         return
 
-    def infer_sim_graph(self, path, sim, n0=None, n_epn=None, label=None):
+    def infer_sim_graph(self, path2snode, sim, n0=None, n_epn=None):
+        """
+        This method manages the generation of similarity (semantic) graphs.
+
+        Parameters
+        ----------
+        path2snode : str
+            Path to the snode
+        sim : str
+            Similarity measure
+        n0 : int or float of None, optional (default=None)
+            Number of nodes. If None, it is requested to the user.
+            If 0 < n_epn < 1, it is the fraction of the total no. of nodes
+            If 0, all nodes are taken.
+        n_epn : int or None, optional (default=None)
+            Average number of edges per node. If None, it is requested to the
+            user. If 0, 10 nodes are taken.
+        """
+
+        # Name of the graph
+        graph_name = os.path.split(path2snode)[-1]
+        self.SG.activate_snode(graph_name)
+        n_nodes = self.SG.snodes[graph_name].n_nodes
+
+        # #######################
+        # REQUEST NUMBER OF EDGES
+
+        if n_epn is None:
+            n0_default = 10
+            # Be careful: this 'or' is order-sensitive...
+            n_epn = float(input(f"Select average number of edges per node "
+                                f"[{n0_default}]: ") or n0_default)
+
+        n_edges = int(n_epn * n_nodes)
+
+        # ########################
+        # COMPUTE SIMILARITY GRAPH
+
+        self.SG.computeSimGraph(
+            graph_name, n_edges=n_edges, similarity=sim, g=1,
+            blocksize=self.blocksize, useGPU=self.useGPU, tmp_folder=None,
+            save_every=20_000_000, verbose=True)
+
+        # #####################
+        # SHOW AND SAVE RESULTS
+
+        # Log some results
+        md = self.SG.snodes[graph_name].metadata
+        logging.info(f"-- -- Similarity measure: {md['edges']['metric']}")
+        logging.info(f"-- -- Number of nodes: {md['nodes']['n_nodes']}")
+        logging.info(f"-- -- Number of edges: {md['edges']['n_edges']}")
+        logging.info(f"-- -- Average neighbors per node: "
+                     f"{md['edges']['neighbors_per_sampled_node']}")
+        logging.info(f"-- -- Density of the similarity graph: "
+                     f"{100 * md['edges']['density']} %")
+
+        gc.collect()
+
+        # Save graph: nodes and edges
+        self.SG.save_supergraph()
+
+        # Reset snode. This is to save memory.
+        self._deactivate()
+
+        return
+
+    def import_and_infer_sim_graph(self, path, sim, n0=None, n_epn=None,
+                                   label=None):
         """
         This method manages the generation of similarity (semantic) graphs.
 
@@ -1857,14 +2009,10 @@ class SgTaskManager(object):
         self.SG.sub_snode(graph_name, n_gnodes, ylabel=graph_name,
                           sampleT=True)
 
-        # sim = 'He2->JS'
-        # self.SG.computeSimGraph(graph_name, R=R, n_gnodes=n_gnodes,
-        #                         similarity=sim, blocksize=self.blocksize)
         self.SG.computeSimGraph(
             graph_name, n_edges=n_edges, n_gnodes=n_gnodes, similarity=sim,
-            g=1, rescale=self.rescale, blocksize=self.blocksize,
-            useGPU=self.useGPU, tmp_folder=None, save_every=20_000_000,
-            verbose=True)
+            g=1, blocksize=self.blocksize, useGPU=self.useGPU, tmp_folder=None,
+            save_every=20_000_000, verbose=True)
 
         # #####################
         # SHOW AND SAVE RESULTS
@@ -1934,7 +2082,7 @@ class SgTaskManager(object):
         self.SG.computeSimBiGraph(
             s_label, t_label, e_label=e_label, n_edges=n_edges,
             n_gnodesS=n_source, n_gnodesT=n_target, similarity=sim, g=1,
-            rescale=self.rescale, blocksize=self.blocksize, useGPU=self.useGPU)
+            blocksize=self.blocksize, useGPU=self.useGPU)
 
         # #####################
         # SHOW AND SAVE RESULTS
@@ -2236,6 +2384,18 @@ class SgTaskManager(object):
                      f'community {comm2} from graph {graph2_name} is {d}')
 
         self._deactivate()
+
+        return
+
+    def profile_node(self):
+
+        # Ask for node name:
+        node_name = input('\n-- Write the node name to disambigate: ')
+
+        node_profile = self.SG.profile_node(node_name)
+        logging.info("-- Node profile")
+        logging.info(f"-- Name of the node: {node_name}")
+        logging.info(f"-- Report: {node_profile}")
 
         return
 

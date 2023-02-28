@@ -64,7 +64,7 @@ paths2data = {'graphs': path2project / 'graphs',
               'bigraphs': path2project / 'bigraphs',
               'topicmodels': path2source / 'topic_models',
               'agents': path2source / 'agents'}
-path2menu = 'options_menu.yaml'
+path2menu = pathlib.Path('config/options_menu.yaml')
 
 # ##############
 # Call navigator

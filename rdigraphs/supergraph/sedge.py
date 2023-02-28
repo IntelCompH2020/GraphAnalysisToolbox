@@ -98,8 +98,8 @@ class SEdge(DataGraph):
             self.path2Xs = os.path.join(path, 'source_model_sparse.npz')
             self.path2Xt = os.path.join(path, 'target_model_sparse.npz')
 
-        if (self.n_nodes > 0 and
-                self.metadata['graph']['category'] != 'bigraph'):
+        if (self.n_nodes > 0
+                and self.metadata['graph']['category'] != 'bigraph'):
             logging.error(f"---- {label} is not a bipartite datagraph")
 
         if self.n_nodes == 0:
@@ -124,8 +124,8 @@ class SEdge(DataGraph):
             # Check consistency of label names
             ls = self.metadata['graph']['source']    # Abbreviation
             lt = self.metadata['graph']['target']    # Abbreviation
-            if ((label_source is not None and ls != label_source) or
-                    (label_target is not None and lt != label_target)):
+            if ((label_source is not None and ls != label_source)
+                    or (label_target is not None and lt != label_target)):
                 logging.warning(
                     "---- You have entered a new label for source or target ",
                     "nodes.\n",
@@ -310,8 +310,8 @@ class SEdge(DataGraph):
 
         # Add atribute to nodes specifying the category of each node (node
         # from the source snode or node from the destination snode)
-        Cat = ([self.label_source] * self.n_source +
-               [self.label_target] * self.n_target)
+        Cat = ([self.label_source] * self.n_source
+               + [self.label_target] * self.n_target)
         self.add_attributes('Cat', Cat)
 
         if Xs is not None:
@@ -319,15 +319,15 @@ class SEdge(DataGraph):
             if Xs.shape[0] == self.n_source:
                 self.Xs = Xs
             else:
-                logging.error("-- -- The number of source nodes must be " +
-                              "equal to the number of rows in Xs")
+                logging.error("-- -- The number of source nodes must be "
+                              + "equal to the number of rows in Xs")
         if Xt is not None:
             # Check consistency between nodes and features
             if Xt.shape[0] == self.n_target:
                 self.Xt = Xt
             else:
-                logging.error("-- -- The number of target nodes must be " +
-                              "equal to the number of rows in Xt")
+                logging.error("-- -- The number of target nodes must be "
+                              + "equal to the number of rows in Xt")
 
         # Update metadata dictionary
         self.metadata['graph'].update({'prefix_names': prefix_names})
@@ -359,8 +359,8 @@ class SEdge(DataGraph):
 
         return
 
-    def computeSimBiGraph(self, R=None, n_gnodesS=None, n_gnodesT=None,
-                          n_edges=None, similarity='He2', g=1, rescale=False,
+    def computeSimBiGraph(self, s_min=None, n_gnodesS=None, n_gnodesT=None,
+                          n_edges=None, similarity='He2', g=1,
                           blocksize=25_000, useGPU=False, verbose=True):
         """
         Computes a sparse similarity bipartite graph for the self graph
@@ -368,9 +368,9 @@ class SEdge(DataGraph):
 
         Parameters
         ----------
-        R : float or None, optional (default=None)
-            Radius. Edges link all data pairs at distance lower than R
-            This is to forze a sparse graph.
+        s_min : float or None, optional (default=None)
+            Similarity threshold. Edges link all data pairs with similarity
+            higher than R. This forzes a sparse graph.
         n_gnodesS : int or None, optional (default=None)
             Number of nodes in the source subgraph.
             If None, all nodes are used
@@ -388,10 +388,7 @@ class SEdge(DataGraph):
             'He2' (1 minus squared Hellinger distance (self implementation));
             'He2->JS' (1 minus Jensen-Shannon (JS) divergence)
         g : float, optional (default=1)
-            Exponent for the affinity mapping (not used for 'Gauss')
-        rescale : bool, optional (default=False)
-            If True, affinities are computed from distances by rescaling values
-            so that the minimum is zero and maximum is 1.
+            Exponent for the affinity mapping
         blocksize : int, optional (default=25_000)
             Size of each block for the computation of affinity values. Large
             sizes might imply a large memory consumption.
@@ -441,8 +438,8 @@ class SEdge(DataGraph):
             # Disable log messages
             root_logger = logging.getLogger()
             root_logger.disabled = True
-        sbg.computeGraph(R=R, n_edges=n_edges, sim=similarity, g=g,
-                         rescale=rescale, verbose=verbose)
+        sbg.sim_graph(s_min=s_min, n_edges=n_edges, sim=similarity, g=g,
+                      verbose=verbose)
         if not verbose:
             # Re-enable log messages
             root_logger = logging.getLogger()
@@ -480,7 +477,7 @@ class SEdge(DataGraph):
                 2 * self.n_edges / (n_gnodesS + n_gnodesT)),
             'density': 2 * self.n_edges / (self.n_source * self.n_target)})
 
-        logging.info(f"-- -- Bipartite graph generated with {self.n_edges} " +
+        logging.info(f"-- -- Bipartite graph generated with {self.n_edges} "
                      f"edges in {tm} seconds")
 
         return
@@ -572,8 +569,8 @@ class SEdge(DataGraph):
         """
 
         logging.error("---- Method add_single_edge has not been implemented "
-                      "for sedges. Since the method from the parent class "
-                      " is not appropriate, no action is taken.")
+                      "for sedges. Since the method from the parent class is "
+                      "not appropriate, no action is taken.")
         return
 
     # def computeBinFeatures(self, Ygraph, XYgraph, field, fitXY=False,

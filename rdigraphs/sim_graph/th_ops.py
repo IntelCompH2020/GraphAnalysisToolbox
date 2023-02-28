@@ -18,20 +18,22 @@ from typing import List, Tuple, Union
 try:
     import cupy.sparse
     # import GPUtil
-except:
-    print("-- Libraries for GPU operation are not available. Maybe you need "
-          "to instal cupy library. GPU options will be disabled in this run. ")
 
-try:
     memory_pool = cupy.cuda.MemoryPool()
     cupy.cuda.set_allocator(memory_pool.malloc)
     pinned_memory_pool = cupy.cuda.PinnedMemoryPool()
     cupy.cuda.set_pinned_memory_allocator(pinned_memory_pool.malloc)
-except:
-    print("-- Error during GPU setting. GPU options will be disabled")
+
+except ModuleNotFoundError:
+    print("-- GPU options disabled. If a GPU is available, install cupy "
+          "library to enable GPU options")
+
+except Exception:
+    print("-- Error during GPU setting with cupy.cuda. "
+          "GPU options will be disabled")
 
 
-def print_status(msg, verbose=True):
+def vprint(msg, verbose=True):
     """
     If verbose is True, prints a status message. A time stamp is returned
     anyway.
@@ -275,6 +277,9 @@ class ThOps(object):
         self.fpath_edges = os.path.join(self.tmp_folder, f'edges_{suff}.csv')
         self.fpath_values = os.path.join(self.tmp_folder, f'values_{suff}.csv')
 
+        # This prevents some occasional but large debug messages from numba
+        logging.getLogger('numba').setLevel(logging.WARNING)
+
         return
 
     def _move_to_file(self, edge_list, thp=[], mode='w'):
@@ -294,7 +299,7 @@ class ThOps(object):
         # If mode == 'w', create output folder if it does not exist (if
         # mode == 'a', the output folder and files must already exist)
         if mode == 'w' and not os.path.isdir(self.tmp_folder):
-                os.makedirs(self.tmp_folder)
+            os.makedirs(self.tmp_folder)
 
         # Save edge_list
         with open(self.fpath_edges, mode) as f:
@@ -340,8 +345,8 @@ class ThOps(object):
 
         return edges, values
 
-    def th_selfprod(self, th: float, X: csr_matrix, mode: str='distance',
-                    verbose: bool=False) -> Union[
+    def th_selfprod(self, th: float, X: csr_matrix, mode: str = 'distance',
+                    verbose: bool = False) -> Union[
                         List[Tuple[int, int]], Tuple[List[Tuple[int, int]],
                                                      List[float]]]:
         """
@@ -415,7 +420,7 @@ class ThOps(object):
 
             for j in range(i, N, self.blocksize):
 
-                t0 = print_status(f"i = {i}, j = {j}.  ", verbose)
+                t0 = vprint(f"i = {i}, j = {j}.  ", verbose)
                 # Arrange rhs (compressed sparse) array
 
                 if self.useGPU:
@@ -427,14 +432,18 @@ class ThOps(object):
                 S = lhs_matrix.dot(rhs_matrix.T)
                 if self.useGPU:
                     S = S.get()
-                t0 = print_status(f"Multiplying: {time()-t0} secs.", verbose)
+                t0 = vprint(f"Multiplying: {time()-t0:.4f} secs.", verbose)
 
                 # Apply threshold
                 if issparse(X):
                     S.data[S.data < th] = 0
                 else:
                     S[S < th] = 0
-                t0 = print_status(f"Thresholding: {time()-t0} secs.", verbose)
+                    if self.useGPU:
+                        S = cupy.sparse.csr_matrix(S)
+                    else:
+                        S = csr_matrix(S)
+                t0 = vprint(f"Thresholding: {time()-t0:.4f} secs.", verbose)
 
                 # Extract coordinates and values from product
                 uu = S.shape[1]
@@ -444,19 +453,18 @@ class ThOps(object):
                 # abs_coord, coord_values = (
                 #     edges_weights_from_sparseU_THRESHOLED(
                 #         S.data, S.indptr, S.indices, S.shape[1], th, i, j))
-                t0 = print_status(f"Listing: {time()-t0} secs", verbose)
+                t0 = vprint(f"Listing: {time()-t0:.4f} secs", verbose)
 
                 edge_list += abs_coord
                 if mode == 'distance':
                     thp += coord_values
-                t0 = print_status(f"Accumulating: {time()-t0} secs", verbose)
-                print_status(
-                    f".. .. .. Edge list: {len(edge_list)} edges. " +
-                    f"Memory usage: {sys.getsizeof(edge_list)}", verbose)
+                t0 = vprint(f"Accumulating: {time()-t0:.4f} secs", verbose)
+                vprint(f".. .. .. Edge list: {len(edge_list)} edges. "
+                       f"Memory usage: {sys.getsizeof(edge_list)}", verbose)
 
                 # Store lists if they reach the limit size
                 if len(edge_list) > self.save_every:
-                    print_status("Saving to temporary file")
+                    vprint("Saving to temporary file", verbose)
                     # Save current lists
                     self._move_to_file(edge_list, thp, mode=save_mode)
                     edge_list, thp = [], []
@@ -472,7 +480,7 @@ class ThOps(object):
             # Append last block to the saved list
             if len(edge_list) > 0:
                 # Save current lists
-                print_status("Saving to temporary file")
+                vprint("Saving to temporary file", verbose)
                 self._move_to_file(edge_list, thp, mode=save_mode)
 
             # Load full list
@@ -485,7 +493,7 @@ class ThOps(object):
             return edge_list, thp
 
     def th_prod(self, th: float, X: csr_matrix, Y: csr_matrix,
-                mode: str='distance', verbose: bool=False) -> Union[
+                mode: str = 'distance', verbose: bool = False) -> Union[
                     List[Tuple[int, int]],
                     Tuple[List[Tuple[int, int]], List[float]]]:
         """
@@ -557,7 +565,7 @@ class ThOps(object):
 
             for j in range(0, Ny, self.blocksize):
 
-                t0 = print_status(f"i = {i}, j = {j}.  ", verbose)
+                t0 = vprint(f"i = {i}, j = {j}.  ", verbose)
 
                 # Arrange rhs (compressed sparse) array
                 if self.useGPU:
@@ -570,14 +578,15 @@ class ThOps(object):
                 S = lhs_matrix.dot(rhs_matrix.T)
                 if self.useGPU:
                     S = S.get()
-                t0 = print_status(f"Multiplying: {time()-t0} secs.", verbose)
+                t0 = vprint(f"Multiplying: {time()-t0:.4f} secs.", verbose)
 
                 # Apply threshold
                 if issparse(X) and issparse(Y):
                     S.data[S.data < th] = 0
                 else:
                     S[S < th] = 0
-                t0 = print_status(f"Thresholding: {time()-t0} secs.", verbose)
+                    S = csr_matrix(S)
+                t0 = vprint(f"Thresholding: {time()-t0:.4f} secs.", verbose)
 
                 # Extract coordinates and values from product
                 abs_coord, coord_values = edges_weights_from_sparseLDU(
@@ -586,19 +595,18 @@ class ThOps(object):
                 # abs_coord, coord_values = (
                 #     edges_weights_from_sparseLDU_THRESHOLED(
                 #         S.data, S.indptr, S.indices, S.shape[1], th, i, j))
-                t0 = print_status(f"Listing: {time()-t0} secs", verbose)
+                t0 = vprint(f"Listing: {time()-t0:.4f} secs", verbose)
 
                 edge_list += abs_coord
                 if mode == 'distance':
                     thp += coord_values
-                t0 = print_status(f"Accumulating: {time()-t0} secs", verbose)
-                print_status(
-                    f".. .. .. Edge list: {len(edge_list)} edges. " +
-                    f"Memory usage: {sys.getsizeof(edge_list)}", verbose)
+                t0 = vprint(f"Accumulating: {time()-t0:.4f} secs", verbose)
+                vprint(f".. .. .. Edge list: {len(edge_list)} edges. "
+                       f"Memory usage: {sys.getsizeof(edge_list)}", verbose)
 
                 # Store lists if they reach the limit size
                 if len(edge_list) > self.save_every:
-                    print_status("Saving to temporary file")
+                    vprint("Saving to temporary file", verbose)
                     # Save current lists
                     self._move_to_file(edge_list, thp, mode=save_mode)
                     edge_list, thp = [], []
@@ -614,7 +622,7 @@ class ThOps(object):
             # Append last block to the saved list
             if len(edge_list) > 0:
                 # Save current lists
-                print_status("Saving to temporary file")
+                vprint("Saving to temporary file", verbose)
                 self._move_to_file(edge_list, thp, mode=save_mode)
 
             # Load full list
@@ -626,9 +634,256 @@ class ThOps(object):
         else:
             return edge_list, thp
 
+    def cosine_sim_graph(
+            self, X: csr_matrix, s_min: float, mode: str = 'distance',
+            verbose: bool = False) -> Union[List[Tuple[int, int]], Tuple[
+                List[Tuple[int, int]], List[float]]]:
+        """
+        Computes the truncated cosine similarity matrix between the rows of X
+
+        If y and z are two rows of X, the cosine similarity is given
+        by `y·z^T / (||y|·||z||)`
+
+        Parameters
+        ----------
+        X : numpy array
+            Input matrix
+        s_min : float
+            Threshold. All similarity values below smin will be set to zero
+        mode : {'distance', 'connectivity'}, optional (default='distance')
+            If 'distance', a similarity graph is computed
+            If 'connectivity', a binary connectivity graph is computed
+        verbose : boolean, optional (default=False)
+            If True, ongoing processing messages are shown.
+
+        Returns
+        -------
+        y : tuple of (list, list) or list
+            If mode = 'connectivity': a list of edges
+            If mode = 'distance': a tuple (list of edges, list of values)
+        """
+
+        # Normalize rows
+        if issparse(X):
+            normX = np.sum(X.power(2), axis=1)
+        else:
+            normX = np.sum(X**2, axis=1, keepdims=True)
+        Z = X / np.sqrt(normX)
+
+        # Compute thresholded product g(Z @ Z.T)
+        return self.th_selfprod(s_min, Z, mode=mode, verbose=verbose)
+
+    def cosine_sim_bigraph(
+            self, X: csr_matrix, Y: csr_matrix, s_min: float,
+            mode: str = 'distance', verbose: bool = False) -> Union[
+                List[Tuple[int, int]],
+                Tuple[List[Tuple[int, int]], List[float]]]:
+        """
+        Computes the truncated cosine similarity matrix between the
+        rows of X and Y
+
+        If x and y are two rows of X and Y, respectively, the cosine
+        similarity is given by `y·z^T / (||y|·||z||)`
+
+        Parameters
+        ----------
+        X : numpy array
+            Input matrix
+        Y : numpy array
+            Input matrix
+        s_min : float
+            Threshold. All similarity values below smin will be set to zero
+        mode : {'distance', 'connectivity'}, optional (default='distance')
+            If 'distance', a similarity graph is computed
+            If 'connectivity', a binary connectivity graph is computed
+        verbose : boolean, optional (default=False)
+            If True, ongoing processing messages are shown.
+
+        Returns
+        -------
+        y : tuple of (list, list) or list
+            If mode = 'connectivity': a list of edges
+            If mode = 'distance': a tuple (list of edges, list of values)
+        """
+
+        # Normalize rows
+        normX = np.sum(X**2, axis=1, keepdims=True)
+        Zx = X / np.sqrt(normX)
+        normY = np.sum(Y**2, axis=1, keepdims=True)
+        Zy = Y / np.sqrt(normY)
+
+        # Compute thresholded product g(Z @ Z.T)
+        return self.th_prod(s_min, Zx, Zy, mode=mode, verbose=verbose)
+
+    def ncosine_sim_graph(
+            self, X: csr_matrix, s_min: float, mode: str = 'distance',
+            verbose: bool = False) -> Union[List[Tuple[int, int]], Tuple[
+                List[Tuple[int, int]], List[float]]]:
+        """
+        Computes the truncated and normalized cosine similarity matrix
+        between the rows of X.
+
+        It differs from :func:`cosine_sim_graph` in that the similarity
+        values are rescaled from [-1, 1] to [0, 1]
+
+        Parameters
+        ----------
+        X : numpy array
+            Input matrix
+        s_min : float
+            Threshold. All similarity values below smin will be set to zero
+        mode : {'distance', 'connectivity'}, optional (default='distance')
+            If 'distance', a similarity graph is computed
+            If 'connectivity', a binary connectivity graph is computed
+        verbose : boolean, optional (default=False)
+            If True, ongoing processing messages are shown.
+
+        Returns
+        -------
+        y : tuple of (list, list) or list
+            If mode = 'connectivity': a list of edges
+            If mode = 'distance': a tuple (list of edges, list of values)
+        """
+
+        # A theshold s_min over the ncosine similarity is equivalent to a
+        # threshold 2·s_min-1 over the cosine similarity
+        s_min_cosine = 2 * s_min - 1
+
+        # Compute cosine similarity rows
+        edge_ids, weights = self.cosine_sim_graph(
+            X, s_min_cosine, mode=mode, verbose=verbose)
+
+        # Normalize
+        weights = [(w + 1) / 2 for w in weights]
+
+        return edge_ids, weights
+
+    def ncosine_sim_bigraph(
+            self, X: csr_matrix, Y: csr_matrix, s_min: float,
+            mode: str = 'distance', verbose: bool = False) -> Union[
+                List[Tuple[int, int]],
+                Tuple[List[Tuple[int, int]], List[float]]]:
+        """
+        Computes the truncated and normalized cosine similarity matrix
+        between the rows of X and Y
+
+        It differs from :func:`cosine_sim_graph` in that the similarity
+        values are rescaled from [-1, 1] to [0, 1]
+
+        Parameters
+        ----------
+        X : numpy array
+            Input matrix
+        Y : numpy array
+            Input matrix
+        s_min : float
+            Threshold. All similarity values below s_min will be set to zero
+        mode : {'distance', 'connectivity'}, optional (default='distance')
+            If 'distance', a similarity graph is computed
+            If 'connectivity', a binary connectivity graph is computed
+        verbose : boolean, optional (default=False)
+            If True, ongoing processing messages are shown.
+
+        Returns
+        -------
+        y : tuple of (list, list) or list
+            If mode = 'connectivity': a list of edges
+            If mode = 'distance': a tuple (list of edges, list of values)
+        """
+
+        # Compute cosine similarity rows
+        edge_ids, weights = self.cosine_sim_graph(
+            X, s_min, mode=mode, verbose=verbose)
+
+        # Normalize
+        weights = [(w + 1) / 2 for w in weights]
+
+        return edge_ids, weights
+
+    def bc_sim_graph(
+            self, X: csr_matrix, s_min: float, mode: str = 'distance',
+            verbose: bool = False) -> Union[List[Tuple[int, int]], Tuple[
+                List[Tuple[int, int]], List[float]]]:
+        """
+        Computes the Bhattacharyya Coefficient (BC) between the rows of matrix
+        X
+
+        It asumes that the rows of X are stochastic vectors.
+
+        If y and z are two rows of X, the BC is given by `srt(y)·sqrt(z)`,
+        where the square roots are computed component-wise.
+
+        Parameters
+        ----------
+        X : numpy array
+            Input matrix.
+        s_min : float
+            Threshold. All similarity values below smin will be set to zero
+        mode : {'distance', 'connectivity'}, optional (default='distance')
+            If distance, a similarity graph is computed
+            If connectivity, a binary connectivity graph is computed
+        verbose : boolean, optional (default=False)
+            If True, ongoing processing messages are shown.
+
+        Returns
+        -------
+        y : tuple of (list, list) or list
+            If mode = 'connectivity': a list of edges
+            If mode = 'distance': a tuple (list of edges, list of values)
+        """
+
+        # Take the square root of matrix components in order to compute the He
+        # distances as a function of a matrix product
+        Z = np.sqrt(X)
+
+        # Compute thresholded product g(Z @ Z.T)
+        return self.th_selfprod(s_min, Z, mode=mode, verbose=verbose)
+
+    def bc_sim_bigraph(
+            self, X: csr_matrix, Y: csr_matrix, s_min: float,
+            mode: str = 'distance', verbose: bool = False) -> Union[
+                List[Tuple[int, int]],
+                Tuple[List[Tuple[int, int]], List[float]]]:
+        """
+        Computes the truncated matrix of Bhattacharyya coefficients between the
+        rows of X and Y
+
+        If x and y are two rows of X and Y, respectively, the BC is given by
+        `srt(x)·sqrt(y)`
+        where the square roots are computed component-wise.
+
+
+        Parameters
+        ----------
+        X : numpy array
+            Input matrix
+        Y : numpy array
+            Input matrix
+        s_min : float
+            Threshold. All similarity values below smin will be set to zero
+        mode : {'distance', 'connectivity'}, optional (default='distance')
+            If 'distance', a similarity graph is computed
+            If 'connectivity', a binary connectivity graph is computed
+        verbose : boolean, optional (default=False)
+            If True, ongoing processing messages are shown.
+
+        Returns
+        -------
+        y : tuple of (list, list) or list
+            If mode = 'connectivity': a list of edges
+            If mode = 'distance': a tuple (list of edges, list of values)
+        """
+
+        # Normalize rows
+        Zx = np.sqrt(X)
+        Zy = np.sqrt(Y)
+
+        # Compute thresholded product g(Z @ Z.T)
+        return self.th_prod(s_min, Zx, Zy, mode=mode, verbose=verbose)
+
     def he_neighbors_graph(
-            self, X: csr_matrix, radius: float, mode: str='distance',
-            verbose: bool=False) -> Union[List[Tuple[int, int]], Tuple[
+            self, X: csr_matrix, R2: float, mode: str = 'distance',
+            verbose: bool = False) -> Union[List[Tuple[int, int]], Tuple[
                 List[Tuple[int, int]], List[float]]]:
         """
         Computes the truncated squared Hellinger distance matrix between the
@@ -638,8 +893,8 @@ class ThOps(object):
         ----------
         X : numpy array
             Input matrix
-        radius : float
-            Radius
+        R2 : float
+            Squared radius
         mode : {'distance', 'connectivity'}, optional (default='distance')
             If distance, a similarity graph is computed
             If connectivity, a binary connectivity graph is computed
@@ -659,7 +914,7 @@ class ThOps(object):
         Z = np.sqrt(X)
 
         # Compute the threshold to be applied over the product Z @ Z.T
-        s_min = 1 - radius**2 / 2
+        s_min = 1 - R2 / 2
 
         if mode == 'connectivity':
             # Compute coordinates of the nonzero values of thresholded product
@@ -670,22 +925,22 @@ class ThOps(object):
 
         else:
             # Compute thresholded product g(Z @ Z.T)
-            edge_list, he_dist2 = self.th_selfprod(
+            edge_list, values = self.th_selfprod(
                 s_min, Z, mode=mode, verbose=verbose)
 
-            # Transform products into similarities (we override he_dist2 to
+            # Transform products into similarities (we override values to
             # reduce memory usage for large matrices)
             # This is a pythonic choice:
             # he_dist2 = [max(2. - 2. * p, 0.) for p in he_dist2]
             # This is much faster:
-            he_dist2 = np.clip(2. - 2. * np.array(he_dist2), a_min=0.,
-                               a_max=None).tolist()
+            values = np.clip(2. - 2. * np.array(values), a_min=0.,
+                             a_max=None).tolist()
 
-            return edge_list, he_dist2
+            return edge_list, values
 
     def he_neighbors_bigraph(
-            self, X: csr_matrix, Y: csr_matrix, radius: float,
-            mode: str='distance', verbose: bool=False) -> Union[
+            self, X: csr_matrix, Y: csr_matrix, R2: float,
+            mode: str = 'distance', verbose: bool = False) -> Union[
                 List[Tuple[int, int]],
                 Tuple[List[Tuple[int, int]], List[float]]]:
         """
@@ -698,8 +953,8 @@ class ThOps(object):
             Input left matrix
         Y : numpy array
             Input right matrix
-        radius : float
-            Radius
+        R2 : float
+            Squared radius
         mode : {'distance', 'connectivity'}, optional (default='distance')
             If distance, a similarity graph is computed
             If connectivity, a binary connectivity graph is computed
@@ -720,7 +975,7 @@ class ThOps(object):
         Zy = np.sqrt(Y)
 
         # Compute the threshold to be applied over the product Z @ Z.T
-        s_min = 1 - radius**2 / 2
+        s_min = 1 - R2 / 2
 
         if mode == 'connectivity':
             # Compute coordinates of the nonzero values of thresholded product
@@ -731,18 +986,18 @@ class ThOps(object):
 
         else:
             # Compute thresholded product g(Z @ Z.T)
-            edge_list, he_dist2 = self.th_prod(
+            edge_list, values = self.th_prod(
                 s_min, Zx, Zy, mode=mode, verbose=verbose)
 
             # Transform products into similarities (we override he_dist2 to
             # reduce memory usage for large matrices)
             # This is a pythonic choice:
-            # he_dist2 = [max(2. - 2. * p, 0.) for p in he_dist2]
+            # he_dist2 = [max(2. - 2. * p, 0.) for p in values]
             # This is much faster:
-            he_dist2 = np.clip(2. - 2. * np.array(he_dist2), a_min=0.,
-                               a_max=None).tolist()
+            values = np.clip(2. - 2. * np.array(values), a_min=0.,
+                             a_max=None).tolist()
 
-            return edge_list, he_dist2
+            return edge_list, values
 
 
 @numba.jit
@@ -1054,9 +1309,10 @@ class base_ThOps(object):
 
             for j in range(i, N, self.blocksize):
 
-                t0 = print_status(f"i = {i}, j = {j}.  ", verbose)
+                t0 = vprint(f"i = {i}, j = {j}.  ", verbose)
                 S = Xi @ X[j: j + self.blocksize, :].T
-                t0 = print_status(f"Multiplying: {time()-t0} secs.", verbose)
+                t0 = vprint(
+                    f"Multiplying: {time()-t0:.4f} secs.", verbose)
 
                 # Apply threshold
                 if issparse(X):
@@ -1064,7 +1320,7 @@ class base_ThOps(object):
                 else:
                     S[S < th] = 0
                     #     S = S * (S <= s_min)
-                t0 = print_status(f"Thresholding: {time()-t0} secs.", verbose)
+                t0 = vprint(f"Thresholding: {time()-t0} secs.", verbose)
 
                 # List of edges in block coordinates
                 if i == j:
@@ -1088,15 +1344,15 @@ class base_ThOps(object):
                         edges0 = [(m, n) for m in range(S.shape[0])
                                   for n in range(S.shape[1])]
 
-                t0 = print_status(f"Listing {len(edges0)} edges in block "
-                                  f"coords: {time()-t0} secs.", verbose)
+                t0 = vprint(f"Listing {len(edges0)} edges in block "
+                            f"coords: {time()-t0} secs.", verbose)
 
                 if mode == 'distance':
                     thp += [S[x] for x in edges0]
 
                 # list of edges in absolute coordinates
                 edge_list += [(x[0] + i, x[1] + j) for x in edges0]
-                print_status(f"Listing: {time()-t0} secs.", verbose)
+                vprint(f"Listing: {time()-t0} secs.", verbose)
 
         if mode == 'connectivity':
             return edge_list
@@ -1142,7 +1398,7 @@ class base_ThOps(object):
 
         # Check data consistency
         if dimx != dimy:
-            logging.error('-- -- Error in thresholded product: input ' +
+            logging.error('-- -- Error in thresholded product: input '
                           'matrices must have the same number of columns')
 
         # Initialize outputs
@@ -1157,9 +1413,9 @@ class base_ThOps(object):
 
             for j in range(0, Ny, self.blocksize):
 
-                t0 = print_status(f"i = {i}, j = {j}.  ", verbose)
+                t0 = vprint(f"i = {i}, j = {j}.  ", verbose)
                 S = Xi @ Y[j: j + self.blocksize, :].T
-                t0 = print_status(f"Multiplying: {time()-t0} secs.", verbose)
+                t0 = vprint(f"Multiplying: {time()-t0} secs.", verbose)
 
                 # Apply threshold
                 if issparse(X) and issparse(Y):
@@ -1167,7 +1423,7 @@ class base_ThOps(object):
                 else:
                     S[S < th] = 0
                     #     S = S * (S <= s_min)
-                t0 = print_status(f"Thresholding: {time()-t0} secs.", verbose)
+                t0 = vprint(f"Thresholding: {time()-t0} secs.", verbose)
 
                 if th > 0:
                     # This is the usual case
@@ -1177,7 +1433,7 @@ class base_ThOps(object):
                     edges0 = [(m, n) for m in range(S.shape[0])
                               for n in range(S.shape[1])]
 
-                t0 = print_status(f"Listing {len(edges0)} edges in block "
+                t0 = vprint(f"Listing {len(edges0)} edges in block "
                                   f"coords: {time()-t0} secs.", verbose)
 
                 if mode == 'distance':
@@ -1185,7 +1441,7 @@ class base_ThOps(object):
 
                 # list of edges in absolute coordinates
                 edge_list += [(x[0] + i, x[1] + j) for x in edges0]
-                print_status(f"Listing: {time()-t0} secs.", verbose)
+                vprint(f"Listing: {time()-t0} secs.", verbose)
 
         if mode == 'connectivity':
             return edge_list
@@ -1194,8 +1450,8 @@ class base_ThOps(object):
 
     def he_neighbors_graph(self, X, R0, mode='distance', verbose=True):
         """
-        Computes the truncated squared Hellinger distance matrix between the
-        rows of X
+        Computes the list of coordinates and vales of the truncated squared
+        Hellinger distance matrix between the rows of X
 
         Parameters
         ----------
@@ -1302,4 +1558,7 @@ class base_ThOps(object):
                                a_max=None).tolist()
 
             return edge_list, he_dist2
+
+
+
 

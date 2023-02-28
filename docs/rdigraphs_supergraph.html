@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supergraph &mdash; SuperGraph 2023 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Taskmanager" href="rdigraphs_taskmanager.html" />
+    <link rel="prev" title="Similarity graphs" href="rdigraphs_sim_graph.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SuperGraph
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Data access:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html">Datamanager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.base_dm_sql">SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.base_dm_neo4j">Neo4j</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.cypher">Cypher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.callbacks">Migration Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.util">Util</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Menu:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_menu_navigator.html">Menu</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Community:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_community_plus.html">Community Plus</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Similarity:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_sim_graph.html">Similarity graphs</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Supergraph:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Supergraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#module-rdigraphs.supergraph.dgview">Data graph view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#module-rdigraphs.supergraph.sedge">Super edge</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Task manager:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_taskmanager.html">Taskmanager</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SuperGraph</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Supergraph</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/rdigraphs_supergraph.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-rdigraphs.supergraph.supergraph">
+<span id="supergraph"></span><h1>Supergraph<a class="headerlink" href="#module-rdigraphs.supergraph.supergraph" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.supergraph.supergraph.</span></span><span class="sig-name descname"><span class="pre">SuperGraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2snodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2sedges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sg'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_active</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Generic class defining a supergraph.</p>
+<p>A supergraph is a set of supernodes and super-edges connecting them.</p>
+<p>A supernode is itself a graph.</p>
+<p>A superedge connecting supernodes M and N is a directed bipartite graph
+whose nodes are the nodes of M and N, and edges are directed links from
+nodes in M to nodes in N.</p>
+<p>The class provides methods to create a supergraph and add nodes and edges
+using data taken from an SQL database.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2snodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2sedges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sg'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_active</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes an empty supergraph with an empty dictionary of supernodes
+and an empty dictionary of superlinks</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>snode</strong> (<em>str or None, optional (default=None)</em>) – If None, an empty supergraph is created.
+Otherwise, the given snode is added to the supergraph structure</p></li>
+<li><p><strong>path</strong> (<em>str or None, optional (default=None)</em>) – Path to the supergraph folder</p></li>
+<li><p><strong>path2snodes</strong> (<em>str or None, optional (default=None)</em>) – Path to the snodes folder. If None, snodes will be located in
+folder ‘snodes’ from the input path</p></li>
+<li><p><strong>path2sedges</strong> (<em>str or None, optional (default=None)</em>) – Path to the sedges folder. If None, sedges will be located in
+folder ‘sedges’ from the input path</p></li>
+<li><p><strong>label</strong> (<em>str, optional (default=’sg’)</em>) – Name of the supegraph</p></li>
+<li><p><strong>keep_active</strong> (<em>bool, optional (default=False)</em>) – If True, all supergraph components loaded from memory or generated
+by some method are preserved in memory.
+If False, some methods may deactivate snodes or sedges to free some
+memory. This is useful for large graphs</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.__weakref__">
+<span class="sig-name descname"><span class="pre">__weakref__</span></span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.__weakref__" title="Permalink to this definition"></a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.activate_all">
+<span class="sig-name descname"><span class="pre">activate_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.activate_all" title="Permalink to this definition"></a></dt>
+<dd><p>Activates all snodes and sedges in the supergraph</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.activate_sedge">
+<span class="sig-name descname"><span class="pre">activate_sedge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.activate_sedge" title="Permalink to this definition"></a></dt>
+<dd><p>Loads sedge into the dictionary of active sedges.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>label</strong> (<em>str</em>) – Name of the sedge</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.activate_snode">
+<span class="sig-name descname"><span class="pre">activate_snode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.activate_snode" title="Permalink to this definition"></a></dt>
+<dd><p>Loads snode into the dictionary of active snodes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>label</strong> (<em>str</em>) – Name of the snode</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.addSuperEdge">
+<span class="sig-name descname"><span class="pre">addSuperEdge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sedge</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.addSuperEdge" title="Permalink to this definition"></a></dt>
+<dd><p>Add a superedge (sedge) to the supergraph structure.
+The sedge is an object (graph) from class SEdge, which is an extension
+of class DataGraph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sedge</strong> (<em>object</em>) – Superedge (an object of class SEdge)</p></li>
+<li><p><strong>weight</strong> (<em>float, optional (default=1)</em>) – Weight of the sedge (in the supergraph)</p></li>
+<li><p><strong>attributes</strong> (<em>dict, optional (default={})</em>) – A dictionary of attributes</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.addSuperNode">
+<span class="sig-name descname"><span class="pre">addSuperNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.addSuperNode" title="Permalink to this definition"></a></dt>
+<dd><p>Add a snode to the supergraph structure.
+The node is an object (graph) from class DataGraph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>snode</strong> (<em>object</em>) – snode (an instance of class DataGraph)</p></li>
+<li><p><strong>attributes</strong> (<em>dict, optional (default={})</em>) – Dictionary of snode attributes</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.add_snode_attributes">
+<span class="sig-name descname"><span class="pre">add_snode_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">att</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">att_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.add_snode_attributes" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – Graph to add the new attribute</p></li>
+<li><p><strong>att</strong> (<em>str or list</em>) – Name of the attribute
+If att_values is a pandas dataframe, ‘att’ contains the name of
+the column in att_values that will be used as key for merging</p></li>
+<li><p><strong>values</strong> (<em>list or pandas dataframe or dict</em>) – If list: it contains the attribute values. If names is list, it
+is a list of lists. The order of the values must correspond with
+the order of nodes in the self node.
+If pandas dataframe, dataframe containing the new attribute values.
+This dataframe will be merged with the dataframe of nodes. In
+such case, name
+If dict, the keys must refer to values in the reference column of
+the snode.</p></li>
+<li><p><strong>att_values</strong> (<em>dataframe containing the attribute values</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.clean_up_metagraph">
+<span class="sig-name descname"><span class="pre">clean_up_metagraph</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.clean_up_metagraph" title="Permalink to this definition"></a></dt>
+<dd><p>Removes from the metagraph all nodes or edges that do no longer exist
+in the supergraph database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.computeSimBiGraph">
+<span class="sig-name descname"><span class="pre">computeSimBiGraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_edges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_gnodesS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_gnodesT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'He2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blocksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useGPU</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmp_folder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_every</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e+300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.computeSimBiGraph" title="Permalink to this definition"></a></dt>
+<dd><p>Calls the snode method to compute a similarity bipartite graph.</p>
+<p>It assumes that the source and target snodes with their corresponding
+feature matrices already exists in the supergraphs structure.</p>
+<p>A new sedge connecting the source and target snodes will be created.
+If it already exists</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s_label</strong> (<em>str</em>) – Name of the source snode</p></li>
+<li><p><strong>t_label</strong> (<em>str</em>) – Name of the target snode</p></li>
+<li><p><strong>e_label</strong> (<em>str or None, optional (default=None)</em>) – Name of the new s_edge</p></li>
+<li><p><strong>s_min</strong> (<em>float or None, optional (default=None)</em>) – Similarity threshold. Edges link all data pairs with similarity
+higher than R. This forzes a sparse graph.</p></li>
+<li><p><strong>n_edges</strong> (<em>int or None, optional (default=None)</em>) – Target number of edges. n_edges is an alternative to radius. Only
+one of both must be specified</p></li>
+<li><p><strong>n_gnodesS</strong> (<em>int or None, optional (default=None)</em>) – Number of nodes in the source subgraph.
+If None, all nodes are used
+If n_gnodesS &lt; no. of rows in self.Xs, a random subsample is taken.</p></li>
+<li><p><strong>n_gnodesT</strong> (<em>int or None, optional (default=None)</em>) – Number of nodes in the target subgraph.
+If None, all nodes are used.
+If n_gnodesT &lt; no. of rows in self.Xt, a random subsample is taken.</p></li>
+<li><p><strong>similarity</strong> (<em>str {‘He2’, ‘He2-&gt;JS’}, optional (default=’JS’)</em>) – Similarity measure used to compute affinity matrix.
+Available options are:
+(1) ‘He2’ (Same as He, but based on a proper implementation);
+(2) ‘He2-&gt;JS’: 1 minus Jensen-Shannon (JS) divergence</p></li>
+<li><p><strong>g</strong> (<em>int or float, optional (default=1)</em>) – Exponent for the affinity mapping</p></li>
+<li><p><strong>blocksize</strong> (<em>int, optional (default=25_000)</em>) – Size of each block for affinity computations</p></li>
+<li><p><strong>useGPU</strong> (<em>bool, optional (default=False)</em>) – If True, matrix operations are accelerated using GPU</p></li>
+<li><p><strong>tmp_folder</strong> (<em>str or None, optional (defautl = None)</em>) – Name of the folder to save temporary files</p></li>
+<li><p><strong>save_every</strong> (<em>int, optional (default=0)</em>) – Maximum size of the growing lists. The output lists are constructed
+incrementally. To avooy memory overload, growing lists are saved
+every time they reach this size limit. The full liests are thus
+incrementally saved in files.
+The default value is extremely large, which de facto implies no
+temporary saving.</p></li>
+<li><p><strong>verbose</strong> (<em>bool, optional (default=True)</em>) – If False, block-by-block messaging is omitted</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.computeSimGraph">
+<span class="sig-name descname"><span class="pre">computeSimGraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_edges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_gnodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'He2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blocksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useGPU</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmp_folder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_every</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e+300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.computeSimGraph" title="Permalink to this definition"></a></dt>
+<dd><p>Calls the snode method to compute a similarity graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – Name of the snode where the similarity graph will be computed.</p></li>
+<li><p><strong>s_min</strong> (<em>float or None, optional (default=None)</em>) – Similarity threshold. Edges link all data pairs with similarity
+higher than R. This forzes a sparse graph.</p></li>
+<li><p><strong>n_edges</strong> (<em>int or None, optional (default=None)</em>) – Target number of edges. n_edges is an alternative to radius. Only
+one of both must be specified</p></li>
+<li><p><strong>n_gnodes</strong> (<em>int or None, optional (default=None)</em>) – Number of nodes in the source subgraph.
+If None, all nodes are used
+If n_gnodes &lt; no. of rows in self.T, a random subsample is taken.</p></li>
+<li><p><strong>similarity</strong> (<em>str, optional (default=’JS’)</em>) – Similarity measure used to compute affinity matrix.
+Available options are:
+(1) ‘JS’ (1 minus Jensen-Shannon (JS) divergence (too slow));
+(2) ‘l1’ (1 minus l1 distance);
+(3) ‘He’ (1 minus squared Hellinger’s distance (sklean-based));
+(4) ‘He2’ (Same as He, but based on a proper implementation);
+(5) ‘Gauss’ (An exponential function of the squared l2 distance);
+(6) ‘l1-&gt;JS’ (Same as JS, but the graph is computed after
+preselecting edges using l1 distances and a theoretical bound);
+(7) ‘He-&gt;JS’ (Same as JS, but the graph is computed after pre-
+selecting edges using Hellinger’s distances and a theoretical bound
+(8) ‘He2-&gt;JS’:Same as He-Js, but using a self implementation of He
+(9) ‘cosine’, cosine similarity</p></li>
+<li><p><strong>g</strong> (<em>int or float, optional (default=1)</em>) – Exponent for the affinity mapping</p></li>
+<li><p><strong>blocksize</strong> (<em>int, optional (default=25_000)</em>) – Size of each block for affinity computations</p></li>
+<li><p><strong>useGPU</strong> (<em>bool, optional (default=False)</em>) – If True, matrix operations are accelerated using GPU</p></li>
+<li><p><strong>tmp_folder</strong> (<em>str or None, optional (defautl = None)</em>) – Name of the folder to save temporary files</p></li>
+<li><p><strong>save_every</strong> (<em>int, optional (default=0)</em>) – Maximum size of the growing lists. The output lists are constructed
+incrementally. To avooy memory overload, growing lists are saved
+every time they reach this size limit. The full liests are thus
+incrementally saved in files.
+The default value is extremely large, which de facto implies no
+temporary saving.</p></li>
+<li><p><strong>verbose</strong> (<em>bool, optional (default=True)</em>) – (Only for he_neighbors_graph()). If False, block-by-block
+messaging is omitted</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.compute_ppr">
+<span class="sig-name descname"><span class="pre">compute_ppr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">th</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.compute_ppr" title="Permalink to this definition"></a></dt>
+<dd><p>Calls the snode method to compute a similarity graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – Name of the snode where the similarity graph will be computed.</p></li>
+<li><p><strong>th</strong> (<em>float, optional (default=0.9)</em>) – Threshold over the ppr to create a link</p></li>
+<li><p><strong>inplace</strong> (<em>bool, optional (default=True)</em>) – If true, the new graph overrides the original graph</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.cosine_sim">
+<span class="sig-name descname"><span class="pre">cosine_sim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xlabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.cosine_sim" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the cosine similarity between two supernodes, X and Y.
+The cosine similarity isdefined as follows:</p>
+<blockquote>
+<div><p>sim = trace(X’ Y) / ||X|| ||Y||</p>
+</div></blockquote>
+<p>where ||·|| is the Frobenius norm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xlabel</strong> (<em>str</em>) – Name of one supernode</p></li>
+<li><p><strong>ylabel</strong> (<em>str</em>) – Name of the other supernode</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>score</strong> – Value of the cosine similarity</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.deactivate">
+<span class="sig-name descname"><span class="pre">deactivate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.deactivate" title="Permalink to this definition"></a></dt>
+<dd><p>Removes all snodes and sedges from the dictionaries of active snodes
+and sedges. This removes them from memory, but not from the supergraph
+structure. It is used to clean memory space</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.deactivate_sedge">
+<span class="sig-name descname"><span class="pre">deactivate_sedge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.deactivate_sedge" title="Permalink to this definition"></a></dt>
+<dd><p>Remove sedge from the dictionary of sedge. Note that this does not
+supresses the sedge from the supergraph. It is only removed from
+memory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>label</strong> (<em>str</em>) – Name of the sedge</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.deactivate_snode">
+<span class="sig-name descname"><span class="pre">deactivate_snode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.deactivate_snode" title="Permalink to this definition"></a></dt>
+<dd><p>Remove snode from the dictionary of snodes. Note that this does not
+supresses the snode from the supergraph. It is only removed from
+memory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>label</strong> (<em>str</em>) – Name of the snode</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.detectCommunities">
+<span class="sig-name descname"><span class="pre">detectCommunities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'louvain'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ncmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comm_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Comm'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.detectCommunities" title="Permalink to this definition"></a></dt>
+<dd><p>Applies the selected community detection algorithm to a given node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – Name of the snode</p></li>
+<li><p><strong>alg</strong> (<em>str, opional (default=’louvain’)</em>) – Community detection algorithm</p></li>
+<li><p><strong>ncmax</strong> (<em>int or None, optional (default=None)</em>) – Number of communities.</p></li>
+<li><p><strong>label</strong> (<em>str, optional (default=’Comm’)</em>) – Label for the cluster indices in the output dataframe</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.disambiguate_node">
+<span class="sig-name descname"><span class="pre">disambiguate_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.disambiguate_node" title="Permalink to this definition"></a></dt>
+<dd><p>Disambiguate a given node (from any graph) based on the topological
+structure of the related snode and sedge in the supergraph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to snode</p></li>
+<li><p><strong>node_name</strong> (<em>str</em>) – Name of the node</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.drop_sedge">
+<span class="sig-name descname"><span class="pre">drop_sedge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.drop_sedge" title="Permalink to this definition"></a></dt>
+<dd><p>Removes sedges from the supergraph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>label</strong> (<em>str</em>) – Name of the sedge to be removed</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.drop_snode">
+<span class="sig-name descname"><span class="pre">drop_snode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.drop_snode" title="Permalink to this definition"></a></dt>
+<dd><p>Removes snode from the supergraph. Note that this does not remove the
+related sedges, and the resulting supergraphg might be inconsistent.
+Future version of this method should accomplish edge removal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>label</strong> (<em>str</em>) – Name of the snode to be removed</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.duplicate_snode">
+<span class="sig-name descname"><span class="pre">duplicate_snode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xlabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.duplicate_snode" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a copy of a given snode with another name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xlabel</strong> (<em>str</em>) – Name of the snode to be duplicated</p></li>
+<li><p><strong>ylabel</strong> (<em>str</em>) – Name of the new snode</p></li>
+<li><p><strong>out_path</strong> (<em>str or None, optional (default=None)</em>) – Output path of the duplicate</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.export_2_halo">
+<span class="sig-name descname"><span class="pre">export_2_halo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_att1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_att2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_att</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_att2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.export_2_halo" title="Permalink to this definition"></a></dt>
+<dd><p>Export sedge, with selected attributes, into a csv file, for
+visualization with Halo.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path2sedge</strong> (<em>str</em>) – Path to the bipartite graph</p></li>
+<li><p><strong>s_att1</strong> (<em>str</em>) – Name of the first attribute of the source node</p></li>
+<li><p><strong>s_att2</strong> (<em>str</em>) – Name of the second attribute of the source node</p></li>
+<li><p><strong>t_att</strong> (<em>str</em>) – Name of the attribute of the target node</p></li>
+<li><p><strong>t_att2</strong> (<em>str or None, optional (default=None)</em>) – Name of the second attribute of the target node
+If None, t_att2 is taken equal to t_att</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>label_map</strong> – Dictionary of correspondences label_in_graph : label_in_halo</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.filter_edges_from_sedge">
+<span class="sig-name descname"><span class="pre">filter_edges_from_sedge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">th</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.filter_edges_from_sedge" title="Permalink to this definition"></a></dt>
+<dd><p>Removes edges below a given threshold from a given snode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – Name of the snode</p></li>
+<li><p><strong>th</strong> (<em>int or float</em>) – Threshold</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.filter_edges_from_snode">
+<span class="sig-name descname"><span class="pre">filter_edges_from_snode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">th</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.filter_edges_from_snode" title="Permalink to this definition"></a></dt>
+<dd><p>Removes edges below a given threshold from a given snode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – Name of the snode</p></li>
+<li><p><strong>th</strong> (<em>int or float</em>) – Threshold</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.get_attributes">
+<span class="sig-name descname"><span class="pre">get_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_snode_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.get_attributes" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the attributes of a given snode or sedge</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – Name of the snode or sedge</p></li>
+<li><p><strong>is_node</strong> (<em>bool, optional (default=True)</em>) – If True, label is a snode. If False, label is a sedge</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>atts</strong> – List of attributes of the given snode</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>If the snode is active, the attributes are not read from file, but from
+memory. Thus, if any other method has modified the attributes without
+updating in-memory data, the attribute list might be not updated.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.get_metadata">
+<span class="sig-name descname"><span class="pre">get_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_node_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.get_metadata" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the metadata of a given snode or sedge</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – Name of the snode or sedge</p></li>
+<li><p><strong>is_node</strong> (<em>bool, optional (default=True)</em>) – If True, label is a snode. If False, label is a sedge</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>md</strong> – Metadata dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.get_sedges">
+<span class="sig-name descname"><span class="pre">get_sedges</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.get_sedges" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the label of all sedges in the supergraph</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.get_snodes">
+<span class="sig-name descname"><span class="pre">get_snodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.get_snodes" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the label of all snodes in the supergraph</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.get_terminals">
+<span class="sig-name descname"><span class="pre">get_terminals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e_label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.get_terminals" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the name of the source and target snodes of a given sedge</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>e_label</strong> (<em>str</em>) – Name of the sedge</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>s_label</strong> (<em>str</em>) – Name of the source snode</p></li>
+<li><p><strong>t_label</strong> (<em>str</em>) – Name of the target snode</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.graph_layout">
+<span class="sig-name descname"><span class="pre">graph_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snode_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.graph_layout" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the layout of the given graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>snode_label</strong> (<em>str</em>) – Name of the snode</p></li>
+<li><p><strong>gravity</strong> (<em>int, optional (default=1)</em>) – Gravity parameter of the graph layout method (only for force atlas
+2)</p></li>
+<li><p><strong>attribute</strong> (<em>str</em>) – Snode attribute used to color the graph</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.is_active_sedge">
+<span class="sig-name descname"><span class="pre">is_active_sedge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e_label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.is_active_sedge" title="Permalink to this definition"></a></dt>
+<dd><p>Checks if a given s_edge is active</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>e_label</strong> (<em>str</em>) – Name of the sedge</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>b</strong> – True if sedge is active, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.is_active_snode">
+<span class="sig-name descname"><span class="pre">is_active_snode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.is_active_snode" title="Permalink to this definition"></a></dt>
+<dd><p>Checks if the snode given by label is active</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>label</strong> (<em>str</em>) – Name of the snode</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>b</strong> – True if snode is active, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.is_sedge">
+<span class="sig-name descname"><span class="pre">is_sedge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e_label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.is_sedge" title="Permalink to this definition"></a></dt>
+<dd><p>Checks if the sedge given by e_label exists in the supergraph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>e_label</strong> (<em>str</em>) – Name of the sedge</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>b</strong> – True if sedge exists, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.is_snode">
+<span class="sig-name descname"><span class="pre">is_snode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.is_snode" title="Permalink to this definition"></a></dt>
+<dd><p>Checks if the snode given by label exists in the supergraph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>label</strong> (<em>str</em>) – Name of the snode</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>b</strong> – True if snode exists, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.local_snode_analysis">
+<span class="sig-name descname"><span class="pre">local_snode_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.local_snode_analysis" title="Permalink to this definition"></a></dt>
+<dd><p>Compute local features of nodes in the given snode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – Name of the snode</p></li>
+<li><p><strong>parameter</strong> (<em>str</em>) – Name of the local feature</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.makeSuperNode">
+<span class="sig-name descname"><span class="pre">makeSuperNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'undirected'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_T</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.makeSuperNode" title="Permalink to this definition"></a></dt>
+<dd><p>Make a new snode for the supergraph structure.
+The snode is created as an object (graph) from class DataGraph, with
+the input data in the args.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – Name os the supernode</p></li>
+<li><p><strong>out_path</strong> (<em>str or None, optional (default=None)</em>) – Output path</p></li>
+<li><p><strong>nodes</strong> (<em>list or None, optional (default=None)</em>) – List of nodes</p></li>
+<li><p><strong>T</strong> (<em>array or None, optional (default=None)</em>) – Feature matrix, one row per node</p></li>
+<li><p><strong>attributes</strong> (<em>dict, optional (default={})</em>) – Attributes of the supernode. Note that these are not attributes of
+the nodes, but of the whole supernode, that will be stored in the
+snode metagraph</p></li>
+<li><p><strong>save_T</strong> (<em>bool, optional (default=False)</em>) – If True, the feature matrix T is saved into an  npz file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.remove_isolated_nodes">
+<span class="sig-name descname"><span class="pre">remove_isolated_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.remove_isolated_nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Removes all isolated nodes in a given snode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>label</strong> (<em>str</em>) – Name of the snode</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.remove_snode_attributes">
+<span class="sig-name descname"><span class="pre">remove_snode_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">att_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.remove_snode_attributes" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – Graph to add the new attribute</p></li>
+<li><p><strong>att_names</strong> (<em>str or list</em>) – Name or names of the attributes to remove</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.save_supergraph">
+<span class="sig-name descname"><span class="pre">save_supergraph</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.save_supergraph" title="Permalink to this definition"></a></dt>
+<dd><p>Saves all active snodes and sedges.
+This means that it will save all snodes and sedges that have been
+uploaded to self.snodes and self.sedges</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.snode_from_atts">
+<span class="sig-name descname"><span class="pre">snode_from_atts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_snode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_sedge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">att_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.snode_from_atts" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a new snode and a new sedge from a given snode in the
+supergraph and one of its attributes.</p>
+<p>The nodes of the new snode will consist of the attribute values of the
+snode.</p>
+<p>Each node in the source snode will be connected to the node in the
+target snode containing its attribute value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<em>str</em>) – Name of the source snode in the supergraph</p></li>
+<li><p><strong>attrib</strong> (<em>str</em>) – The attribute in snode containing the target nodes</p></li>
+<li><p><strong>target</strong> (<em>str or None, optional (default=None)</em>) – Name of the target node</p></li>
+<li><p><strong>path_snode</strong> (<em>str or None, optional (default=None)</em>) – Output path to save the target snode</p></li>
+<li><p><strong>path_sedge</strong> (<em>str or None, optional (default=None)</em>) – Output path to save the sedge</p></li>
+<li><p><strong>e_label</strong> (<em>str or None, optional (default=None)</em>) – Name of the new s_edge</p></li>
+<li><p><strong>att_size</strong> (<em>bool, optional (defautl=False)</em>) – If True, adds attribute to the target node containing the size
+of the node measued by the number of neighbors in the sedge</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.snode_from_edges">
+<span class="sig-name descname"><span class="pre">snode_from_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_snode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_sedge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.snode_from_edges" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a new snode and a new sedge from a given snode in the
+supergraph and and a list of edges to the new snode</p>
+<p>This method is similar to snode_from_atts. The difference is that
+snode_from_atts takes the edges from an snode attribute, while
+snode_from_edges takes the edges as an input argument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<em>str</em>) – Name of the source snode in the supergraph</p></li>
+<li><p><strong>edges</strong> (<em>list</em>) – List of edges</p></li>
+<li><p><strong>target</strong> (<em>str or None</em>) – Name of the target node. If None, default name A_{source} is
+usedm where {source} is the source name</p></li>
+<li><p><strong>path_snode</strong> (<em>str or None</em>) – Output path to save the target snode. If None a defautl path is
+used</p></li>
+<li><p><strong>path_sedge</strong> (<em>str or None</em>) – Output path to save the sedge. If None, a default path is used</p></li>
+<li><p><strong>e_label</strong> (<em>str or None</em>) – Name of the sedge connecting the source and target snodes. If None,
+a default name {source}_2_{target} is used</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.snode_from_eqs">
+<span class="sig-name descname"><span class="pre">snode_from_eqs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_snode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_sedge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.snode_from_eqs" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a new snode and a new sedge from a given snode in the
+supergraph.</p>
+<p>The nodes of the new snode will consist of the equivalence classes
+of the snode.</p>
+<p>An equivalence class is the set of all nodes fully connected by links
+with unit weight</p>
+<p>All nodes from the same equivalence class at the source snode will be
+connected to the same equivalent-class node in the target snode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<em>str</em>) – Name of the source snode in the supergraph</p></li>
+<li><p><strong>target</strong> (<em>str or None</em>) – Name of the target node. If None, default name eq_{source} is
+usedm where {source} is the source name</p></li>
+<li><p><strong>path_snode</strong> (<em>str or None</em>) – Output path to save the target snode. If None a defautl path is
+used</p></li>
+<li><p><strong>path_sedge</strong> (<em>str or None</em>) – Output path to save the sedge. If None, a default path is used</p></li>
+<li><p><strong>e_label</strong> (<em>str or None</em>) – Name of the sedge connecting the source and target snodes. If None,
+a default name {source}_2_{target} is used</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.sub_snode">
+<span class="sig-name descname"><span class="pre">sub_snode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xlabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ynodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampleT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_T</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.sub_snode" title="Permalink to this definition"></a></dt>
+<dd><p>Subsample snode X using a given subset of nodes.</p>
+<p>The list of nodes may contain nodes that are not in X. These nodes will
+be included in the new graph, with no edges.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xlabel</strong> (<em>str</em>) – Name of the snode to be sampled</p></li>
+<li><p><strong>ynodes</strong> (<em>int or list</em>) – If list, list of nodes of the output subgraph.
+If int, number of nodes to sample. The list of nodes is taken
+at random without replacement from the graph nodes</p></li>
+<li><p><strong>ylabel</strong> (<em>str or None, optional (default=None)</em>) – Name of the new snode.
+If None, the sampled snode replaces the original one</p></li>
+<li><p><strong>sampleT</strong> (<em>bool, optional (defaul=True)</em>) – If True, the feature matrix is also sampled, if it exists.</p></li>
+<li><p><strong>save_T</strong> (<em>bool, optional (default=True)</em>) – If True, the feature matrix T is saved into an npz file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.sub_snode_by_novalue">
+<span class="sig-name descname"><span class="pre">sub_snode_by_novalue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xlabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">att</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampleT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.sub_snode_by_novalue" title="Permalink to this definition"></a></dt>
+<dd><p>Subsample snode by removing all nodes without a given value of the
+given attribute</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xlabel</strong> (<em>str</em>) – Name of the snode to be sampled</p></li>
+<li><p><strong>att</strong> (<em>str</em>) – Name of the attribute to select nodes by value</p></li>
+<li><p><strong>value</strong> (<em>int or str, optional</em>) – Value of the attribute. Only nodes NOT taking this value will be
+selected</p></li>
+<li><p><strong>ylabel</strong> (<em>str or None, optional (default=None)</em>) – Name of the new snode.
+If None, the sampled snode replaces the original one</p></li>
+<li><p><strong>sampleT</strong> (<em>bool, optional (defaul=False)</em>) – If True, the feature matrix is also sampled, if it exists.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.sub_snode_by_threshold">
+<span class="sig-name descname"><span class="pre">sub_snode_by_threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xlabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">att</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">th</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lower'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.sub_snode_by_threshold" title="Permalink to this definition"></a></dt>
+<dd><p>Subsample snode by the removing all nodes whose value of a given
+attribute is below or above a given threshold</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xlabel</strong> (<em>str</em>) – Name of the snode to be sampled</p></li>
+<li><p><strong>att</strong> (<em>str</em>) – Name of the attribute to select nodes by value</p></li>
+<li><p><strong>th</strong> (<em>int or float</em>) – Value of the attribute. Only nodes taking this value will be
+selected</p></li>
+<li><p><strong>bound</strong> (<em>str {‘lower’, ‘upper’}, optional (default=’lower’)</em>) – States if the threshold is a lower (default) or an upper bound.
+If “lower”, all nodes with attribute less than the bound are
+removed</p></li>
+<li><p><strong>ylabel</strong> (<em>str or None, optional (default=None)</em>) – Name of the new snode.
+If None, the sampled snode replaces the original one</p></li>
+<li><p><strong>sampleT</strong> (<em>bool, optional (defaul=False)</em>) – If True, the feature matrix is also sampled, if it exists.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.sub_snode_by_value">
+<span class="sig-name descname"><span class="pre">sub_snode_by_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xlabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">att</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.sub_snode_by_value" title="Permalink to this definition"></a></dt>
+<dd><p>Subsample snode by the value of a single attribute</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xlabel</strong> (<em>str</em>) – Name of the snode to be sampled</p></li>
+<li><p><strong>att</strong> (<em>str</em>) – Name of the attribute to select nodes by value</p></li>
+<li><p><strong>value</strong> (<em>int or str or list, optional</em>) – Value of the attribute. Only nodes taking this value will be
+selected.
+If value is a list, all nodes taking a value in the list are
+selected.</p></li>
+<li><p><strong>ylabel</strong> (<em>str or None, optional (default=None)</em>) – Name of the new snode.
+If None, the sampled snode replaces the original one</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Note that the feature matrix, if it exists, is not sampled.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.transduce">
+<span class="sig-name descname"><span class="pre">transduce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xylabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_active</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.transduce" title="Permalink to this definition"></a></dt>
+<dd><p>Given snode X and sedge X-Y, compute a graph for Y based on the
+connectivity betwen nodes in Y through edges from Y to X (strored
+in X-Y) and edges in X.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xylabel</strong> (<em>str</em>) – Name of the sedge (bipartite graph) X-Y.
+The names of snodes X and Y will be taken from the metadata of the
+bipartite graph</p></li>
+<li><p><strong>n</strong> (<em>int, optional (default=1)</em>) – Order for K. A positive integer.
+The affinity matrix is a normalized version of F·K^n·F’</p></li>
+<li><p><strong>normalize</strong> (<em>bool, optional (default=True)</em>) – If True the graph is normalized so that each node has similarity 1
+to itself.</p></li>
+<li><p><strong>keep_active</strong> (<em>bool, optinoal (default=False)</em>) – If True, snodes and sedge are not deactivated before return.
+If False, X and X-Y are deactivated. Y remains active, otherwise
+changes would be lost.
+If None, the defaul value in self.keep_active is used</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The new graph is stored in the edges of snode Y.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.supergraph.SuperGraph.transitive_graph">
+<span class="sig-name descname"><span class="pre">transitive_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmlabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mylabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_sedge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_active</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.supergraph.SuperGraph.transitive_graph" title="Permalink to this definition"></a></dt>
+<dd><p>Construct a new superedge XY connecting suprenodes X and Y that are
+linked by an intermediate supernode M (through superedges XM
+and MY)</p>
+<p>To do so, we replace connections x-m-y by connections x-y</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>e_label</strong> (<em>str</em>) – Label of the new superedge</p></li>
+<li><p><strong>xmlabel</strong> (<em>str</em>) – Label of superedge x-m</p></li>
+<li><p><strong>mylabel</strong> (<em>str</em>) – Label of superedge m-y</p></li>
+<li><p><strong>path_sedge</strong> (<em>str</em>) – Path to the ne sedge</p></li>
+<li><p><strong>keep_active</strong> (<em>bool, optinoal (default=False)</em>) – If True, snodes and sedge are not deactivated before return.
+If False, XM and MY are deactivated. XY remains active, otherwise
+changes would be lost.
+If None, the defaul value in self.keep_active is used</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-rdigraphs.supergraph.dgview">
+<span id="data-graph-view"></span><h1>Data graph view<a class="headerlink" href="#module-rdigraphs.supergraph.dgview" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.dgview.plotAverageTopic">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.supergraph.dgview.</span></span><span class="sig-name descname"><span class="pre">plotAverageTopic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.dgview.plotAverageTopic" title="Permalink to this definition"></a></dt>
+<dd><p>Plots the sorted average of all sorted topics vectors</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array</em>) – Input matrix</p></li>
+<li><p><strong>fpath</strong> (<em>str or None, optional (default=None)</em>) – Path to save the figure</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.dgview.plotCXmatrix">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.supergraph.dgview.</span></span><span class="sig-name descname"><span class="pre">plotCXmatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.dgview.plotCXmatrix" title="Permalink to this definition"></a></dt>
+<dd><p>Plots matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>M</strong> (<em>array</em>) – Input matrix</p></li>
+<li><p><strong>fpath</strong> (<em>str or None, optional (default=None)</em>) – Path to save the figure</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.dgview.plotClusterWeights">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.supergraph.dgview.</span></span><span class="sig-name descname"><span class="pre">plotClusterWeights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.dgview.plotClusterWeights" title="Permalink to this definition"></a></dt>
+<dd><p>Barplot of the nuber of items per cluster.</p>
+<p>Plots the main topic</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>labels</strong> (<em>list</em>) – Labels</p></li>
+<li><p><strong>fpath</strong> (<em>str or None, optional (default=None)</em>) – Path to save the figure</p></li>
+<li><p><strong>n</strong> (<em>int or None, optional (default=None)</em>) – If none, show all clusters. If integer, it only shows the highest n
+clusters</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.dgview.plotMainTopic">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.supergraph.dgview.</span></span><span class="sig-name descname"><span class="pre">plotMainTopic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.dgview.plotMainTopic" title="Permalink to this definition"></a></dt>
+<dd><p>Plots the main topic</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array</em>) – Input matrix</p></li>
+<li><p><strong>fpath</strong> (<em>str or None, optional (default=None)</em>) – Path to save the figure</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.dgview.plotSortedFeatures">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.supergraph.dgview.</span></span><span class="sig-name descname"><span class="pre">plotSortedFeatures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.dgview.plotSortedFeatures" title="Permalink to this definition"></a></dt>
+<dd><p>Plots the average of all sorted topics vectors</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array</em>) – Input matrix</p></li>
+<li><p><strong>fpath</strong> (<em>str or None, optional (default=None)</em>) – Path to save the figure</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.dgview.plot_cluster_analysis">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.supergraph.dgview.</span></span><span class="sig-name descname"><span class="pre">plot_cluster_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fpath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.dgview.plot_cluster_analysis" title="Permalink to this definition"></a></dt>
+<dd><p>Plots the values of one or more scores for clustering evaluation, as a
+function of the number of clusters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scores</strong> (<em>dict</em>) – Scores</p></li>
+<li><p><strong>fpath</strong> (<em>str</em>) – Path to save the figure</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.dgview.printClusters">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.supergraph.dgview.</span></span><span class="sig-name descname"><span class="pre">printClusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">M</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.dgview.printClusters" title="Permalink to this definition"></a></dt>
+<dd><p>Prints clusters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>M</strong> (<em>array</em>) – Input matrix</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.dgview.printStats">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.supergraph.dgview.</span></span><span class="sig-name descname"><span class="pre">printStats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.dgview.printStats" title="Permalink to this definition"></a></dt>
+<dd><p>logging.info(some statistics about the size and content of the graph data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df_nodes</strong> (<em>dataframe</em>) – Dataframe</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – Label</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.dgview.rankEdges">
+<span class="sig-prename descclassname"><span class="pre">rdigraphs.supergraph.dgview.</span></span><span class="sig-name descname"><span class="pre">rankEdges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_edges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.dgview.rankEdges" title="Permalink to this definition"></a></dt>
+<dd><p>”
+Show the n edges with highest weight.</p>
+<p>Refer the nodes using the specified field in df_nodes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df_edges</strong> (<em>dataframe</em>) – Edges</p></li>
+<li><p><strong>df_nodes</strong> (<em>dataframe</em>) – Nodes</p></li>
+<li><p><strong>fields</strong> (<em>str</em>) – Column containing the weights</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – Number of edges</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rdigraphs.supergraph.sedge">
+<span id="super-edge"></span><h1>Super edge<a class="headerlink" href="#module-rdigraphs.supergraph.sedge" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.sedge.SEdge">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdigraphs.supergraph.sedge.</span></span><span class="sig-name descname"><span class="pre">SEdge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dg'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'directed'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.sedge.SEdge" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGraph</span></code></p>
+<p>Generic class defining a super-edge: a bipartite datagraph.</p>
+<p>It is inherited from DataGraph. This is because a bipartite graph is
+nothing but a particular type of graph.</p>
+<p>The SEdge class distinguishes between source nodes and target nodes. Thus,
+the DataGraph class is extended with some attributes to label the type of
+each node.</p>
+<p>However, the graph may be undirected (links from target nodes to source
+nodes are allowed)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.sedge.SEdge.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dg'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'directed'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.sedge.SEdge.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the superedge structure</p>
+<p>If a superedge exists in the given path, it is loaded. Otherwise,
+a new empty superegde is created.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str or None, optional (default=’dg’)</em>) – Name os the superedge</p></li>
+<li><p><strong>path</strong> (<em>str or None, optional (default=None)</em>) – Path to the folder that contains, or will contain, the graph data</p></li>
+<li><p><strong>label_source</strong> (<em>str or None, optional (default=None)</em>) – Generic name of the source nodes</p></li>
+<li><p><strong>label_target</strong> (<em>str or None, optional (default=None)</em>) – Generic name of the target nodes</p></li>
+<li><p><strong>load_data</strong> (<em>bool, optional (default=True)</em>) – If True (default) the graph data are loaded.
+If False, only the graph metadata are loaded</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>n_source</strong> (<em>int</em>) – Number of source nodes</p></li>
+<li><p><strong>n_target</strong> (<em>int</em>) – Number of target nodes</p></li>
+<li><p><strong>label_source</strong> (<em>str</em>) – Generic label for the source nodes</p></li>
+<li><p><strong>label_target</strong> (<em>str</em>) – Generic label for the target nodes</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>These are the specific attributes of the SEdge class. See the parent
+class documentation to see more attributes.</p>
+<p>The source and target nodes in the parent class attribute self.df_edges
+are located in columns ‘Source’ and ‘Target’, because these are the
+standard names for Gephi graphs. Thus, the names in label_source and
+label_target are not used in self.df_edges.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.sedge.SEdge.add_single_edge">
+<span class="sig-name descname"><span class="pre">add_single_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.sedge.SEdge.add_single_edge" title="Permalink to this definition"></a></dt>
+<dd><p>Add single edge</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<em>str</em>) – Source node name</p></li>
+<li><p><strong>target</strong> (<em>str</em>) – Target node name</p></li>
+<li><p><strong>weight</strong> (<em>float, optional (default=1)</em>) – Edge weight</p></li>
+<li><p><strong>attributes</strong> (<em>dict, optional (default={})</em>) – Dictionary of attributes</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.sedge.SEdge.add_single_node">
+<span class="sig-name descname"><span class="pre">add_single_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.sedge.SEdge.add_single_node" title="Permalink to this definition"></a></dt>
+<dd><p>Add single node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node</strong> (<em>str</em>) – Node name</p></li>
+<li><p><strong>attributes</strong> (<em>dict, optional (default={})</em>) – Dictionary of attributes</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.sedge.SEdge.computeSimBiGraph">
+<span class="sig-name descname"><span class="pre">computeSimBiGraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_gnodesS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_gnodesT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_edges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'He2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blocksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useGPU</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.sedge.SEdge.computeSimBiGraph" title="Permalink to this definition"></a></dt>
+<dd><p>Computes a sparse similarity bipartite graph for the self graph
+structure. The self graph must contain a T-matrix, self.T</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s_min</strong> (<em>float or None, optional (default=None)</em>) – Similarity threshold. Edges link all data pairs with similarity
+higher than R. This forzes a sparse graph.</p></li>
+<li><p><strong>n_gnodesS</strong> (<em>int or None, optional (default=None)</em>) – Number of nodes in the source subgraph.
+If None, all nodes are used
+If n_gnodesS &lt; no. of rows in self.Xs, a random subsample is taken.</p></li>
+<li><p><strong>n_gnodesT</strong> (<em>int or None, optional (default=None)</em>) – Number of nodes in the target subgraph.
+If None, all nodes are used.
+If n_gnodesT &lt; no. of rows in self.Xt, a random subsample is taken.</p></li>
+<li><p><strong>n_edges</strong> (<em>int or None, optional (default=None)</em>) – Target number of edges. n_edges is an alternative to radius.
+Only one of both must be specified (i.e., not None)</p></li>
+<li><p><strong>similarity</strong> (<em>str {‘He2’, ‘He2-&gt;JS’}, optional (default=’He2’)</em>) – Similarity measure used to compute affinity matrix
+Available options are:
+‘He2’ (1 minus squared Hellinger distance (self implementation));
+‘He2-&gt;JS’ (1 minus Jensen-Shannon (JS) divergence)</p></li>
+<li><p><strong>g</strong> (<em>float, optional (default=1)</em>) – Exponent for the affinity mapping</p></li>
+<li><p><strong>blocksize</strong> (<em>int, optional (default=25_000)</em>) – Size of each block for the computation of affinity values. Large
+sizes might imply a large memory consumption.</p></li>
+<li><p><strong>useGPU</strong> (<em>bool, optional (default=False)</em>) – If True, matrix operations are accelerated using GPU</p></li>
+<li><p><strong>verbose</strong> (<em>bool, optional (default=True)</em>) – (Only for he_neighbors_graph()). If False, block-by-block
+messaging is omitted</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.sedge.SEdge.disconnect_nodes">
+<span class="sig-name descname"><span class="pre">disconnect_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.sedge.SEdge.disconnect_nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Disconnect nodes by removing edges</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<em>str</em>) – Source node name</p></li>
+<li><p><strong>target</strong> (<em>str</em>) – Target node name</p></li>
+<li><p><strong>directed</strong> (<em>bool, optional (default=True)</em>) – True if only edge source-&gt;target should be removed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.sedge.SEdge.drop_single_node">
+<span class="sig-name descname"><span class="pre">drop_single_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.sedge.SEdge.drop_single_node" title="Permalink to this definition"></a></dt>
+<dd><p>Add single node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node</strong> (<em>str</em>) – Node name</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.sedge.SEdge.get_source_nodes">
+<span class="sig-name descname"><span class="pre">get_source_nodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.sedge.SEdge.get_source_nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Get list of source nodes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of source nodes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.sedge.SEdge.get_target_nodes">
+<span class="sig-name descname"><span class="pre">get_target_nodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.sedge.SEdge.get_target_nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Get list of target nodes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of target nodes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.sedge.SEdge.get_terminals">
+<span class="sig-name descname"><span class="pre">get_terminals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.sedge.SEdge.get_terminals" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the name of the source and target snodes of a given sedge</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>s_label</strong> (<em>str</em>) – Name of the source snode</p></li>
+<li><p><strong>t_label</strong> (<em>str</em>) – Name of the target snode</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.sedge.SEdge.save_feature_matrix">
+<span class="sig-name descname"><span class="pre">save_feature_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.sedge.SEdge.save_feature_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Save feature matrices in self.Xs and self.Xt, if they exist.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.sedge.SEdge.set_edges">
+<span class="sig-name descname"><span class="pre">set_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.sedge.SEdge.set_edges" title="Permalink to this definition"></a></dt>
+<dd><p>This method modifies set_edges from the parent class to test name
+collisions in source and target nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_nodes</strong> (<em>list</em>) – Source nodes</p></li>
+<li><p><strong>target_nodes</strong> (<em>list</em>) – Target nodes</p></li>
+<li><p><strong>weights</strong> (<em>list or None, optional (default=None)</em>) – Edge weights. If None, unit weights are assumed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.sedge.SEdge.set_nodes">
+<span class="sig-name descname"><span class="pre">set_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes_orig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes_dest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_T</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.sedge.SEdge.set_nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Loads a superedge with a given set of source and target nodes.</p>
+<p>The new sets of nodes overwrite any existing ones.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nodes_orig</strong> (<em>list, optional (default=[])</em>) – Source nodes</p></li>
+<li><p><strong>nodes_dest</strong> (<em>list, optional (default=[])</em>) – Target nodes</p></li>
+<li><p><strong>Xs</strong> (<em>array or None, optional (default=None)</em>) – Source feature matrix: one row per source node, one column per
+feature</p></li>
+<li><p><strong>Xt</strong> (<em>array or None, optional (default=None)</em>) – Target feature matrix: one row per source node, one column per
+feature</p></li>
+<li><p><strong>save_T</strong> (<em>bool, optional (default=False)</em>) – If True, features matrices are saver into npz files.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdigraphs.supergraph.sedge.SEdge.update_metadata">
+<span class="sig-name descname"><span class="pre">update_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.supergraph.sedge.SEdge.update_metadata" title="Permalink to this definition"></a></dt>
+<dd><p>Updates metadata dictionary with the self variables directly computed
+from df_nodes and df_edges</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="rdigraphs_sim_graph.html" class="btn btn-neutral float-left" title="Similarity graphs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rdigraphs_taskmanager.html" class="btn btn-neutral float-right" title="Taskmanager" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, J. Cid-Sueiro, M. A. Vázquez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
