@@ -1,8 +1,8 @@
-# Supergraph
+# Graph Analysis Toolbox
 
 <img src="https://github.com/Orieus/supergraph/blob/master/figures/supergraph.png" width="400">
 
-**Supergraph** is a generic software for the management and processing of a interrelated collection of multiple graphs. 
+The **Graph Analysis Toolbox** is a generic software for the management and processing of a interrelated collection of multiple graphs. 
 
 It can be used to process multiple graphs. Functionality include (but it is not limited to):
 
@@ -51,12 +51,4 @@ The software include several class packages that can be used independently. Clas
    * `CommunityPlus`: Wrapper to community detection algorithms
    * `DataGraph` (requires `SimGraph` and `CommunityPlus`): provides tools for graph processing and analysis.
    * `SuperGraph` (requires `DataGraph`): provides tools for handling collections of DataGraph objects, including tools for the generation of new datagraphs.
-
-### Additional information
-
-You can find more detailed information about this software in the [Wiki](https://github.com/Orieus/supergraph/wiki).
-
-This project was initially conceived for the processing of multiple corpus of scientific publications, patents and project proposals, inside the project "**Service for Identifying Impact and R&D&I Agent Collaboration Networks**" (*Servicio para Identificar Impacto y Redes de Colaboración de Agentes I+D+i*), funded by the **Secretary of State for the Digital Agenda** (SEAD, Secretaría de Estado para la Agenda Digital), under the umbrella of the Spanish Plan for the Stimulus of Language Tecnologies (PTL, [*Plan de Impulso de las Tecnologías del Lenguaje*](https://www.plantl.gob.es/Paginas/index.aspx)).
-
-
 
