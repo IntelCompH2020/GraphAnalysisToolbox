@@ -25,7 +25,7 @@ import gensim.corpora.bleicorpus as blei
 from sklearn.preprocessing import normalize
 
 # # Local imports
-from rdigraphs.sgtaskmanager import SgTaskManager
+from rdigraphs.sgtaskmanager import SgTaskManagerCMD
 from rdigraphs.supergraph.supergraph import SuperGraph
 from rdigraphs.sim_graph.sim_graph import SimGraph
 from rdigraphs.community_plus.community_plus import CommunityPlus
@@ -33,7 +33,7 @@ from rdigraphs.community_plus.community_plus import CommunityPlus
 import matplotlib.pyplot as plt
 
 
-class LabTaskManager(SgTaskManager):
+class LabTaskManager(SgTaskManagerCMD):
     """
     Task Manager for the RDIgraph analyzer.
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Similarity graphs &mdash; SuperGraph 2023 documentation</title>
@@ -29,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            SuperGraph
+            <a href="index.html" class="icon icon-home"> SuperGraph
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -46,8 +42,8 @@
               <p class="caption" role="heading"><span class="caption-text">Data access:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html">Datamanager</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.base_dm_sql">SQL</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.base_dm_neo4j">Neo4j</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#sql">SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#neo4j">Neo4j</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.cypher">Cypher</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.callbacks">Migration Callbacks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rdigraphs_datamanager.html#module-rdigraphs.datamanager.util">Util</a></li>
@@ -68,7 +64,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="rdigraphs_supergraph.html">Supergraph</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rdigraphs_supergraph.html#module-rdigraphs.supergraph.dgview">Data graph view</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rdigraphs_supergraph.html#module-rdigraphs.supergraph.sedge">Super edge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdigraphs_supergraph.html#super-edge">Super edge</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Task manager:</span></p>
 <ul>
@@ -88,8 +84,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Similarity graphs</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Similarity graphs</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/rdigraphs_sim_graph.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -108,16 +104,16 @@
 and q.
 It assumes that both p and q are normalized and sum up to 1</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>p</strong> (<em>numpy array</em>) – Probability distribution</p></li>
 <li><p><strong>q</strong> (<em>numpy array</em>) – Probability distribution (with the same size as p)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>d</strong> – JS distance</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -131,16 +127,16 @@ and q.
 It assumes that both p and q are normalized and sum up to 1 p and q can
 be sparse vectors (this is the main difference wrt JSdist())</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>p</strong> (<em>numpy array or sparse vector</em>) – Probability distribution</p></li>
 <li><p><strong>q</strong> (<em>numpy array or sparse vector</em>) – Probability distribution (with the same size as p)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>d</strong> – JS distance</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -160,7 +156,7 @@ the node attribute vectors</p>
 <p>It assumes that all attribute vectors are normalized to sum up to 1
 Attribute matrices in X and Y can be sparse</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> (<em>numpy array</em>) – Input matrix of probabilistic attribute vectors</p></li>
 <li><p><strong>Y</strong> (<em>numpy array or None, optional (default=None)</em>) – Input matrix of probabilistic attribute vectors. If None, it is
@@ -173,14 +169,14 @@ which implies no edge filtering</p></li>
 <li><p><strong>g</strong> (<em>float</em>) – Exponent for the final affinity mapping</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>edge_id</strong> (<em>list of tuples</em>) – List of edges</p></li>
 <li><p><strong>weights</strong> (<em>list</em>) – List of edge weights</p></li>
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><ul class="simple">
 <li><p><strong>edge_id</strong> (<em>list of tuples</em>) – List of edges</p></li>
 <li><p><strong>weights</strong> (<em>list</em>) – List of edge weights</p></li>
@@ -195,7 +191,7 @@ which implies no edge filtering</p></li>
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blocksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useGPU</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmp_folder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_every</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e+300</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sim_graph.sim_graph.SimGraph.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Stores the main attributes of a class instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> (<em>scipy.sparse.csr or numpy.array</em>) – Matrix of node attribute vectors</p></li>
 <li><p><strong>blocksize</strong> (<em>int, optional (default=25_000)</em>) – Size (number of rows) of each block in blocwise processing.</p></li>
@@ -218,7 +214,7 @@ temporary saving.</p></li>
 <dd><p>Computes a graph where each node is formed by all nodes at zero
 distance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>reduceX</strong> (<em>boolean</em>) – If True, it computes self.Xeq, a data matrix without rows at zero
 distance</p>
 </dd>
@@ -242,7 +238,7 @@ class i.</p>
 have the same feature vector in self.T. Otherwise, a and be are
 disconnected</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>R</strong> (<em>float</em>) – Radius. Edges link all data pairs at distance lower than R.
 It should be a very small value in order to link nodes with almost
@@ -252,11 +248,11 @@ deviations from equality.</p></li>
 he_neighbors graph.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>self</strong> – Updated attribute self.edge_ids (list of edges, as pairs (i, j) of
 indices)</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>object</p>
 </dd>
 </dl>
@@ -268,7 +264,7 @@ indices)</p>
 <dd><p>Computes a sparse connectivity graph for the self graph structure.
 The self graph must contain matrix self.X</p>
 <dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul>
 <li><p><strong>R</strong> (<em>float</em>) – Radius. Edges link all data pairs at distance lower than R
 This is to forze a sparse graph.</p></li>
@@ -285,12 +281,12 @@ Available options are:</p>
 messaging is omitted</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>self</strong> – Changes in attributes self.edge_ids (List of edges, as pairs (i, j)
 of indices) and self.weights (list of affinity values for each pair
 in edge_ids)</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>object</p>
 </dd>
 </dl>
@@ -311,7 +307,7 @@ distances) into a list of similarity values</p>
 Both linear and polynomial mappings are defined for founded distances
 in [0, div]. Otherwise, the similarity values would be negative.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>div</strong> (<em>float or list of float</em>) – A a divergence or a list of divergence values</p></li>
 <li><p><strong>mapping</strong> (<em>str in {‘linear’, ‘polynomial’, ‘exponential’}</em>) – Type of mapping from distances to similarities.</p></li>
@@ -320,10 +316,10 @@ in [0, div]. Otherwise, the similarity values would be negative.</p>
 in d2 higher than B, the output similarity will be negative.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>s</strong> – A list of similarity values with the same size than d</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list</p>
 </dd>
 </dl>
@@ -337,7 +333,7 @@ on the node attribute vectors in matrix</p>
 <p>It assumes that all attribute vectors are normalized to sum up to 1
 Attribute matrix X can be sparse</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> (<em>numpy array</em>) – Input matrix of probabilistic attribute vectors</p></li>
 <li><p><strong>R2</strong> (<em>float, optional (default=2)</em>) – Squared radius (maximum squared He distance). Edges at higher
@@ -348,7 +344,7 @@ distributions), which implies no edge filtering</p></li>
 <li><p><strong>g</strong> (<em>float</em>) – Exponent for the final affinity mapping</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>edge_id</strong> (<em>list of tuples</em>) – List of edges</p></li>
 <li><p><strong>weights</strong> (<em>list</em>) – List of edge weights</p></li>
@@ -366,7 +362,7 @@ node attribute vectors</p>
 <p>It assumes that all attribute vectors are normalized to sum up to 1
 Attribute matrix X can be sparse</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> (<em>numpy array</em>) – Input matrix of probabilistic attribute vectors</p></li>
 <li><p><strong>R</strong> (<em>float, optional (default=2)</em>) – Radius (maximum l1 distance). Edges at higher distance are
@@ -377,7 +373,7 @@ implies no edge filtering</p></li>
 <li><p><strong>g</strong> (<em>float</em>) – Exponent for the final affinity mapping</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>edge_id</strong> (<em>list of tuples</em>) – List of edges</p></li>
 <li><p><strong>weights</strong> (<em>list</em>) – List of edge weights</p></li>
@@ -395,7 +391,7 @@ node attribute vectors</p>
 <p>It assumes that all attribute vectors are normalized to sum up to 1
 Attribute matrix X can be sparse</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> (<em>numpy array</em>) – Input matrix of probabilistic attribute vectors</p></li>
 <li><p><strong>R2</strong> (<em>float, optional (default=2)</em>) – Radius (maximum squared l2 distance). Edges at higher distance are
@@ -406,7 +402,7 @@ which implies no edge filtering</p></li>
 <li><p><strong>g</strong> (<em>float</em>) – Exponent for the final affinity mapping</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>edge_id</strong> (<em>list of tuples</em>) – List of edges</p></li>
 <li><p><strong>weights</strong> (<em>list</em>) – List of edge weights</p></li>
@@ -421,7 +417,7 @@ which implies no edge filtering</p></li>
 <span class="sig-name descname"><span class="pre">show_JS_bounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdigraphs.sim_graph.sim_graph.SimGraph.show_JS_bounds" title="Permalink to this definition"></a></dt>
 <dd><p>Computes JS bounds for a given similarity measure.</p>
 <dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul>
 <li><p><strong>s_min</strong> (<em>float</em>) – Radius. Edges link all data pairs at distance lower than R
 This is to forze a sparse graph.</p></li>
@@ -438,12 +434,12 @@ edges using Hellinger’s distances and a theoretical bound</p>
 messaging is omitted</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>self</strong> – Modifies self.edge_ids (ist of edges, as pairs (i, j) of indices)
 and self.weights (list of affinity values for each pair in
 edge_ids)</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>object</p>
 </dd>
 </dl>
@@ -456,7 +452,7 @@ edge_ids)</p>
 (tipically, distances or squared distances)</p>
 <p>This is the inverse of method <a class="reference internal" href="#rdigraphs.sim_graph.sim_graph.SimGraph.div2sim" title="rdigraphs.sim_graph.sim_graph.SimGraph.div2sim"><code class="xref py py-func docutils literal notranslate"><span class="pre">div2sim()</span></code></a></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> (<em>list</em>) – A list of similarity values</p></li>
 <li><p><strong>g</strong> (<em>int or float, optional (default=1)</em>) – Power factor. Use g != 1 to apply nonlinear mapping</p></li>
@@ -464,10 +460,10 @@ edge_ids)</p>
 in div higher than B, the output similarity will be negative.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>div</strong> – A list of divergences</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list</p>
 </dd>
 </dl>
@@ -482,7 +478,7 @@ in edge_id.</p>
 measure (l1, l2) as a first step to reduce the sample set used to
 elect edges based on the Jensen-Shannon divergence.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>D</strong> (<em>2D array</em>) – Data matrix</p></li>
 <li><p><strong>R</strong> (<em>float</em>) – Radius bound</p></li>
@@ -501,7 +497,7 @@ elect edges based on the Jensen-Shannon divergence.</p>
 <dd><p>Computes a sparse graph for a given radius or for a given number of
 edges</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s_min</strong> (<em>float or None, optional (default=None)</em>) – Similarity threshold. Edges link all data pairs with similarity
 higher than R. This forzes a sparse graph.</p></li>

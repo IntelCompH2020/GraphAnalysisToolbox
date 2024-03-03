@@ -5,6 +5,7 @@
 import numpy as np
 import collections
 import logging
+import random
 
 from scipy.sparse import csr_matrix, identity
 from sklearn.cluster import spectral_clustering
@@ -127,7 +128,7 @@ class CommunityPlus(object):
         return new_cluster_labels, cluster_sizes
 
     def detect_communities(self, edges, weights, n_nodes=None, alg='louvain',
-                           ncmax=None, resolution=1e100):
+                           ncmax=None, resolution=1, seed=None):
         """
         Applies a Community Detection algorithm to the graph given by a list
         of edges and a list of weights.
@@ -146,10 +147,12 @@ class CommunityPlus(object):
             Number of clusters.
         alg : string, default='louvain
             Community detection algorithm.
-            It must be one of 'louvain', 'spectral', 'fastgreedy', 'walktrap',
-            'infomap' or 'labelprop'
+            It must be one of 'cc', 'louvain', 'spectral', 'fastgreedy',
+            'walktrap', 'infomap', 'labelprop' or 'leiden'
         resolution: float
             Resolution parameter of the Louvain algorithm
+        seed: int or None
+            Seed for randomization
 
         Returns
         -------
@@ -183,7 +186,8 @@ class CommunityPlus(object):
             # Spectral clustering
             cluster_labels = spectral_clustering(
                 K, n_clusters=ncmax, n_components=None, eigen_solver=None,
-                n_init=10, eigen_tol=0.0, assign_labels='kmeans')
+                n_init=10, eigen_tol=0.0, assign_labels='kmeans',
+                random_state=seed)
 
         elif alg == 'louvain':
             # Get affinity matrix
@@ -193,7 +197,7 @@ class CommunityPlus(object):
             G = nx.from_scipy_sparse_matrix(K)
             labels = community.best_partition(
                 G, partition=None, weight='weight', resolution=resolution,
-                randomize=None)
+                randomize=None, random_state=seed)
             cluster_labels = [labels[n] for n in range(K.shape[0])]
             # graphplot = nx.draw(G, K, node_size=40, width=0.5,)
 
@@ -204,6 +208,11 @@ class CommunityPlus(object):
             # library
             G = igraph.Graph(n=self.n_nodes, edges=edges, directed=False,
                              edge_attrs={'weight': weights})
+
+            # iGraph uses the buil-in random number generator. This should
+            # serve to fix a seed to the community detection algorithms
+            # (not tested)
+            random.seed(seed)
 
             if alg == 'cc':
                 # Get the connected components
@@ -236,7 +245,8 @@ class CommunityPlus(object):
                 # This is the basic usage of leidenalg. For further options see
                 # https://leidenalg.readthedocs.io/en/latest/reference.html#module-leidenalg
                 clusters = leidenalg.find_partition(
-                    G, leidenalg.ModularityVertexPartition, n_iterations=-1)
+                    G, leidenalg.ModularityVertexPartition, n_iterations=-1,
+                    seed=seed)
 
             # get the membership vector
             cluster_labels = clusters.membership

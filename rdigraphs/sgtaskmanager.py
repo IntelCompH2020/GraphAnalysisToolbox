@@ -118,28 +118,6 @@ class SgTaskManager(object):
 
         return
 
-    def _request_confirmation(self, msg="     Are you sure?"):
-        """
-        Requests a confirmation from user
-
-        Parameters
-        ----------
-        msg : str
-            Prompt message
-
-        Returns
-        -------
-        r : str {'yes', 'no'}
-            User response
-        """
-
-        # Iterate until an admissible response is got
-        r = ''
-        while r not in ['yes', 'no']:
-            r = input(msg + ' (yes | no): ')
-
-        return r == 'yes'
-
     def create(self, f_struct=None):
         """
         Creates a RDI graph analysis project.
@@ -166,13 +144,13 @@ class SgTaskManager(object):
             print('Folder {} already exists.'.format(p2p))
 
             # Remove current backup folder, if it exists
-            old_p2p = pathlib.Path(p2p + '_old')
+            old_p2p = pathlib.Path(str(p2p) + '_old')
             if old_p2p.is_dir():
                 shutil.rmtree(old_p2p)
 
             # Copy current project folder to the backup folder.
             shutil.move(p2p, old_p2p)
-            print('Moved to ' + old_p2p)
+            print(f'Moved to {old_p2p}')
 
         # Create project folder and subfolders
         # os.makedirs(self.path2project)
@@ -391,30 +369,33 @@ class SgTaskManager(object):
         self.state['dbReady'] = self.DM.dbON
 
         # Update the project state
-        logging.info(
-            "-- The following databases have been successfully connected:")
-        for corpus in self.DM.SQL:
+        if self.DM.SQL == {} and self.DM.Neo4j is None:
+            logging.info("-- No databases connected")
+        else:
+            logging.info(
+                "-- The following databases have been successfully connected:")
 
-            if self.DM.SQL[corpus].dbON:
-                logging.info(f"-- -- {corpus}")
-                self.db_tables[corpus] = self.DM.SQL[corpus].getTableNames()
-                if self.db_tables[corpus] == []:
-                    logging.info("-- -- DB with no tables in the DB")
-                else:
-                    all_tables = ', '.join(self.db_tables[corpus])
-                    logging.info("      Available tables are: ")
-                    logging.info(f"         {all_tables}")
+            for corpus in self.DM.SQL:
+                if self.DM.SQL[corpus].dbON:
+                    logging.info(f"-- -- {corpus}")
+                    self.db_tables[corpus] = self.DM.SQL[corpus].getTableNames()
+                    if self.db_tables[corpus] == []:
+                        logging.info("-- -- DB with no tables in the DB")
+                    else:
+                        all_tables = ', '.join(self.db_tables[corpus])
+                        logging.info("      Available tables are: ")
+                        logging.info(f"         {all_tables}")
 
-        if self.DM.Neo4j is not None:
-            logging.info("-- -- Neo4j")
-            self.db_tables['neo4j'] = self.DM.Neo4j.get_db_structure()
-            logging.info("      Available components are:")
-            node_list = [x for x, y in self.db_tables['neo4j'].items()
-                         if y['type'] == 'node']
-            edge_list = [x for x, y in self.db_tables['neo4j'].items()
-                         if y['type'] == 'relationship']
-            logging.info(f"         Nodes: {', '.join(node_list)}")
-            logging.info(f"         Edges: {', '.join(edge_list)}")
+            if self.DM.Neo4j is not None:
+                logging.info("-- -- Neo4j")
+                self.db_tables['neo4j'] = self.DM.Neo4j.get_db_structure()
+                logging.info("      Available components are:")
+                node_list = [x for x, y in self.db_tables['neo4j'].items()
+                            if y['type'] == 'node']
+                edge_list = [x for x, y in self.db_tables['neo4j'].items()
+                            if y['type'] == 'relationship']
+                logging.info(f"         Nodes: {', '.join(node_list)}")
+                logging.info(f"         Edges: {', '.join(edge_list)}")
 
         self.state['configReady'] = True
         self.blocksize = self.global_parameters['algorithms']['blocksize']
@@ -540,9 +521,7 @@ class SgTaskManager(object):
 
     def get_attributes(self, path):
         """
-        Returns attributes of the graph in path. At this time, this version
-        returns communities only. Eventually, it should be able to return all
-        attributes that could be transformed in independent snodes
+        Returns attributes of the graph in path.
 
         Parameters
         ----------
@@ -862,15 +841,9 @@ class SgTaskManager(object):
 
         if self.DM.Neo4j is None:
             logging.info("-- Neo4j database is not available")
-            return
-
-        print("---- This will reset the entire database. All data will be "
-              "lost.")
-        if self._request_confirmation():
+        else:
             self.DM.Neo4j.resetDB()
             logging.info("---- Graph database have been reset")
-        else:
-            logging.info("---- Reset cancelled")
 
         return
 
@@ -886,14 +859,9 @@ class SgTaskManager(object):
 
         if self.DM.Neo4j is None:
             logging.info("-- Neo4j database is not available")
-            return
-
-        print("---- WARNING: This will reset the snode from the database.")
-        if self._request_confirmation():
+        else:
             self.DM.Neo4j.dropNodes(snode)
             logging.info(f"---- Nodes of type {snode} have been reset.")
-        else:
-            logging.info("---- Reset cancelled")
 
         return
 
@@ -909,19 +877,13 @@ class SgTaskManager(object):
 
         if self.DM.Neo4j is None:
             logging.info("-- Neo4j database is not available")
-            return
-
-        print("---- WARNING: This will reset the sedge from the database.")
-        breakpoint()
-        if self._request_confirmation():
-            self.DM.Neo4j.drop_relationship(sedge)
-            logging.info("---- Edges of type {sedge} have been reset.")
         else:
-            logging.info("---- Reset cancelled")
+            self.DM.Neo4j.drop_relationship(sedge)
+            logging.info(f"---- Edges of type {sedge} have been reset.")
 
         return
 
-    def export_graph(self, path2graph, label_nodes):
+    def export_graph_2_neo4J(self, path2graph, label_nodes):
         """
         Export graphs from csv files to neo4J.
 
@@ -947,7 +909,7 @@ class SgTaskManager(object):
 
         return
 
-    def export_bigraph(self, path2graph, label_source, label_target):
+    def export_bigraph_2_neo4J(self, path2graph, label_source, label_target):
         """
         Export bipartite graph from csv files to neo4J.
 
@@ -977,20 +939,38 @@ class SgTaskManager(object):
     # ###########
     # Load graphs
     # ###########
-    def import_snode_from_table(self, table_name):
+    def import_snode_from_table(
+            self, table_name, n0=0, sampling_factor=1, params={},
+            load_feather=False, save_feather=False):
         """
+        Import a graph from a table containing node names, attributes and
+        (possibly) embeddings
 
+        Parameters
+        ----------
+        table_name : str
+            Name of the folder containing the table of nodes
+        n0 : int or float, optional (default=0).
+            Number of nodes. If 0 all nodes are imported. If 0 < n0 < 1, this
+            is the fraction of the total. If n0 > 1, number of nodes
+        sampling_factor : float, optional (default=1)
+            Sampling factor.
+        params : dict, optional (default={})
+            Dictionary of parameters (specific of the dataset)
+        load_feather : bool, optional (default=False)
+            If True, data are imported from a feather file, if available
+        save_feather : bool, optional (default=False)
+            If True, dataframe is saved to a feather file
+
+        Notes
+        -----
+        The final no. of nodes is the minimum between n0 and the result of
+        applyng the sampling factor over the whole dataset
+        Both parameters (n0 and sampling_factor) may be needed for large
+        datasets: the sampling factor can be used to avoid reading all data
+        dataset from the parquet files, while n0 is used as the true target
+        number of nodes
         """
-
-        # #######################
-        # REQUEST NUMBER OF NODES
-
-        # Number of nodes.
-        # If 0, all nodes are used
-        # If 0 < n_nodes < 1, this is the fraction of the total
-        # If n_nodes > 1, number of nodes
-        n0_default = 0
-        n0 = float(input(f"Select number of nodes [0=all]: ") or n0_default)
 
         # #########
         # LOAD DATA
@@ -999,8 +979,17 @@ class SgTaskManager(object):
         # path = self.global_parameters['source_data'][corpus]
         logging.info(f'-- Loading dataset {table_name}')
 
-        df_nodes = self.DM.import_graph_data_from_tables(
-            table_name, sampling_factor=0.1)
+        df_nodes, source_metadata = self.DM.import_graph_data_from_tables(
+            table_name, sampling_factor, params=params)
+
+        # Load labels of features from the corpus metadata
+        T_labels = None
+        if 'feature_labels' in source_metadata:
+            if 'n_topics' in params:
+                T_labels = (
+                    source_metadata['feature_labels'][params['n_topics']])
+            else:
+                T_labels = source_metadata['feature_labels']
 
         # Take feature matrix from embeddings
         T = np.array(df_nodes['embeddings'].tolist())
@@ -1008,13 +997,13 @@ class SgTaskManager(object):
         # Remove embeddings from df_nodes
         df_nodes.drop(columns='embeddings', inplace=True)
 
-        nodes = df_nodes['id'].tolist()
+        # nodes = df_nodes['id'].tolist()
 
         # Take a random sample
         if n0 <= 0:
-            n_gnodes = len(nodes)
+            n_gnodes = len(df_nodes)
         elif n0 < 1:
-            n_gnodes = int(n0 * len(nodes))
+            n_gnodes = int(n0 * len(df_nodes))
         else:
             n_gnodes = int(n0)
 
@@ -1022,7 +1011,8 @@ class SgTaskManager(object):
         # LOAD DATA INTO NEW SNODE
 
         # Create datagraph with the full feature matrix
-        self.SG.makeSuperNode(label=table_name, nodes=nodes, T=T, save_T=True)
+        self.SG.makeSuperNode(label=table_name, nodes=df_nodes, T=T,
+                              save_T=True, T_labels=T_labels)
         self.SG.sub_snode(table_name, n_gnodes, ylabel=table_name,
                           sampleT=True, save_T=True)
 
@@ -1038,29 +1028,20 @@ class SgTaskManager(object):
 
         return
 
-    def import_nodes_and_model(self, path):
+    def import_nodes_and_model(self, path, n0=0):
         """
-        This method manages the generation of similarity (semantic)
-        graphs.
+        Import nodes from a csv and npz files.
 
         Parameters
         ----------
         path : str
             Path to the model
+        n0 : int or float, optional (default=0).
+            Number of nodes. If 0 all nodes are imported
         """
 
         # Name of the selected corpus topic model
         graph_name = os.path.split(path)[-1]
-
-        # #######################
-        # REQUEST NUMBER OF NODES
-
-        # Number of nodes.
-        # If 0, all nodes are used
-        # If 0 < n_nodes < 1, this is the fraction of the total
-        # If n_nodes > 1, number of nodes
-        n0_default = 0
-        n0 = float(input(f"Select number of nodes [0=all]: ") or n0_default)
 
         # #########
         # LOAD DATA
@@ -1330,7 +1311,7 @@ class SgTaskManager(object):
         # The use of things like f'`{att}`' below is to avoid an error if the
         # att name has an space
         # att4sql = [f'`{att_ref}`', f'`{att}`']
-        if type(att) == str:
+        if isinstance(att, str):
             att4sql = f'`{att_ref}`, `{att}`'
         else:
             att_str = [f"`{a}`" for a in att]
@@ -1342,7 +1323,6 @@ class SgTaskManager(object):
             orderOptions=None)
 
         # Create graph object
-        logging.info(f'-- Loading GRAPH from {path}')
         graph_name = path.split(os.path.sep)[-1]
         self.SG.add_snode_attributes(graph_name, att_ref, att_values)
 
@@ -1368,7 +1348,6 @@ class SgTaskManager(object):
         """
 
         # Create graph object
-        logging.info(f'-- Loading GRAPH from {path}')
         graph_name = path.split(os.path.sep)[-1]
 
         # In the current version of the SuperGraph class, snode activation must
@@ -1509,7 +1488,7 @@ class SgTaskManager(object):
     # ###########
     # Graph tools
     # ###########
-    def subsample_graph(self, path, mode):
+    def subsample_graph(self, path, mode, n0):
         """
         Subsample graph
 
@@ -1519,17 +1498,14 @@ class SgTaskManager(object):
             Path to graph
         mode : str
             If 'newgraph', create a new snode with the subgraph
+        n0 : int
+            Target number of nodes
         """
 
         # Create graph object
-        logging.info(f'-- Loading GRAPH from {path}')
-        graph_name = path.split(os.path.sep)[-1]
+        graph_name = pathlib.Path(path).name
         if not self.SG.is_active_snode(graph_name):
             self.SG.activate_snode(graph_name)
-
-        # Number of target nodes.
-        n0 = int(self.SG.snodes[graph_name].n_nodes / 2)
-        n0 = int(input(f"Select number of target nodes [{n0}]: ") or n0)
 
         if mode == 'newgraph':
             new_graph_name = f'{graph_name}_{n0}'
@@ -1554,6 +1530,28 @@ class SgTaskManager(object):
 
         return
 
+    def filter_edges(self, path, th):
+        """
+        Subsample graph from threshold
+
+        Parameters
+        ----------
+        path : str
+            Path to graph
+        th : str
+            Threshold. Edges with smaller weight are removed.
+        """
+
+        # Create graph object
+        graph_name = pathlib.Path(path).name
+
+        self.SG.filter_edges_from_snode(graph_name, th)
+
+        self.SG.save_supergraph()
+        self._deactivate()
+
+        return
+
     def largest_community_subgraph(self, path, comm):
         """
         Subsample graph taking the nodes from the largest community.
@@ -1567,7 +1565,6 @@ class SgTaskManager(object):
         """
 
         # Create graph object
-        logging.info(f'-- Loading GRAPH from {path}')
         graph_name = path.split(os.path.sep)[-1]
         new_graph_name = f'sub_{graph_name}{comm}'
 
@@ -1597,7 +1594,6 @@ class SgTaskManager(object):
         """
 
         # Create graph object
-        logging.info(f'-- Loading GRAPH from {path}')
         graph_name = path.split(os.path.sep)[-1]
 
         # Remove isolated nodes
@@ -1685,13 +1681,36 @@ class SgTaskManager(object):
 
         return
 
+    def label_nodes_from_feature_labels(self, path):
+        """
+        Reads feature labels from the corpus metadata and assigns labels to
+        nodes with feature vector according to their dominating features
+
+        Parameters
+        ----------
+        path : str
+            Path to snode
+        """
+
+        # Get snode name
+        graph = pathlib.Path(path).name
+
+        self.SG.label_nodes_from_features(graph)
+
+        # Save modified snode
+        self.SG.save_supergraph()
+        # Deactivate snode
+        self._deactivate()
+
+        return
+
     # ###############
     # Graph inference
     # ###############
     def equivalence_graph(self, path):
         """
         This method manages the equivalence graph, which is a graph that
-        connects all nodes with the same topic vector into its equivalence
+        connects all nodes with the same feature vector into its equivalence
         class.
 
         Parameters
@@ -1735,14 +1754,15 @@ class SgTaskManager(object):
 
         return
 
-    def infer_eq_simgraph(self, path, sim):
+    def infer_eq_simgraph(self, path, sim, n0=0, epn=10):
         """
         This method manages the generation of an equivalence similarity
         (semantic) graph.
 
-        It is similar to a concatenatio of self.equivalence_graph() (to
-        transform the original topic matrix into the reduced matrix without row
-        repetitions) and infer_sim_graph() (to compute the similarity graph)
+        It is similar to a concatenation of self.equivalence_graph() (to
+        transform the original feature matrix into the reduced matrix without
+        row repetitions) and infer_sim_graph() (to compute the similarity
+        graph)
 
         Parameters
         ----------
@@ -1750,22 +1770,17 @@ class SgTaskManager(object):
             Path to the model
         sim : str
             Similarity measure
+        n0 : int or float, optional (default=0).
+            Number of nodes. If 0 all nodes are imported. If 0 < n0 < 1,
+            this is the fraction of the total. If n0 > 1, number of nodes
+        epn : int or float, optional (default=0).
+            Number of edges per node.
         """
 
         # Name of the selected corpus topic model
-        s_label = os.path.split(path)[-1]    # Name of the source snode
+        s_label = pathlib.Path(path).name
         t_label = f'eq_{s_label}'            # Name of the equivalent snode
         e_label = s_label + '_2_' + t_label  # Name of the connecting sedge
-
-        # #######################
-        # REQUEST NUMBER OF NODES
-
-        # Number of nodes.
-        # If 0, all nodes are used
-        # If 0 < n_nodes < 1, this is the fraction of the total
-        # If n_nodes > 1, number of nodes
-        n0_default = 0
-        n0 = float(input(f"Select number of nodes [0=all]: ") or n0_default)
 
         # #########
         # LOAD DATA
@@ -1791,14 +1806,7 @@ class SgTaskManager(object):
         #
         logging.info(f'Topic matrix loaded with {n_gnodes} nodes')
 
-        # #######################
-        # REQUEST NUMBER OF EDGES
-
-        n0_default = 10
-        n0 = float(input(
-            f"Select average number of edges per node [{n0_default}]: ")
-            or n0_default)    # Be careful: this 'or' is order-sensitive...
-        n_edges = int(n0 * n_gnodes)
+        n_edges = int(epn * n_gnodes)
 
         # #################
         # MAKE SOURCE SNODE
@@ -1849,7 +1857,7 @@ class SgTaskManager(object):
 
         return
 
-    def infer_sim_graph(self, path2snode, sim, n0=None, n_epn=None):
+    def infer_sim_graph(self, path2snode, sim, n0=0, n_epn=10):
         """
         This method manages the generation of similarity (semantic) graphs.
 
@@ -1859,29 +1867,17 @@ class SgTaskManager(object):
             Path to the snode
         sim : str
             Similarity measure
-        n0 : int or float of None, optional (default=None)
-            Number of nodes. If None, it is requested to the user.
-            If 0 < n_epn < 1, it is the fraction of the total no. of nodes
-            If 0, all nodes are taken.
-        n_epn : int or None, optional (default=None)
-            Average number of edges per node. If None, it is requested to the
-            user. If 0, 10 nodes are taken.
+        n0 : int or float of None, optional (default=0)
+            Number of nodes. If 0, all nodes are taken.
+            If 0 < n0 < 1, it is the fraction of the total no. of nodes
+        n_epn : int, optional (default=10)
+            Average number of edges per node.
         """
 
         # Name of the graph
-        graph_name = os.path.split(path2snode)[-1]
+        graph_name = pathlib.Path(path2snode).name
         self.SG.activate_snode(graph_name)
         n_nodes = self.SG.snodes[graph_name].n_nodes
-
-        # #######################
-        # REQUEST NUMBER OF EDGES
-
-        if n_epn is None:
-            n0_default = 10
-            # Be careful: this 'or' is order-sensitive...
-            n_epn = float(input(f"Select average number of edges per node "
-                                f"[{n0_default}]: ") or n0_default)
-
         n_edges = int(n_epn * n_nodes)
 
         # ########################
@@ -1915,7 +1911,7 @@ class SgTaskManager(object):
 
         return
 
-    def import_and_infer_sim_graph(self, path, sim, n0=None, n_epn=None,
+    def import_and_infer_sim_graph(self, path, sim, n0=0, n_epn=10,
                                    label=None):
         """
         This method manages the generation of similarity (semantic) graphs.
@@ -1926,13 +1922,11 @@ class SgTaskManager(object):
             Path to the model
         sim : str
             Similarity measure
-        n0 : int or float of None, optional (default=None)
-            Number of nodes. If None, it is requested to the user.
-            If 0 < n_epn < 1, it is the fraction of the total no. of nodes
-            If 0, all nodes are taken.
-        n_epn : int or None, optional (default=None)
-            Average number of edges per node. If None, it is requested to the
-            user. If 0, 10 nodes are taken.
+        n0 : int or float, optional (default=0)
+            Number of nodes. If 0, all nodes are taken.
+            If 0 < n0 < 1, it is the fraction of the total no. of nodes
+        n_epn : int, optional (default=10)
+            Average number of edges per node.
         """
 
         # Name of the selected corpus topic model
@@ -1940,19 +1934,6 @@ class SgTaskManager(object):
             graph_name = os.path.split(path)[-1]
         else:
             graph_name = label
-
-        # #######################
-        # REQUEST NUMBER OF NODES
-
-        # Number of nodes.
-        # If 0, all nodes are used
-        # If 0 < n_nodes < 1, this is the fraction of the total
-        # If n_nodes > 1, number of nodes
-        if n0 is None:
-            n0_default = 0
-            # Be careful: this 'or' is order-sensitive...
-            n0 = float(input(f"Select number of nodes [0=all]: ")
-                       or n0_default)
 
         # #########
         # LOAD DATA
@@ -1986,20 +1967,7 @@ class SgTaskManager(object):
         #
         logging.info(f'Topic matrix loaded with {n_gnodes} nodes')
 
-        # #######################
-        # REQUEST NUMBER OF EDGES
-
-        if n_epn is None:
-            n0_default = 10
-            # Be careful: this 'or' is order-sensitive...
-            n_epn = float(input(f"Select average number of edges per node "
-                                f"[{n0_default}]: ") or n0_default)
         n_edges = int(n_epn * n_gnodes)
-
-        # REQUEST RADIUS (deprecated, now we request n_edges)
-        # Radius of the similarity graph
-        # R_default = 0.18
-        # R = float(input(f"Select radius [{R_default}]: ") or R_default)
 
         # ########################
         # COMPUTE SIMILARITY GRAPH
@@ -2038,7 +2006,7 @@ class SgTaskManager(object):
 
         return
 
-    def infer_sim_bigraph(self, s_label, t_label, sim):
+    def infer_sim_bigraph(self, s_label, t_label, sim, epn=10):
         """
         This method manages the generation of similarity (semantic) bipartite
         graphs.
@@ -2055,6 +2023,8 @@ class SgTaskManager(object):
             comparable to that of the source graph)
         sim : str
             Similarity measure
+        epn : int, optional (default=10)
+            Average number of edges per node.
         """
 
         # ###########
@@ -2065,14 +2035,8 @@ class SgTaskManager(object):
 
         n_source = self.SG.snodes[s_label].n_nodes
         n_target = self.SG.snodes[t_label].n_nodes
-
-        # #######################
-        # REQUEST NUMBER OF EDGES
-
-        n_def = 10
-        # Be careful: this 'or' is order-sensitive...
-        n0 = float(input(f"Average edges per node [{n_def}]: ") or n_def)
-        n_edges = int(0.5 * n0 * (n_source + n_target))
+        # Target number of edges
+        n_edges = int(0.5 * epn * (n_source + n_target))
 
         # ##########################
         # COMPUTE SIMILARITY BIGRAPH
@@ -2126,8 +2090,7 @@ class SgTaskManager(object):
         # LOAD GRAPH
 
         # Load source snode
-        s_label = path.split(os.path.sep)[-1]
-        # source_snode = DataGraph(label=s_label, path=path)
+        s_label = pathlib.Path(path).name
 
         # ################
         # MAKE SUPERGRAPH
@@ -2139,7 +2102,7 @@ class SgTaskManager(object):
             e_label = s_label + '_2_' + t_label
 
         self.SG.snode_from_atts(s_label, attribute, target=t_label,
-                                e_label=e_label)
+                                e_label=e_label, save_T=True)
 
         self.SG.save_supergraph()
         # Clean memory:
@@ -2160,7 +2123,7 @@ class SgTaskManager(object):
         """
 
         # Load sedge
-        xylabel = path.split(os.path.sep)[-1]
+        xylabel = pathlib.Path(path).name
 
         # Compute transduced graph
         self.SG.transduce(xylabel, n=order, normalize=True)
@@ -2269,7 +2232,6 @@ class SgTaskManager(object):
         """
 
         # Create graph object
-        logging.info(f'-- Loading GRAPH from {path}')
         graph_name = path.split(os.path.sep)[-1]
 
         # Local graph analysis
@@ -2281,7 +2243,8 @@ class SgTaskManager(object):
 
         return
 
-    def detectCommunities(self, algorithm, path, comm_label=None):
+    def detectCommunities(self, algorithm, path, comm_label=None,
+                          seed=None):
         """
         Applies a community detection algorithm to a given snode
 
@@ -2291,20 +2254,24 @@ class SgTaskManager(object):
             Community detection algoritms
         path : str
             Path to snode
+        comm_label : str or None (default=None)
+            Label for the column storing the community indices
+        seed : int or None (default=None)
+            Seed for randomization
         """
 
         if comm_label is None:
             comm_label = algorithm
 
         # Create graph object
-        logging.info(f'-- Loading GRAPH from {path}')
-        graph_name = path.split(os.path.sep)[-1]
+        graph_name = pathlib.Path(path).name
 
         # In the current version of the SuperGraph class, snode activation must
         # be done before calling to the snode method. Maybe I should consider
         # activation inside the method
         self.SG.detectCommunities(
-            graph_name, alg=algorithm, ncmax=None, comm_label=comm_label)
+            graph_name, alg=algorithm, ncmax=None, comm_label=comm_label,
+            seed=seed)
 
         # ############
         # SAVE RESULTS
@@ -2414,14 +2381,18 @@ class SgTaskManager(object):
             Snode attribute used to color the graph
         """
 
-        # Parameters
-        gravity = 40
-
-        # Create graph obje
-        logging.info(f'-- Loading GRAPH from {path2snode}')
+        # Create graph object
         graph_name = path2snode.split(os.path.sep)[-1]
 
-        self.SG.graph_layout(graph_name, attribute, gravity=gravity)
+        # Parameters
+        if self.SG.get_metadata(graph_name)['nodes']['n_nodes'] > 100:
+            alg = 'fa2'
+            gravity = 40
+        else:
+            alg = 'fr'
+            gravity = 1000
+
+        self.SG.graph_layout(graph_name, attribute, gravity=gravity, alg=alg)
 
         # ############
         # SAVE RESULTS
@@ -2432,6 +2403,42 @@ class SgTaskManager(object):
         self._deactivate()
 
         return
+
+    def display_graph(self, path2snode, attribute, path=None):
+        """
+        Display the graph using matplotlib
+
+        Parameters
+        ----------
+        path2snode : str
+            Path to snode
+        attribute: str
+            Snode attribute used to color the graph
+        path: pathlib.Path, str or None, optional (default=None)
+            Path to save the figure. If None, the figure is saved in a
+            default path.
+
+        Returns
+        -------
+        attrib_2_idx : dict
+            Dictionary attributes -> RGB colors. It stores the colors used
+            to represent the attribute value for each node.
+        """
+
+        # Create graph obje
+        graph_name = path2snode.split(os.path.sep)[-1]
+
+        att_2_idx = self.SG.display_graph(graph_name, attribute, path=path)
+
+        # ############
+        # SAVE RESULTS
+
+        # Save graph: nodes and edges
+        self.SG.save_supergraph()
+        # Reset active snodes or sedges. This is to save memory.
+        self._deactivate()
+
+        return att_2_idx
 
     def display_bigraph(self, path2sedge, s_att1, s_att2, t_att, t_att2=None,
                         template_html="bigraph_template.html",
@@ -2573,7 +2580,6 @@ class SgTaskManager(object):
         n = 400
 
         # Create graph obje
-        logging.info(f'-- Loading GRAPH from {path}')
         label = path.split(os.path.sep)[-1]
 
         self.SG.activate_snode(label)
@@ -2596,5 +2602,369 @@ class SgTaskManager(object):
         print(f"-- -- Top {n} saved in {path2out}")
 
         self._deactivate()
+
+        return
+
+    # ############
+    # Graph export
+    # ############
+    def export_2_parquet(self, path):
+        """
+        Exports graph to parquet files
+
+        Parameters
+        ----------
+            path : str
+                Path to the graph
+        """
+
+        graph_name = pathlib.Path(path).name
+
+        path2folder = self.path2project / self.f_struct['export']
+        path2nodes = path2folder / f"{graph_name}_nodes.parquet"
+        path2edges = path2folder / f"{graph_name}_edges.parquet"
+
+        self.SG.export_2_parquet(graph_name, path2nodes, path2edges)
+
+        self._deactivate()
+
+        return
+
+
+class SgTaskManagerCMD(SgTaskManager):
+    """
+    Extends task manager to get data from the user through a command window
+    """
+
+    def _request_confirmation(self, msg="     Are you sure?"):
+        """
+        Requests a confirmation from user
+
+        Parameters
+        ----------
+        msg : str
+            Prompt message
+
+        Returns
+        -------
+        r : str {'yes', 'no'}
+            User response
+        """
+
+        # Iterate until an admissible response is got
+        r = ''
+        while r not in ['yes', 'no']:
+            r = input(msg + ' (yes | no): ')
+
+        return r == 'yes'
+
+    # ################
+    # Neo4J management
+    # ################
+    def reset_Neo4J(self):
+        """
+        Reset the whole database
+        """
+
+        print("---- This will reset the entire database. All data will be "
+              "lost.")
+        if self._request_confirmation():
+            super().reset_Neo4J()
+        else:
+            logging.info("---- Reset cancelled")
+
+        return
+
+    def reset_Neo4J_snode(self, snode):
+        """
+        Reset (drop and create emtpy) tables from the database.
+
+        Parameters
+        ----------
+        snode : str
+            Selected node or edge to reset
+        """
+
+        print("---- WARNING: This will reset the snode from the database.")
+        if self._request_confirmation():
+            super().reset_Neo4J_snode(snode)
+        else:
+            logging.info("---- Reset cancelled")
+
+        return
+
+    def reset_Neo4J_sedge(self, sedge):
+        """
+        Reset (drop and create emtpy) tables from the database.
+
+        Parameters
+        ----------
+        sedge : str
+            Selected node or edge to reset
+        """
+
+        print("---- WARNING: This will reset the sedge from the database.")
+        if self._request_confirmation():
+            super().reset_Neo4J_sedge(sedge)
+            self.DM.Neo4j.drop_relationship(sedge)
+        else:
+            logging.info("---- Reset cancelled")
+
+        return
+
+    # ###########
+    # Load graphs
+    # ###########
+    def import_snode_from_table(self, table_name):
+        """
+        Import a graph from a table containing node names, attributes and
+        (possibly) embeddings
+
+        Parameters
+        ----------
+        table_name : str
+            Name of the folder containing the table of nodes
+        """
+
+        # #######################
+        # REQUEST NUMBER OF NODES
+
+        # The final no. of nodes is the minimum between the selected number of
+        # nodes and the result of applyng the sampling factor over the whole
+        # datasets
+        # Both parameter are needed for cases where the dataset is too large.
+        # The sampling factor can be used to avoid reading the whole dataset
+        # from the parquet files, while n0 is used as the true target number
+        # of nodes
+
+        # Number of nodes.
+        # If 0, all nodes are used
+        # If 0 < n_nodes < 1, this is the fraction of the total
+        # If n_nodes > 1, number of nodes
+        n0_default = 0
+        n0 = float(input(f"Select number of nodes [0=all]: ") or n0_default)
+
+        # Sampling factor
+        sf_default = 1
+        sampling_factor = float(input(
+            f"Sampling factor (default 1 = no sampling): ") or sf_default)
+
+        super().import_snode_from_table(
+            table_name, n0=n0, sampling_factor=sampling_factor)
+
+        return
+
+    def import_nodes_and_model(self, path):
+        """
+        This method manages the generation of similarity (semantic)
+        graphs.
+
+        Parameters
+        ----------
+        path : str
+            Path to the model
+        """
+
+        # #######################
+        # REQUEST NUMBER OF NODES
+
+        # Number of nodes.
+        # If 0, all nodes are used
+        # If 0 < n_nodes < 1, this is the fraction of the total
+        # If n_nodes > 1, number of nodes
+        n0_default = 0
+        n0 = float(input(f"Select number of nodes [0=all]: ") or n0_default)
+
+        super().import_nodes_and_model(path, n0=n0)
+
+        return
+
+    # ###########
+    # Graph tools
+    # ###########
+    def subsample_graph(self, path, mode):
+        """
+        Subsample graph
+
+        Parameters
+        ----------
+        path : str
+            Path to graph
+        mode : str
+            If 'newgraph', create a new snode with the subgraph
+        """
+
+        # Read number of nodes in the graph
+        graph_name = path.split(os.path.sep)[-1]
+        atts = self.SG.get_attributes(graph_name)
+        n_nodes = atts['nodes']['n_nodes']
+
+        # Number of target nodes.
+        n0 = int(n_nodes / 2)
+        n0 = int(input(f"Select number of target nodes [{n0}]: ") or n0)
+
+        super().subsample_graph(path, mode, n0)
+
+        return
+
+    def filter_edges(self, path):
+        """
+        Subsample graph
+
+        Parameters
+        ----------
+        path : str
+            Path to graph
+        """
+
+        # Read minimum weight value
+        graph_name = pathlib.Path(path).name
+        if not self.SG.is_active_snode(graph_name):
+            self.SG.activate_snode(graph_name)
+        smin = min(self.SG.snodes[graph_name].df_edges['Weight'])
+
+        # Ask threshold
+        th = float(input(f"Select threshold [{smin}]: ") or smin)
+
+        super().filter_edges(path, th)
+
+        return
+
+    # ###############
+    # Graph inference
+    # ###############
+    def infer_eq_simgraph(self, path, sim):
+        """
+        This method manages the generation of an equivalence similarity
+        (semantic) graph.
+
+        It is similar to a concatenatio of self.equivalence_graph() (to
+        transform the original feature matrix into the reduced matrix without
+        row repetitions) and infer_sim_graph() (to compute the similarity
+        graph)
+
+        Parameters
+        ----------
+        path : str
+            Path to the model
+        sim : str
+            Similarity measure
+        """
+
+        # Request number of nodes.
+        # If 0, all nodes are used
+        # If 0 < n_nodes < 1, this is the fraction of the total
+        # If n_nodes > 1, number of nodes
+        default = 0
+        n0 = float(input(f"Select number of nodes [0=all]: ") or default)
+
+        # Request number of edges
+        default = 10
+        epn = float(input(
+            f"Select average number of edges per node [{default}]: ")
+            or default)    # Be careful: this 'or' is order-sensitive...
+
+        # Compute equivalent similarity graph
+        super().infer_eq_simgraph(path, sim, n0=n0, epn=epn)
+
+        return
+
+    def infer_sim_graph(self, path2snode, sim, n0=None, n_epn=None):
+        """
+        This method manages the generation of similarity (semantic) graphs.
+
+        Parameters
+        ----------
+        path2snode : str
+            Path to the snode
+        sim : str
+            Similarity measure
+        n0 : int or float of None, optional (default=None)
+            Number of nodes. If None, it is requested to the user.
+            If 0 < n_epn < 1, it is the fraction of the total no. of nodes
+            If 0, all nodes are taken.
+        n_epn : int or None, optional (default=None)
+            Average number of edges per node. If None, it is requested to the
+            user. If 0, 10 nodes are taken.
+        """
+
+        # Request number of edges
+        if n_epn is None:
+            default = 10
+            # Be careful: this 'or' is order-sensitive...
+            n_epn = float(input(f"Select average number of edges per node "
+                                f"[{default}]: ") or default)
+
+        super().infer_sim_graph(path2snode, sim, n0=n0, n_epn=n_epn)
+
+        return
+
+    def import_and_infer_sim_graph(self, path, sim, n0=None, n_epn=None,
+                                   label=None):
+        """
+        This method manages the generation of similarity (semantic) graphs.
+
+        Parameters
+        ----------
+        path : str
+            Path to the model
+        sim : str
+            Similarity measure
+        n0 : int or float of None, optional (default=None)
+            Number of nodes. If None, it is requested to the user.
+            If 0 < n_epn < 1, it is the fraction of the total no. of nodes
+            If 0, all nodes are taken.
+        n_epn : int or None, optional (default=None)
+            Average number of edges per node. If None, it is requested to the
+            user. If 0, 10 nodes are taken.
+        """
+
+        # Request number of nodes.
+        # If 0, all nodes are used
+        # If 0 < n_nodes < 1, this is the fraction of the total
+        # If n_nodes > 1, number of nodes
+        if n0 is None:
+            n0_default = 0
+            # Be careful: this 'or' is order-sensitive...
+            n0 = float(input(f"Select number of nodes [0=all]: ")
+                       or n0_default)
+
+        # Requeest number of edges
+        if n_epn is None:
+            n0_default = 10
+            # Be careful: this 'or' is order-sensitive...
+            n_epn = float(input(f"Select average number of edges per node "
+                                f"[{n0_default}]: ") or n0_default)
+
+        super().import_and_infer_sim_graph(
+            path, sim, n0=n0, n_epn=n_epn, label=None)
+
+        return
+
+    def infer_sim_bigraph(self, s_label, t_label, sim):
+        """
+        This method manages the generation of similarity (semantic) bipartite
+        graphs.
+
+        It assumes that the feature vectors in source and target nodes are
+        comparable.
+
+        Parameters
+        ----------
+        s_label : str
+            Name of the source graph (it must contain a feature matrix)
+        t_path : str
+            Name of the source graph (it must contain a feature matrix that was
+            comparable to that of the source graph)
+        sim : str
+            Similarity measure
+        """
+
+        # Request number of edges per node
+        n_def = 10
+        # Be careful: this 'or' is order-sensitive...
+        epn = float(input(f"Average edges per node [{n_def}]: ") or n_def)
+
+        super().infer_sim_bigraph(s_label, t_label, sim, epn=epn)
 
         return

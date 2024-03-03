@@ -22,6 +22,7 @@ root:
     - community_metric
     - compare_communities
     - display_graphs
+    - export_graphs
 
 # In the following, each menu option is described.
 # GENERIC FORMAT OF AN OPTION DESCRIPTOR:
@@ -103,10 +104,12 @@ graph_tools:
   options:
     - generate_minigraph
     - subsample_graph
+    - filter_edges
     - largest_community_subgraph
     - remove_isolated_nodes
     - remove_snode_attributes
     - disambiguate_node
+    - label_nodes_from_feature_labels
 
 gInference: 
   title: Graph inference tools
@@ -144,10 +147,12 @@ local_graph_analysis:
         centrality: Eigenvector Centrality
         degree: Degree Centrality
         betweenness: Betweenness centrality
+        load: Load centrality
         closeness: Closeness centrality
         cluster_coef: Clustering Coefficient
         pageRank: PageRank
         katz: Katz centrality
+        harmonic: Harmonic centrality
         abs_in_degree: Absolute (i.e. unnormalized) in-degree
         abs_out_degree: Absolute (i.e. unnormalized) out_degree
     - path: graphs
@@ -182,7 +187,13 @@ display_graphs:
   options:
     - show_top_nodes
     - graph_layout
+    - display_graph
     - display_bigraph
+
+export_graphs:
+  title: Export graph data to parquet files
+  options:
+   - path: graphs
 
 # #############################################################################
 # LEVEL 2
@@ -251,8 +262,8 @@ manage_Neo4J:
   options:
     - showGDBdata
     - resetGDB
-    - export_graph
-    - export_bigraph
+    - export_graph_2_neo4J
+    - export_bigraph_2_neo4J
 
 # ##########################
 # Options for graph previews
@@ -283,6 +294,11 @@ subsample_graph:
         inplace: Replace the original snode
         newgraph: Keep the original snode and create a new one 
 
+filter_edges:
+  title: Filter edges by threshold
+  options:
+    - path: graphs
+
 largest_community_subgraph:
   title: Make a subgraph with the largest community
   options:
@@ -302,6 +318,11 @@ remove_snode_attributes:
 
 disambiguate_node:
   title: Disambiguate node
+
+label_nodes_from_feature_labels:
+  title: Label nodes according to dominant features and feature labels
+  options:
+    - path: graphs
 
 # ######################
 # Options for gInference
@@ -397,8 +418,20 @@ inferTransit:
 # ##########################
 # Options for display_graphs
 
+show_top_nodes:
+  title: Show top nodes ranked by attribute value
+  options:
+    - path: graphs
+    - get_method: get_local_features
+
 graph_layout: 
   title: Graph layout
+  options:
+    - path: graphs
+    - get_method: get_attributes
+
+display_graph:
+  title: Visualize graph
   options:
     - path: graphs
     - get_method: get_attributes
@@ -410,12 +443,6 @@ display_bigraph:
     - get_method: get_source_atts
     - get_method: get_source_atts
     - get_method: get_target_atts
-
-show_top_nodes:
-  title: Show top nodes ranked by attribute value
-  options:
-    - path: graphs
-    - get_method: get_local_features
 
 profile_node:
   title: Show profile of a given node
@@ -441,7 +468,7 @@ resetGDB:
     - reset_Neo4J_snode
     - reset_Neo4J_sedge
 
-export_graph:
+export_graph_2_neo4J:
   title: Export graphs to Neo4J
   options:
     - path: graphs
@@ -452,7 +479,7 @@ export_graph:
         AU: Author
         Org: Organization
 
-export_bigraph:
+export_bigraph_2_neo4J:
   title: Export bigraph to Neo4J
   options:
     - path: bigraphs

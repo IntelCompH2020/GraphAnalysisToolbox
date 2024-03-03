@@ -17,7 +17,7 @@ import argparse
 
 # Local imports
 from rdigraphs.menu_navigator.menu_navigator import MenuNavigator
-from rdigraphs.sgtaskmanager import SgTaskManager
+from rdigraphs.sgtaskmanager import SgTaskManagerCMD
 
 # ########################
 # Main body of application
@@ -54,7 +54,7 @@ path2source = pathlib.Path(args.source)
 paths2data = {'topicmodels': path2source / 'topic_models',
               'agents': path2source / 'agents',
               'ACL_models': path2source / 'ACL_models'}
-tm = SgTaskManager(path2project, paths2data, path2source)
+tm = SgTaskManagerCMD(path2project, paths2data, path2source)
 
 # ########################
 # Prepare user interaction

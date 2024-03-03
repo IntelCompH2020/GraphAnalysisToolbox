@@ -1,7 +1,7 @@
 import logging
 
 # # Local imports
-from rdigraphs.sgtaskmanager import SgTaskManager
+from rdigraphs.sgtaskmanager import SgTaskManagerCMD
 
 # #####################
 # PROBABLY USELESS
@@ -21,7 +21,7 @@ if platform.system() == 'Darwin':     # Darwin is the system name for mac os.
 from rdigraphs.supergraph.validator import Validator
 
 
-class ValTaskManager(SgTaskManager):
+class ValTaskManager(SgTaskManagerCMD):
     """
     Main class of the Everis project.
 

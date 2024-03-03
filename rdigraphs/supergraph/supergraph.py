@@ -185,7 +185,8 @@ class SuperGraph(object):
         return
 
     def makeSuperNode(self, label, out_path=None, nodes=None, T=None,
-                      attributes={}, edge_class='undirected', save_T=False):
+                      col_id='Id', attributes={}, edge_class='undirected',
+                      save_T=False, T_labels=None):
         """
         Make a new snode for the supergraph structure.
         The snode is created as an object (graph) from class DataGraph, with
@@ -197,16 +198,21 @@ class SuperGraph(object):
             Name os the supernode
         out_path : str or None, optional (default=None)
             Output path
-        nodes : list or None, optional (default=None)
-            List of nodes
+        nodes : list or pandas.DataFrame or None, optional (default=None)
+            If list, a list of nodes. If a dataframe, a table of nodes and
+            attributes
         T : array or None, optional (default=None)
             Feature matrix, one row per node
+        col_id : str, optional (default='id')
+            Name of the column of node names (only if nodes is a dataframe)
         attributes : dict, optional (default={})
             Attributes of the supernode. Note that these are not attributes of
             the nodes, but of the whole supernode, that will be stored in the
             snode metagraph
         save_T : bool, optional (default=False)
             If True, the feature matrix T is saved into an  npz file.
+        T_labels : dict or None, optional (default=None)
+            A sorted list of labels assigned to features
          """
 
         if label in self.snodes or self.is_snode(label):
@@ -226,7 +232,8 @@ class SuperGraph(object):
 
         self.snodes[label] = DataGraph(label=label, path=out_path,
                                        edge_class=edge_class)
-        self.snodes[label].set_nodes(nodes, T, save_T=save_T)
+        self.snodes[label].set_nodes(nodes, T, save_T=save_T,
+                                     T_labels=T_labels)
 
         # Update metagraph
         self.metagraph.add_single_node(label, attributes)
@@ -638,7 +645,8 @@ class SuperGraph(object):
     # Snode inference
     # ###############
     def snode_from_atts(self, source, attrib, target=None, path_snode=None,
-                        path_sedge=None, e_label=None, att_size=True):
+                        path_sedge=None, e_label=None, att_size=True,
+                        save_T=True):
         """
         Generate a new snode and a new sedge from a given snode in the
         supergraph and one of its attributes.
@@ -664,8 +672,13 @@ class SuperGraph(object):
         e_label : str or None, optional (default=None)
             Name of the new s_edge
         att_size : bool, optional (defautl=False)
-            If True, adds attribute to the target node containing the size
-            of the node measued by the number of neighbors in the sedge
+            If True, adds attribute to the target node containing the size of
+            the node measured by the number of neighbors in the sedge
+        save_T : bool, optional (default=True)
+            If true and a feature matrix exists in the source snode, a
+            feature matrix is computed for the target snode.
+            The feature vector of a target node is computed as the average of
+            the feature vectors from the source node that are linked to it.
         """
 
         if not self.is_active_snode(source):
@@ -751,6 +764,23 @@ class SuperGraph(object):
             node_sizes_dict = collections.Counter(target_nodes)
             node_sizes = [node_sizes_dict[n] for n in s1.nodes]
         s1.add_attributes('NSize', node_sizes)
+
+        # ##################################
+        # Feature matrix of the target snode
+
+        # Infer feature matrix. The feature vector of each node in the output
+        # graph is the average of the feature vectors of all nodes connecting
+        # to it from the original graph
+        if save_T and s0.T is not None:
+            # Compute target feature matrix
+            Kxy = e01._computeK()
+            ksum = Kxy.sum(axis=0) + EPS
+            # Normalize rows and aggregate
+            T = np.array(Kxy / ksum).T @ s0.T
+
+            # Add feature labels, if they exist, to the target node
+            T_labels = s0.get_feature_labels()
+            s1.add_feature_matrix(T, T_labels=T_labels, save_T=True)
 
         # Update metagraph
         s1_attrib = {'category': attrib}
@@ -1211,29 +1241,6 @@ class SuperGraph(object):
 
         return
 
-    def graph_layout(self, snode_label, attribute, gravity=1):
-        """
-        Compute the layout of the given graph
-
-        Parameters
-        ----------
-        snode_label : str
-            Name of the snode
-        gravity: int, optional (default=1)
-            Gravity parameter of the graph layout method (only for force atlas
-            2)
-        attribute: str
-            Snode attribute used to color the graph
-        """
-
-        if not self.is_active_snode(snode_label):
-            self.activate_snode(snode_label)
-
-        self.snodes[snode_label].graph_layout(
-            color_att=attribute, gravity=gravity)
-
-        return
-
     def sub_snode(self, xlabel, ynodes, ylabel=None, sampleT=True,
                   save_T=True):
         """
@@ -1290,9 +1297,15 @@ class SuperGraph(object):
         ref = self.snodes[xlabel].REF
         ynodes_in_x = subgraph['nodes'][ref].tolist()
 
+        # If the feature matrix is saved, add feature labels to the subgraph
+        # metadata
+        T_labels = None
+        if save_T and 'feature_labels' in self.snodes[xlabel].metadata:
+            T_labels = self.snodes[xlabel].metadata['feature_labels']
+
         # Create new snode with the list of edges
         self.makeSuperNode(ylabel, nodes=ynodes_in_x, T=subgraph['T'],
-                           save_T=save_T)
+                           save_T=save_T, T_labels=T_labels)
 
         # Add node attributes
         att_names = [x for x in subgraph['nodes'] if x != ref]
@@ -1352,6 +1365,7 @@ class SuperGraph(object):
         logging.info(f"-- -- Nodes with attribute {att} taking a not allowed "
                      f"value removed. {ylabel} now has {n_nodes} nodes and "
                      f"{n_edges} edges")
+
         return
 
     def sub_snode_by_novalue(self, xlabel, att, value, ylabel=None,
@@ -1860,6 +1874,31 @@ class SuperGraph(object):
 
         return
 
+    def label_nodes_from_features(self, graph_name, att='tag', thp=2.5):
+        """
+        Labels each node in the graph according to the labels of its dominant
+        features.
+
+        Parameters
+        ----------
+        graph_name : str
+            Name of the graph
+        att : str, optional (default='tag')
+            Name of the column in df_nodes that will store the labels
+        thp : float, optional (default=2.5)
+            Parameter of the threshold. The threshold is computed as thp / nf,
+            where nf is the number of features. Assuming probabilistic
+            features, thp represents how large must be a feature value wrt the
+            the value of a flat feature vector (i.e. 1/nf) to be selected.
+        """
+
+        if not self.is_active_snode(graph_name):
+            self.activate_snode(graph_name)
+
+        self.snodes[graph_name].label_nodes_from_features(att=att, thp=thp)
+
+        return
+
     def remove_snode_attributes(self, label, att_names):
         """
         Parameters
@@ -1878,7 +1917,7 @@ class SuperGraph(object):
         return
 
     def detectCommunities(self, label, alg='louvain', ncmax=None,
-                          comm_label='Comm'):
+                          comm_label='Comm', seed=None):
         """
         Applies the selected community detection algorithm to a given node
 
@@ -1892,13 +1931,15 @@ class SuperGraph(object):
             Number of communities.
         label : str, optional (default='Comm')
             Label for the cluster indices in the output dataframe
+        seed : int or None (default=None)
+            Seed for randomization
         """
 
         if not self.is_active_snode(label):
             self.activate_snode(label)
 
         self.snodes[label].detectCommunities(
-            alg=alg, ncmax=ncmax, label=comm_label)
+            alg=alg, ncmax=ncmax, label=comm_label, seed=seed)
 
         return
 
@@ -1919,6 +1960,69 @@ class SuperGraph(object):
         self.snodes[label].remove_isolated()
 
         return
+
+    def graph_layout(self, snode_label, attribute, gravity=1, alg='fa2'):
+        """
+        Compute the layout of the given graph
+
+        Parameters
+        ----------
+        snode_label : str
+            Name of the snode
+        gravity: int, optional (default=1)
+            Gravity parameter of the graph layout method (only for force atlas
+            2)
+        attribute: str
+            Snode attribute used to color the graph
+        """
+
+        if not self.is_active_snode(snode_label):
+            self.activate_snode(snode_label)
+
+        self.snodes[snode_label].graph_layout(
+            alg=alg, color_att=attribute, gravity=gravity)
+
+        return
+
+    def display_graph(self, snode_label, attribute, node_size=None,
+                      edge_width=None, show_labels=None, path=None):
+        """
+        Display the given graph using matplolib
+
+        Parameters
+        ----------
+        snode_label : str
+            Name of the snode
+        attribute: str
+            Snode attribute used to color the graph
+        node_size : int or None, optional (defautl=None)
+            Size of a degree-1 node in the graph. If None, a value is
+            automatically assigned in proportion to the log number of nodes
+        edge_width : int or None, optional (defautl=None)
+            Edge width. If None, a value is automatically assigned in
+            proportion to the log number of nodes
+        show_labels : bool or None, optional (defautl=None)
+            If True, label nodes are show. If None, labels are shown for graphs
+            with less than 100 nodes only.
+        path : str or None, optional (default=None)
+            Path to the file where the graph is saved. If None, a default path
+            is used.
+
+        Returns
+        -------
+        attrib_2_idx : dict
+            Dictionary attributes -> RGB colors. It stores the colors used
+            to represent the attribute value for each node.
+        """
+
+        if not self.is_active_snode(snode_label):
+            self.activate_snode(snode_label)
+
+        att_2_idx = self.snodes[snode_label].display_graph(
+            color_att=attribute, node_size=None, edge_width=None,
+            show_labels=None, path=path)
+
+        return att_2_idx
 
     # ##############
     # Snode analysis
@@ -2060,9 +2164,21 @@ class SuperGraph(object):
 
         return bgs, total_score
 
-    def node_profile(self):
+    def node_profile(self, node_name):
 
-        report = ""
+        report = {}
+
+        for g in self.get_snodes():
+
+            if node_name in self.snodes[g].nodes:
+
+                # Get the node attributes in self.snodes[g].df_nodes
+                node = self.snodes[g].df_nodes[
+                    self.snodes[g].df_nodes[self.REF] == node_name]
+                
+                # Add the node attributes to a new entry in report as a
+                # dictionary
+                report[g] = node.to_dict()
 
         return report
 
@@ -2088,6 +2204,27 @@ class SuperGraph(object):
             self.sedges[s].saveGraph()
 
         self.save_metagraph()
+
+        return
+
+    def export_2_parquet(self, snode_label, path2nodes, path2edges):
+        """
+        Export the nodes and edges of a given snode to parquet files
+
+        Parameters
+        ----------
+        snode_label: str
+            Nambe of the snode
+        path2nodes : str or pathlib.Path
+            Path to the output file of nodes
+        path2edges : str or pathlib.Path
+            Path to the output file of edges
+        """
+
+        if not self.is_active_snode(snode_label):
+            self.activate_snode(snode_label)
+
+        self.snodes[snode_label].export_2_parquet(path2nodes, path2edges)
 
         return
 
