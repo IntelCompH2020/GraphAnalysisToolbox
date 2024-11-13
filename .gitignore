@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Added by JCS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+Icon\r
